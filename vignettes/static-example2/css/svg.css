@@ -1,0 +1,23 @@
+svg .plot-point {
+  stroke: none;
+}
+svg .plot-point.selected {
+  stroke: black;
+  stroke-width: 2px;
+  stroke-dasharray: 2,2;
+}
+svg .plot-point.filtered-out {
+  display: none;
+}
+svg .brush .extent {
+  fill-opacity: .1;
+  stroke: #fff;
+  shape-rendering: crispEdges;
+}
+svg .ep-tag-cloud .ep-tag-link {
+  stroke: #2F96B4;
+}
+svg .ep-tag-cloud .ep-tag text {
+  font-size: 10px;
+  cursor: move;
+}

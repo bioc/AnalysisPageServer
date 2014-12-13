@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>AnalysisPageServer</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="css/concatenated.css?v=@@version" rel="stylesheet" type="text/css" />
+        <link id="ep-svg-styles" href="css/svg.css" type="text/css" rel="stylesheet">
+    </head>
+    <body data-env="analysis-page-server">
+        <div id="wrap">
+            <div class="container-fluid">
+                <header class="row-fluid">
+                    <div class="span12 navbar">
+                        <div class="navbar-inner">
+                            <a class="brand" href="#">AnalysisPageServer</a>
+                            <p class="navbar-text pull-left"></p> 
+                            <ul class="nav pull-right">
+                                <li id="ep-header-tools-menu" class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Tools <span class="caret"></span></a>
+                                    <ul class="dropdown-menu"></ul>
+                                </li>
+<!--                                <li id="ep-header-options-menu" class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Options <span class="caret"></span></a>
+                                    <ul class="dropdown-menu"></ul>
+                                </li>-->
+                            </ul>
+                        </div>
+                    </div>
+                </header>
+                <div id="ep-intro-row" class="row-fluid">
+                    <div class="offset4">
+                        <div class="ep-load-indicator ep-load-indicator-bowlG">
+                            <div class="ep-load-indicator-bowl_ringG">
+                                <div class="ep-load-indicator-ball_holderG">
+                                    <div class="ep-load-indicator-ballG">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="muted">Loading application components...</p>
+                    </div>
+                </div>
+            </div>
+            <div id="push"></div>
+        </div>
+        <div id="footer">
+            <div class="container-fluid">
+                <footer class="row-fluid">
+                    <nav class="offset1 span10">
+                        <ul class="pull-right nav inline">
+                            <li id="ep-footer-version"><h6></h6></li>
+                        </ul>
+                    </nav>
+                </footer>
+            </div>
+        </div>
+        <script id="ep-entry-script" data-main="js/requirejs-config" src="js/concatenated-modules.js?v=@@version"></script>
+    </body>
+</html>

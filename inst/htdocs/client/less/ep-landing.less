@@ -1,0 +1,79 @@
+.ep-page-row {
+    
+    &.animated {
+        animation-duration: 0.5s;
+        -webkit-animation-duration: 0.5s;
+        -ms-animation-duration: 0.5s; 
+    }
+}
+
+#ep-intro-row {
+    
+    margin-top: 100px;
+    
+    .ep-load-indicator {
+        display: inline-block;
+        float:  left;
+        margin-right: 10px;
+    }
+}
+
+.light-blue {
+    border:             1px solid @blueBorder;
+    border-radius:      @baseBorderRadius;
+    background-color:   @blueLight;
+}
+
+.ep-landing-row-forms {
+    min-height:         65px;
+    padding:            @baseLineHeight 0;
+    margin:             0 0 @baseLineHeight;
+}
+
+.ep-landing-search-form {    
+
+    .control-label {
+        width:              100px;
+        font-size:          @fontSizeLarge;
+        line-height:        @baseLineHeight + 20;
+    }
+    .controls {
+        margin-left:        120px;
+        position:           relative;
+        
+        button.btn-primary {
+            height: 58px;/* make it as tall as select2 widget */
+        }
+        
+        .select2-container {
+        
+            .select2-choice {
+                font-size:          @fontSizeLarge;
+                padding:            @paddingLarge;
+                
+                .select2-arrow {
+                    
+                    b {
+                        margin-top: 10px;
+                    }
+                }
+            }
+        }
+    }
+}   
+
+
+.ep-landing-tool-overview {
+    padding:            @paddingLarge;
+    min-height:         350px;
+
+    .media {
+        display:        none;
+    }
+}
+
+#ep-landing-projects-table-lead {
+    .lead {
+        margin-top: 20px;
+    }
+}

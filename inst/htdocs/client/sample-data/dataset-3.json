@@ -1,0 +1,1 @@
+{"type":"plot","name":"plot","label":"plot","description":"plot","value":{"plot":"data/dataset-3.svg","table":{"type":"table","name":"table","label":"table","description":"table","value":{"data":{},"meta":{},"caption":"Scattergram again but with no data table"},"warnings":[]}},"warnings":[]}

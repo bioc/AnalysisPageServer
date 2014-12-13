@@ -1,0 +1,37 @@
+html, body {
+    height: 100%;
+}
+
+#wrap {
+    min-height: 100%;
+    height: auto !important;
+    margin: 0 auto -@footerHeight;
+}
+
+body.with-navbar-fixed-top {
+    padding-top:    50px;
+}
+
+/* fix nested lists like in page parameter view */
+.dl-horizontal dl {
+
+    > dt {
+        clear:      none;
+        float:      none;
+        width:      auto;
+        text-align: left;
+    }
+    > dd {
+        margin-left: @baseLineHeight / 2;
+    }
+}
+
+dl {
+    dd {
+        &:after {
+            display: table;
+            content: "";
+            clear: both;
+        }
+    }
+}

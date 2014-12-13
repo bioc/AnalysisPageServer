@@ -1,0 +1,26 @@
+# Installation instructions
+
+## Rook dependency
+
+For Rook deployment users will need version at least 1.1.
+
+As of September 2014 this is not available on CRAN and must
+be installed from github:
+
+```
+library(devtools)
+install_github('Rook','jeffreyhorner')
+```
+
+Once available on CRAN this step will be unnecessary.
+
+You can still use most of the functionality of AnalysisPageServer without
+Rook. In particular, if you only want to make static reports you don't need
+it, and even if you are going to turn on a server, you don't need Rook to
+deploy via FastRWeb or Apache.
+
+## Running on windows
+
+I've set `OS_type: unix` because I've never tested the package on windows,
+only on OS X and linux. It is possible that it might be
+at least partially functional under windows.

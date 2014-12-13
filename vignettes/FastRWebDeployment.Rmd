@@ -1,0 +1,216 @@
+<!--
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{7. FastRWeb Deployment}
+-->
+
+<link rel="stylesheet" type="text/css" href="AnalysisPageServer.css">
+
+```{r echo = FALSE}
+options(markdown.HTML.options = "toc")
+```
+
+# Deployment with FastRWeb
+
+
+## Deploying AnalysisPageServer applications with Rserve/FastRWeb System
+
+It is possible to deploy `AnalysisPageServer` applications using the <a href ="http://rforge.net/Rserve/">Rserve</a>/<a href ="http://rforge.net/FastRWeb/">FastRWeb</a> system.
+Unlike the Rook/Rhttpd combination, this environment properly handles concurrent
+requests and is expected to be more stable. The installation and setup should be easier
+than <a href="ApacheDeployment.html">Apache/RApache</a>. My own production systems have been based on Apache/RApache and so
+I have less experience trying to scale under `Rserve`/`FastRWeb`, but it looks like it could
+be a good solution, and I definitely recommend it over the Rook/Rhttpd option.
+
+This document will take you through steps for deployment in this environment.
+
+## What are Rserve and FastRWeb?
+
+From their websites:
+
+> Rserve is a TCP/IP server which allows other programs to use facilities 
+of R from various languages without the need to initialize R or link against R library.
+
+> FastRWeb is an infrastructure that allows any webserver to use 
+R scripts for generating content on the fly, such as web pages or graphics.
+
+`Rserve` is really the server software. However, it has a lower-level
+interface than `FastRWeb`. Also, the direct HTTP connections that `Rserve` supports are still considered experimental.
+`FastRWeb`, at least in the way we are going to use it, consists of a CGI executable
+which sends HTTP requests via the socket to the `Rserve` process. It also has some functionality to help with
+some of the lower-level HTTP-related tasks like creating HTTP responses within R.
+
+More recent versions of `Rserve` do have the capability of communicating over HTTP, which means that it should be
+possible to deploy `AnalysisPageServer` with just the `Rserve` layer and without `FastRWeb`. I have not yet tried
+this, and am not describing that process in this document.
+
+## Install Rserve and FastRWeb
+
+<a href ="http://rforge.net/Rserve/">Rserve<a/> and <a href="http://rforge.net/FastRWeb/">FastRWeb</a> are both available
+through rforge. You may be able to install them with
+
+```{r eval = FALSE}
+install.packages(c('Rserve','FastRWeb'),,'http://www.rforge.net/')
+```
+
+You may need to add the switch `type="source"` to this.
+
+After you install `FastRWeb` you have to set up a `FastRWeb` environment. See the <a href="http://svn.rforge.net/FastRWeb/trunk/INSTALL">documentation
+for that package</a> for more information. This is typically accomplished by running the `install.sh` script
+that comes with the package, which sets up the `/var/FastRWeb` directory for you:
+
+```{r eval = FALSE}
+system(paste("cd",system.file(package="FastRWeb"),"&& install.sh"))
+```
+
+Among other things, this will create a configuration file in `/var/FastRWeb/code/rserve.conf`. You'll have to make one modification to this file.
+The default looks like this:
+
+```
+socket /var/FastRWeb/socket
+sockmod 0666
+source /var/FastRWeb/code/rserve.R
+control enable
+```
+
+***IMPORTANT!!!*** In the last line change `control enable` to `control disable`. This change is essential as the control commands prevent `Rserve` from
+handling parallel connections correctly, and will lead your server to crash as badly as Rook/Rhttpd. That will give you this configuration:
+
+```
+socket /var/FastRWeb/socket
+sockmod 0666
+source /var/FastRWeb/code/rserve.R
+control disable
+```
+
+
+After making this modification, you should work through the rest of the <a href="http://svn.rforge.net/FastRWeb/trunk/INSTALL">FastRWeb INSTALL document</a> to
+complete the installation and start your `FastRWeb`-configured `Rserve` server.
+
+## Developing your FastRWeb Application
+
+In the default configuration, `FastRWeb` maps URLs to scripts in the directory `/var/FastRWeb/web.R/`. You can deploy as many AnalysisPageServer applications
+as you want by creating multiple files in that directory. Here we'll just create one, called `APS.R`. With default configuration your server would then be located under
+the `http://hostname/cgi-bin/R/APS` URL, with landing page `http://hostname/cgi-bin/R/APS/client/analysis-page-server.html` (if you are running serving and client on
+the same machine then you could just use `localhost` for `hostname`.
+
+The content of a `FastRWeb` script is a bit of code which will get evaluated each time a request is made. At some point in the script a function
+must be assigned to the top-level variable `run`. In some ways the `run` function is similar to `AnalysisPageServer`'s idea of what an `AnalysisPage` handler
+is. Each of the parameters of the HTTP query string are parsed and sent as arguments to the `run` function, and the `run` function then results what
+is called a `FastRWeb` object, which somehow represents the response.
+
+If you are working in the `AnalysisPageServer` framework you don't have to worry about most of these details. You just build your `AnalysisPageRegistry` and 
+then call the `new.FastRWeb.analysis.page.run()` function, assigning the result (which is itself a function) to the `run` variable.
+
+The following would constitute a `FastRWeb` script for an application containing the volano plot from the <a href="InteractiveApps.html">Interactive Applications</a>
+vignette. Everything but the last line is copied verbatim from that vignette.
+
+```{r eval = FALSE}
+library(AnalysisPageServer)
+
+x <- rep(1:nrow(volcano), each = ncol(volcano))
+y <- rep(1:ncol(volcano), nrow(volcano))
+volcano.cells <- data.frame(x = x, y = y, Height = as.vector(t(volcano)))
+
+volcano.handler <- function(color1 = "red", color2 = "blue") {
+  par(mar = c(1, 1, 4, 1))
+  chosen.colors <- c(color1, color2)
+  col <- colorRampPalette(chosen.colors)(50)
+  image(datasets::volcano, xaxt = "n", yaxt = "n", main = "Maunga Whau Volcano", 
+        col = col, cex.main = 2)
+
+  return(volcano.cells)
+}
+
+volcano.page <- new.analysis.page(handler = volcano.handler, name = "volcano", 
+    description = "Draw the Maunga Whau Volcano in Two Colors")
+reg <- new.registry(volcano.page)
+
+run <- new.FastRWeb.analysis.page.run(reg,
+                                      FastRWeb.scriptname = "APS")
+```
+
+`new.FastRWeb.analysis.page.run` has other other options which are useful if you
+have non-default `FastRWeb` configuration. In particular, if your FastRWeb CGI driver
+is not located at `/cgi-bin/R` then you would have to specify that. See that function's inline documentation for that information.
+In any case `FastRWeb.scriptname` is required, and it has to be the same as the name
+of the `FastRWeb` script from which the app will be server, without the `.R` suffix.
+
+Once you put that in the file `/var/FastRWeb/web.R/APS.R` you can then point your
+browser to the landing page <a href="http://localhost/cgi-bin/R/APS/client/analysis-page-server.html">http://localhost/cgi-bin/R/APS/client/analysis-page-server.html</a>.
+
+## Deploying your FastRWeb/Rserve Application
+
+One of the nice things about developing in this environment is that the script is
+reprocessed on each page load. This includes any libraries you load, which means
+that if you develop your `AnalysisPageServer` within an R package (as you should,
+if you really mean business), then you can just install a modified version of that
+R package and refresh your browser, and the modification will be re-loaded.
+
+The downside of this system is that you pay the cost of page load on each request. This can
+be significant, especially since the front end requires multiple AJAX callbacks to
+the server in order to load the application and make even one plot. Even static files
+are handled this way and would trigger loading of any packages with `library()` calls
+in your script.
+
+However, it is possible for you to have your cake and eat it, too. Once you are done development you can
+move the code to the startup script in `/var/FastRWeb/code/rserve.R`. At the bottom
+of that script you could have something like this:
+
+```{r eval = FALSE}
+library(MyAPSPackage)
+myRun <- new.FastRWeb.analysis.page.run(myAPSRegistry(),
+                                        FastRWeb.scriptname = "APS")
+```
+
+
+Then, in `/var/FastRWeb/web.R/APS.R` all you put is this:
+
+```{r eval = FALSE}
+run <- myRun
+```
+
+This time you *do* have to restart the `Rserve` server, which I usually do like
+this:
+
+```{r eval = FALSE}
+killall Rserve
+/var/FastRWeb/code/start
+```
+
+Then your server is poised to handle the requests much more quickly since it
+will have everything it needs already built in memory.
+
+If you are trying to just run through the example in this document and don't have
+your own app packaged nicely into `MyAPSPackage`, you can just copy this whole long thing into
+`/var/FastRWeb/code/rserve.R`:
+
+
+```{r eval = FALSE}
+library(AnalysisPageServer)
+
+x <- rep(1:nrow(volcano), each = ncol(volcano))
+y <- rep(1:ncol(volcano), nrow(volcano))
+volcano.cells <- data.frame(x = x, y = y, Height = as.vector(t(volcano)))
+
+volcano.handler <- function(color1 = "red", color2 = "blue") {
+  par(mar = c(1, 1, 4, 1))
+  chosen.colors <- c(color1, color2)
+  col <- colorRampPalette(chosen.colors)(50)
+  image(datasets::volcano, xaxt = "n", yaxt = "n", main = "Maunga Whau Volcano", 
+        col = col, cex.main = 2)
+
+  return(volcano.cells)
+}
+
+volcano.page <- new.analysis.page(handler = volcano.handler, name = "volcano", 
+    description = "Draw the Maunga Whau Volcano in Two Colors")
+reg <- new.registry(volcano.page)
+
+myRun <- new.FastRWeb.analysis.page.run(reg,
+                                        FastRWeb.scriptname = "APS")
+```
+
+
+The landing page would then be available at this URL:
+
+[http://localhost/cgi-bin/R/APS/dist-aps/analysis-page-server.html](http://localhost/cgi-bin/R/APS/dist-aps/analysis-page-server.html)

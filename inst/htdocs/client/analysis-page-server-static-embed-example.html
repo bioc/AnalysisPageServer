@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<!--
+Copyright Genentech - A member of the Roche Group
+@author Adrian Nowicki <adrian.nowicki@contractors.roche.com>
+-->
+<html>
+    <head>
+        <title>AnalysisPageServerStatic</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <!-- THESE LINK & META TAGS ARE IMPORTANT FOR EMBEDDED DATASETS TO WORK -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="css/bootstrap.css" rel="stylesheet" type="text/css" />
+        <link href="css/bootstrap-responsive.css" rel="stylesheet" type="text/css" />
+        <link href="css/animate.min.css" rel="stylesheet" type="text/css" />
+        <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+        <link id="ep-svg-styles" href="css/svg.css" type="text/css" rel="stylesheet" />
+        <!-- [END] -->
+    </head>
+    <body>
+        
+        <h2>Custom HTML content</h2>
+        
+        <!--
+            Containers are identified by the "ep-analysis-page-data-set" class.
+            "container-fluid" class is also necessary for proper layout of descendants.
+        
+            You can control sources of the dataset and plot with custom 
+            attributes set on a container:
+        -->
+        <div class="ep-analysis-page-data-set container-fluid" 
+             data-svg="sample-data/dataset-1.svg" 
+             data-set="sample-data/dataset-1.json"></div>
+        
+        <h2>More custom HTML content</h2>
+        <!--
+            By default plot, table and sidebar are visible.
+            You can control visibility of sidebar (if data-svg is provided, 
+            otherwise there is no plot nor sidebar)
+            and table (if data-set is provided)
+        -->
+        <div class="ep-analysis-page-data-set container-fluid" 
+             data-svg="sample-data/dataset-2.svg" 
+             data-set="sample-data/dataset-2.json"
+             data-sidebar-visible="no" 
+             data-table-visible="no"></div>
+        
+        <!-- THIS IS THE ONLY SCRIPT NEEDED, PUT IT AT THE BOTTOM OF THE BODY SECTION -->
+        <script id="ep-entry-script" data-version="" data-main="js/build/concatenated-modules-apss" src="js/lib/require/require.js"></script>
+    </body>
+</html>
