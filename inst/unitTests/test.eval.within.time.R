@@ -7,6 +7,11 @@ test.eval.within.time <- function()  {
     return()
   }
 
+  if(! checkPackageInstalled("fork"))  {
+    message("Skipping test.eval.within.time since fork is unavailable")
+    return()
+  }
+
   value <- eval.within.time({1}, 10)
   checkEquals(value, 1)
 

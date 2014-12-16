@@ -7,7 +7,7 @@ test.rook.analysis.page.server <- function()  {
     return()
   }
 
-  if(checkPackageInstalled("Rook", "1.1"))  {
+  if(checkPackageInstalled("Rook", "1.1") && checkPackageInstalled("fork"))  {
     require(fork) || stop("Couldn't load fork")
     dir.create(td <- tempfile())
     
@@ -125,6 +125,6 @@ test.rook.analysis.page.server <- function()  {
     check.same.svgs(got.plot, exp.plot)
     
   }  else  {
-    warning("Rook (>= 1.1) is not installed so Rook-based tests were not run")
+    warning("Rook (>= 1.1) or fork is not installed so Rook-based tests were not run")
   }
 }
