@@ -323,7 +323,7 @@ startRookAnalysisPageServer <- function(reg,
 ##' but handy to have a single function so you don't forget the \code{wait()} call.
 ##' @title kill.process
 ##' @param pid Process ID, or list with \code{$pid} component
-##' @return Same as \code{\link[fork]{wait}}.
+##' @return Same as \code{wait} in the \code{fork} package.
 ##' @author Brad Friedman
 ##' @export kill.process
 kill.process <- function(pid)  {

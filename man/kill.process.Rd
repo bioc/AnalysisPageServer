@@ -9,7 +9,7 @@ kill.process(pid)
 \item{pid}{Process ID, or list with \code{$pid} component}
 }
 \value{
-Same as \code{\link[fork]{wait}}.
+Same as \code{wait} in the \code{fork} package.
 }
 \description{
 Kill a process and wait for it.

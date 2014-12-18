@@ -1,19 +1,27 @@
 Package: AnalysisPageServer
 Type: Package
 Title: A framework for sharing interactive data and plots from R
-        through the web.
-Version: 0.99.13
-Date: 2014-12-15
+    through the web.
+Version: 0.99.14
+Date: 2014-12-17
 Author: Brad Friedman <friedman.brad@gene.com>, Adrian Nowicki, Hunter
-        Whitney <hunter@hunterwhitney.com>, Matthew Brauer
-        <brauer.matthew@gene.com>
+    Whitney <hunter@hunterwhitney.com>, Matthew Brauer
+    <brauer.matthew@gene.com>
 Maintainer: Brad Friedman <friedmab@gene.com>
 Description: AnalysisPageServer is a modular system that enables
-        sharing of customizable R analyses via the web.
+    sharing of customizable R analyses via the web.
 License: Artistic-2.0
 LazyLoad: yes
-Imports: log4r, tools, rjson, Biobase
-Suggests: RUnit, XML, SVGAnnotation, knitr
+Imports:
+    log4r,
+    tools,
+    rjson,
+    Biobase
+Suggests:
+    RUnit,
+    XML,
+    SVGAnnotation,
+    knitr
 Enhances: Rook (>= 1.1), fork, FastRWeb, ggplot2
 URL: http://research-pub.gene.com/AnalysisPageServer
 VignetteBuilder: knitr
