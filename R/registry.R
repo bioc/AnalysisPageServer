@@ -20,6 +20,9 @@ new.registry <- function(...)  {
   return(reg)
 }
 
+
+
+
 ##' Test if an argument is an AnalysisPageRegistry
 ##'
 ##' @title is.registry
@@ -119,8 +122,15 @@ pages.AnalysisPageRegistry <- function(registry, include.services=FALSE)  {
     .validate.analysis.page(get.page(registry, p))
 
   param.set.list <- lapply(pages(registry), function(p)  get.page(registry, p)$params)
-                           
+
+  ## Checks that all Page Params for a given persistent param are of the same type
+  ## (e.g. all select, or all simple input elements).
   .validate.persistent.params(param.set.list)
+  
+  ## Validate persisent param dependencies structure:
+  .validate.persistent.param.dependencies(registry)
+  
+  
 }
 
 ##' Build a toy registry for examples and testing

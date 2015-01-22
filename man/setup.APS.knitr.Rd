@@ -3,11 +3,16 @@
 \alias{setup.APS.knitr}
 \title{Set up knitr documents to contain AnalysisPageServer data sets}
 \usage{
-setup.APS.knitr(outdir, quiet = TRUE)
+setup.APS.knitr(outdir, include.css = system.file("AnalysisPageServer.css",
+  package = "AnalysisPageServer"), include.toc = TRUE, quiet = TRUE)
 }
 \arguments{
 \item{outdir}{Output directory to which front end files should be written.
 Default: see details.}
+
+\item{include.css}{Paths to CSS files to include. See details.}
+
+\item{include.toc}{Boolean, default TRUE. Should I include a table of contents?}
 
 \item{quiet}{Boolean, default TRUE. Set to FALSE to turn on some diagnostic
 messages}
@@ -27,31 +32,45 @@ like this:
   ```
 }
 
-The function has 2 side effects. The first is a heinous crime. It
-looks up the call stack to see if you are in the middle of a
-\code{\link[tools]{buildVignettes}} call. If so then it sets
-\code{clean = FALSE} for that call. The reason for this is that
-for the document to work it will need a bunch of auxiliary files
-like .css and .js, and if \code{clean = TRUE} then these files
-won't be left and your data sets will not show at all. During
-R CMD build \code{buildVignettes} is explicitly called with
-\code{clean = TRUE} so this is the only way I could figure out
-how to turn it off. If it can't find \code{buildVignettes} in the
-call stack then nothing special happens. This would be the case
-if you are just calling \code{\link[knitr]{knit2html}} yourself.
+Calling this function has the following effects:
 
-The second side effect is to copy all the front end files to
-the output directory. The default output directory is also kind
-of heinous. The files need to be next to the output file. So the
-function again looks up the call stack to find the \code{knit2html}
-call, then grabs the name of the \code{output} file from there and uses
-its directory as \code{outdir}. If it can't find a \code{knit2html}
-call then it throws an error.
+\enumerate{
+  \item{
+    The first effect is a heinous crime. It
+    looks up the call stack to see if you are in the middle of a
+    \code{\link[tools]{buildVignettes}} call. If so then it sets
+    \code{clean = FALSE} for that call. The reason for this is that
+    for the document to work it will need a bunch of auxiliary files
+    like .css and .js, and if \code{clean = TRUE} then these files
+    won't be left and your data sets will not show at all. During
+    R CMD build \code{buildVignettes} is explicitly called with
+    \code{clean = TRUE} so this is the only way I could figure out
+    how to turn it off. If it can't find \code{buildVignettes} in the
+    call stack then nothing special happens. This would be the case
+    if you are just calling \code{\link[knitr]{knit2html}} yourself.
+  }
+
+\item{
+    The next effect is to copy all the front end files to
+    the output directory. The default output directory is also kind
+    of heinous. The files need to be next to the output file. So the
+    function again looks up the call stack to find the \code{knit2html}
+    call, then grabs the name of the \code{output} file from there and uses
+    its directory as \code{outdir}. If it can't find a \code{knit2html}
+    call then it throws an error.
 
 The output directory is saved with a call to the private function
-\code{\link{set.APS.outdir}}. This is then read back by \code{\link{embed.APS.dataset}}
-so that the data sets get written to the write place. You could add
-a \code{\link{reset.APS.outdir}()} call in a chunk at the bottom of your knitr document.
+    \code{\link{set.APS.outdir}}. This is then read back by \code{\link{embed.APS.dataset}}
+    so that the data sets get written to the write place. You could add
+    a \code{\link{reset.APS.outdir}()} call in a chunk at the bottom of your knitr document.
+  }
+
+\item{
+    Any files in \code{include.css} are copied to the output directory and
+    included as CSS. The default is a default stylesheet that will make
+    your reports look like the vignettes.
+  }
+}
 
 Finally it returns the html headers as a "knit_asis" object
 to be included in your document. See \code{\link{custom.html.headers}}.

@@ -317,7 +317,7 @@ test.persistent.params <- function()  {
 
   
   e <- simple.param("foo")
-  prm.with.persist <- simple.param("foo", persist="Foo")
+  prm.with.persist <- simple.param("foo", persistent = "Foo")
   stopifnot(!identical(prm.with.persist, e))
   e$persistent <- "Foo"
   checkIdentical(prm.with.persist, e, "persistent param")
@@ -326,8 +326,8 @@ test.persistent.params <- function()  {
 
 
   ## now make 3 AnalysisPageParamSet with some persistent params.
-  fooP <- simple.param("foo", persist="foo")
-  barP <- simple.param("bar", persist="bar")
+  fooP <- simple.param("foo", persistent ="foo")
+  barP <- simple.param("bar", persistent ="bar")
   baz <- simple.param("baz")
 
   ps1 <- param.set(fooP, barP, baz)

@@ -30,3 +30,6 @@ get.plot.element.coords <- function(pp)  {
   ## plot points in image coordinates
   t(sapply(lapply(pp.ss, "[", 2:3), as.numeric))
 }
+
+
+

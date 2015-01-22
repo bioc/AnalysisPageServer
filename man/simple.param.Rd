@@ -5,7 +5,8 @@
 \usage{
 simple.param(name, label = name, description = label, value = "",
   type = "text", advanced = 0, show.if = NULL, display.callback = NULL,
-  size = "medium", required = TRUE, persistent = NULL)
+  size = "medium", required = TRUE, persistent = NULL,
+  persistent.dependencies = NULL)
 }
 \arguments{
 \item{name}{Name of form element}
@@ -46,6 +47,17 @@ the front-end user is required to set this parameter before submitting the reque
 variable in persistent storage that should be used to initialize the value of the parameter.
 The front end will provide some mechanism to change the persistent value, but until the user does
 so the param will be initialized from the value in the persistent space.}
+
+\item{persistent.dependencies}{A character vector or NULL (default) specifying the names
+of other parameters on
+which this one "depends". It is an error to provide this when \code{persistent} is NULL.
+When \code{persistent} is non-NULL, providing \code{persistent.dependencies} makes this parameter
+not just "persistent" but "conditionally persistent", which
+is to say that the persistent value for this parameter is actually a hash lookup based on the
+the other parameters specified in this vector. A typical example would be a pheno fields parameter
+which is dependent on the study parameter. The names are taken from the Page namespace, which
+means that a parameter's \code{$name} is used when this differs from its \code{$persistent}
+slot.}
 }
 \value{
 An AnalysisPageParam. This is just a list with class name slapped on.

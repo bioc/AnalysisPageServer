@@ -5,11 +5,8 @@
 
 ```{r message=FALSE, echo = FALSE}
 library(AnalysisPageServer)
-options(markdown.HTML.options = "toc")
 setup.APS.knitr()
 ```
-
-<link rel="stylesheet" type="text/css" href="AnalysisPageServer.css">
 
 
 # Embedding APS datasets in other documents
@@ -41,7 +38,17 @@ library(AnalysisPageServer)
 setup.APS.knitr()
 ```
 
-Then, proceed as your normally would with your `knitr` document. At the point you want
+A few notes about `setup.APS.knitr()`:
+
+1. By default this function makes a table of contents 
+based on your header elements. Turn this off with `include.toc=FALSE`.
+1. It also includes some custom styling. This puts the table of contents in the margin on the left
+and the body of your document to the right of that. For example, this document was created with
+this default styling. You can control this behavior with the `include.css` argument.
+1. It is recommended to use `message=FALSE, echo=FALSE` for this setup block.
+
+Whether you use default or custom styling, after your call to `setup.APS.knitr()` at the
+top of your document you can proceed as you normally would. At the point you want
 to insert an AnalysisPageServer dataset, make a call to `embed.APS.dataset()`.
 In typical usage the first argument is a code block wrapped in `{`curly brackets`}` that contains
 your plotting code. You also have to

@@ -31,20 +31,38 @@
 ##' variable in persistent storage that should be used to initialize the value of the parameter.
 ##' The front end will provide some mechanism to change the persistent value, but until the user does
 ##' so the param will be initialized from the value in the persistent space.
+##' @param persistent.dependencies A character vector or NULL (default) specifying the names
+##' of other parameters on
+##' which this one "depends". It is an error to provide this when \code{persistent} is NULL.
+##' When \code{persistent} is non-NULL, providing \code{persistent.dependencies} makes this parameter
+##' not just "persistent" but "conditionally persistent", which
+##' is to say that the persistent value for this parameter is actually a hash lookup based on the
+##' the other parameters specified in this vector. A typical example would be a pheno fields parameter
+##' which is dependent on the study parameter. The names are taken from the Page namespace, which
+##' means that a parameter's \code{$name} is used when this differs from its \code{$persistent}
+##' slot.
 ##' @return An AnalysisPageParam. This is just a list with class name slapped on.
 ##' @author Brad Friedman
 ##' @examples
 ##'   x <- simple.param("xmin", label="X-min", description="Minimum x value", type="text")
 ##' @export
-simple.param <- function(name, label=name, description=label, value="", type="text",
+simple.param <- function(name,
+                         label = name,
+                         description = label,
+                         value = "",
+                         type = "text",
                          advanced = 0,
                          show.if = NULL,
                          display.callback = NULL,
-                         size="medium",
-                         required=TRUE,
-                         persistent=NULL
+                         size = "medium",
+                         required = TRUE,
+                         persistent = NULL,
+                         persistent.dependencies = NULL
                          )  {
   .validate.known.param.size(size)
+
+  if(!is.null(persistent.dependencies) && is.null(persistent))
+    stop("You provided persistent.dependencies but not persistent")
 
   param <- list(name=name,
                 label=label,
@@ -55,7 +73,12 @@ simple.param <- function(name, label=name, description=label, value="", type="te
                 show.if=show.if,
                 size=size,
                 required=required)
-  if(!is.null(persistent))  param$persistent <- persistent
+  if(!is.null(persistent))  {
+    param$persistent <- persistent
+    if(!is.null(persistent.dependencies))
+      param$persistent_dependencies<- persistent.dependencies
+  }
+
   if(!is.null(display.callback))  param$display.callback <- display.callback
 
   class(param) <- "AnalysisPageParam"
@@ -72,7 +95,7 @@ simple.param <- function(name, label=name, description=label, value="", type="te
 }
 
 
-## validate the show.if value---either NULL or a length 2 list, as described in the doc for simple.param
+## validate the show.if value---either NULL or a length 2 or 3 list, as described in the doc for simple.param
 .validate.display.callback <- function(display.callback)  {
   is.null(display.callback) && return()
   is.list(display.callback) || stop("display.callback is non-NULL and not a list")
@@ -335,6 +358,12 @@ bool.param <- function(...)  {
 ##' of strings. The "id-long_name-reason" type is a special type for search hits, where an array of hashes is returned, each
 ##' hash having "id", "long_name" and "reason" components.
 ##' @param delay.ms Delay, in milliseconds, that the front-end should wait after keystrokes or paste before submitting queries. Default, 0, means no delay.
+##' @inheritParams simple.param
+##' @param extra.persistent.dependencies Character vector specifying names of other parameters on which this one is conditionally persistent. See arg
+##' \code{persistent.dependencies} in \code{\link{simple.param}}. Whatever is provided in \code{extra.persistent.dependencies}
+##' is taken \emph{in addition to} with \code{unname(dependent.params)}. This is because
+##' if a combobox is persistent then it must be so conditional on its dependent parameters.
+##' It is an error to specify this for a non-persistent parameter.
 ##' @return An AnalysisPageParam
 ##' @author Brad Friedman
 ##' @examples
@@ -344,6 +373,8 @@ bool.param <- function(...)  {
 combobox.param <- function(..., uri, dependent.params, prompt = "Enter search term", n.param=NULL,
                            allow.multiple = FALSE,
                            response.type="simple",
+                           persistent = NULL,
+                           extra.persistent.dependencies = NULL,
                            delay.ms = 0)  {
   ## A dynamic list of options. The list is not known before page load time. It has to be found out by an AJAX request.
   ## This is made after substituting :-prefixed parameters in the uri according to the current values of other fields,
@@ -353,7 +384,15 @@ combobox.param <- function(..., uri, dependent.params, prompt = "Enter search te
   ## one of the dependent parameters changes---or during typeahead, with the current value provided as one of the parameters.
   ## Its actually the same thing---the second is a special case of the first, where the same element is one of the dependnet values.
 
-  param <- simple.param(..., type="combobox")
+  if(!is.null(persistent))  {
+    persistent.dependencies <- unique(c(unname(dependent.params),
+                                        extra.persistent.dependencies))
+  }  else  {
+    persistent.dependencies <- NULL
+  }
+  param <- simple.param(..., type="combobox",
+                        persistent = persistent,
+                        persistent.dependencies = persistent.dependencies)
   param$uri <- uri
   param$dependent <- dependent.params
   param$response.type <- response.type
@@ -364,7 +403,7 @@ combobox.param <- function(..., uri, dependent.params, prompt = "Enter search te
   ## If you do
   ##   listvar$elem <- NULL
   ## it has no effect if $elem is not already in the list, and it actually delete the element if it is already in the
-  ## list (how am I just learning this after 8 years of programming in R?)
+  ## list
   ## And there is further weirdness in that the c(., list())  construction will strip the param of its class!
   save.class <- class(param)
   param <- c(param, list(n.param= n.param))

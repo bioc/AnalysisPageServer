@@ -5,7 +5,7 @@
 \usage{
 combobox.param(..., uri, dependent.params, prompt = "Enter search term",
   n.param = NULL, allow.multiple = FALSE, response.type = "simple",
-  delay.ms = 0)
+  persistent = NULL, extra.persistent.dependencies = NULL, delay.ms = 0)
 }
 \arguments{
 \item{...}{Passed through to \code{\link{simple.param}}. This includes at least "name", optionally "label", "description" and "value", but not "type".}
@@ -28,6 +28,17 @@ Default: FALSE}
 \item{response.type}{A string. "simple" means that the response will be a simple array
 of strings. The "id-long_name-reason" type is a special type for search hits, where an array of hashes is returned, each
 hash having "id", "long_name" and "reason" components.}
+
+\item{persistent}{Character or NULL. If non-NULL then it is passed to the front-end. It names a
+variable in persistent storage that should be used to initialize the value of the parameter.
+The front end will provide some mechanism to change the persistent value, but until the user does
+so the param will be initialized from the value in the persistent space.}
+
+\item{extra.persistent.dependencies}{Character vector specifying names of other parameters on which this one is conditionally persistent. See arg
+\code{persistent.dependencies} in \code{\link{simple.param}}. Whatever is provided in \code{extra.persistent.dependencies}
+is taken \emph{in addition to} with \code{unname(dependent.params)}. This is because
+if a combobox is persistent then it must be so conditional on its dependent parameters.
+It is an error to specify this for a non-persistent parameter.}
 
 \item{delay.ms}{Delay, in milliseconds, that the front-end should wait after keystrokes or paste before submitting queries. Default, 0, means no delay.}
 }

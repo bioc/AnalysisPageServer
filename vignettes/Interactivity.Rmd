@@ -15,7 +15,7 @@ options(markdown.HTML.options = "toc")
 
 Not only does the AnalysisPageServer display your data and plot, it
 also implements sorting, numeric and text filtering, selecting and
-taggin points, zoom, full screen mode, and download. Using the example
+tagging points, zoom, full screen mode, and download. Using the example
 data set this document will walk you through each of these interactions.
 
 The interactions are very easy to learn, and you will probably
