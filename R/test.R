@@ -129,10 +129,10 @@ check.signal <- function(expr, signo,
 ##' @seealso \code{\link[RUnit]{runTestSuite}}, \code{\link[base]{require}}
 ##' @export
 ##' @param pattern String. Regular expression. Only filenames matching
+##' @param package Name of package to test. Default: "AnalysisPageServer"
 ##' this expression will be included in the test harness. Default:
 ##' \code{"^test.*R$"}.
-test.package <- function(pattern = "^test.*R$")  {
-  package <- "AnalysisPageServer"
+test.package <- function(pattern = "^test.*R$", package = "AnalysisPageServer")  {
 
   require(RUnit) || stop("Couldn't load package 'RUnit'")
   

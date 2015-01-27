@@ -44,10 +44,11 @@ test.check.memory <- function()  {
   check.memory(events,
                max.mb = current.used / 2)
 
-  checkEquals(last.args(listener),
-              list(used.mb = current.used,
-                   max.mb = current.used / 2),
+  got <- last.args(listener)
+  checkEquals(names(got), c("used.mb", "max.mb"),
               "event is triggered when max.mb is less than current used Mb")
+  checkEquals(got$max.mb, current.used / 2)
+  checkTrue(got$used.mb >= current.used)  ## memory might have gone up a tiny bit
 }
 
 
