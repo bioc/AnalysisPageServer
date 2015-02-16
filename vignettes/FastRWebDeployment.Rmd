@@ -54,8 +54,13 @@ install.packages(c('Rserve','FastRWeb'),,'http://www.rforge.net/')
 
 You may need to add the switch `type="source"` to this.
 
-After you install `FastRWeb` you have to set up a `FastRWeb` environment. See the <a href="http://svn.rforge.net/FastRWeb/trunk/INSTALL">documentation
-for that package</a> for more information. This is typically accomplished by running the `install.sh` script
+If you get an error installing the Cairo dependency you may be able to work around this by installing the binary version rather than the source.
+If you are using a version of R for which there is not a binary available, you can force the installation by downloading the correct
+binary package for your OS from the [Cairo CRAN page](http://cran.r-project.org/web/packages/Cairo/index.html), then installing from the command
+line with something like `R CMD INSTALL /path/to/downloaded/tarball/Cairo_99.9.9.tgz`. Then go back and try again to install `FastRweb`.
+
+After you install `FastRWeb` you have to set up a `FastRWeb` environment. See the [documentation for that package](http://svn.rforge.net/FastRWeb/trunk/INSTALL)
+for more information. This is typically accomplished by running the `install.sh` script
 that comes with the package, which sets up the `/var/FastRWeb` directory for you:
 
 ```{r eval = FALSE}

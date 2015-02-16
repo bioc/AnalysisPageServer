@@ -428,15 +428,23 @@ static.analysis.page <- function(outdir,
 ##' @param outdir Target directory. This directory will contain your index.html file.
 ##' @param client.basedir Path to client files. Default: \code{system.file("htdocs/client/dist-apss", package = "AnalysisPageServer")}.
 ##' Probably should not be modified except during development work on the client.
+##' @param include.landing.page Boolean. Should I include the landing page "analysis-page-server-static.html"? Default: TRUE
 ##' @param ... Passed through to \code{file.copy}, such as \code{overwrite = TRUE}
 ##' @return Whatever file.copy returns.
 ##' @author Brad Friedman
 ##' @export
 ##' @examples
 ##' message("See vignette embedding.html")
-copy.front.end <- function(outdir, client.basedir = system.file("htdocs/client/dist-apss", package = "AnalysisPageServer"),
+copy.front.end <- function(outdir,
+                           client.basedir = system.file("htdocs/client/dist-apss",
+                             package = "AnalysisPageServer"),
+                           include.landing.page = TRUE,
                            ...)  {
-  file.copy(dir(client.basedir, full.names = TRUE), outdir, recursive = TRUE, ...)
+  res <- file.copy(dir(client.basedir, full.names = TRUE), outdir, recursive = TRUE, ...)
+  if(!include.landing.page)  {
+    landing.page <- file.path(outdir, "analysis-page-server-static.html")
+    unlink(landing.page)
+  }
 }
 
 

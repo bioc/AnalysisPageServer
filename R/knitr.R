@@ -98,7 +98,7 @@ setup.APS.knitr <- function(outdir,
 
   set.APS.outdir(outdir)
   
-  invisible(copy.front.end(outdir = outdir, overwrite = TRUE))
+  invisible(copy.front.end(outdir = outdir, overwrite = TRUE, include.landing.page = FALSE))
   
   if(include.toc)
     options(markdown.HTML.options = "toc")
