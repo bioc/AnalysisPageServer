@@ -84,6 +84,8 @@ work out of the box. To start Chrome this way on a Mac
 open a Terminal and type `open -a "Google Chrome" --args --allow-file-access-from-files`.
 On windows Chrome can be started from the command line  with `"C:\PathTo\Chrome.exe" --allow-file-access-from-files`.
 (To find the path to your Chrome executable open the URL `chrome://version` within Chrome.)
+If data sets are not rendering in Safari, enable the Developer menu (Preferences -> Advanced -> "Show Develop menu in menu bar"),
+then select "Disable local file restrictions" from the Develop menu.
 
 For dynamic content a server is essential since all plots and data are
 generated on-the-fly. For development purposes it is possible to

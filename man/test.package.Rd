@@ -3,10 +3,12 @@
 \alias{test.package}
 \title{test.package}
 \usage{
-test.package(pattern = "^test.*R$")
+test.package(pattern = "^test.*R$", package = "AnalysisPageServer")
 }
 \arguments{
-\item{pattern}{String. Regular expression. Only filenames matching
+\item{pattern}{String. Regular expression. Only filenames matching}
+
+\item{package}{Name of package to test. Default: "AnalysisPageServer"
 this expression will be included in the test harness. Default:
 \code{"^test.*R$"}.}
 }

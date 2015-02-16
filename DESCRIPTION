@@ -24,6 +24,5 @@ Suggests:
     SVGAnnotation,
     knitr
 Enhances: Rook (>= 1.1), fork, FastRWeb, ggplot2
-URL: http://research-pub.gene.com/AnalysisPageServer
 VignetteBuilder: knitr
 biocViews: GUI, Visualization, DataRepresentation
