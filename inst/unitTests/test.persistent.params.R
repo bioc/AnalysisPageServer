@@ -85,7 +85,7 @@ test.persistent.params <- function()  {
   regDepPersInvalidPersDep <- studyColorReg(persDep1 = list(color = "wrongNameForStudy"))
   dies.ok(
           validate(regDepPersInvalidPersDep)
-          , " error message here ")
+          , "dependent on non-persistent parameter")
 
   regDepPers <- studyColorReg(persDep1 = list(color = "study"))
   lives.ok(
@@ -189,7 +189,7 @@ test.validate.persistent.param.dependencies <- function()  {
   dies.ok(
           .validate.registry(reg2)
           , "dependencies have a cycle")
-
   
   
-)}
+  
+}
