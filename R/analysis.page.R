@@ -497,6 +497,74 @@ annotate.data.frame <- function(obj, required.fields=c("x","y"), signif.digits=3
 }
 
 
+.fileIdAttribute <- "___APS_fileContentId___"
+
+
+## File parameters appear in the main parameter as list(fileContentId = fileId)
+## This has to be replaced with list(name =, tmp_name =, fh =), as described
+## in file.param doc. These are taken from the file.params list.
+##
+## The list(fileContentId = fileId) can potentially appear anywhere within the params
+## structure, so we traverse the whole thing recursively, and replace them where
+## they are found.
+##
+## The return value is a length 2 list. First entry is the params structure,
+## with file params injected. Second entry is whatever remains of the file.params
+## list.
+.inject.file.params <- function(params, file.params,
+                                debug = FALSE)  {
+
+  if(debug)  {
+    message("IFP:")
+    str(list(params, FP = file.params))
+  }
+            
+  ## this prevents messing up vectors
+  if(!is.list(params))  {
+    if(debug)
+      message("params not a list")
+    return(list(params, file.params))
+  }
+  
+  injected <- lapply(params, function(par)  {
+    if(debug)  {
+      message("  par")
+      str(list(par, FP = file.params))
+    }
+    
+    if(is.list(par) &&
+       length(par) == 1 &&
+       !is.null(names(par)) &&
+       names(par) == .fileIdAttribute)  {
+      fileId <- par[[.fileIdAttribute]]
+      if(fileId %in% names(file.params))  {
+        if(debug)
+          message("  par is a file param---swapping out file info")
+        
+        ## This is a file param---Swap out the file info
+        fp <- file.params[[fileId]]
+        file.params[[fileId]] <<- NULL  ## delete this from file.params
+        return(fp)
+      }
+    }
+
+    ## otherwise recurse
+    if(debug)
+      message("  par not a file param---recursing")
+
+    got <- .inject.file.params(par, file.params, debug = debug)
+    file.params <<- got[[2]]
+    return(got[[1]])
+  })
+
+  if(debug)  {
+    message("IFP done, returning")
+    str(list(injected, FP = file.params))
+  }
+  
+  return(list(injected, file.params))
+}
+
 
 ## Prepare parameter list for opening graphics device and calling handler
 ##
@@ -505,15 +573,20 @@ annotate.data.frame <- function(obj, required.fields=c("x","y"), signif.digits=3
 ## return List with \code{$svg} and \code{$other} elements, each being a named list of JSON-decoded parameter values.
 .prepare.params <- function(params, file.params=list(), device=svg)  {
   is.list(params) || stop("params is not a list: ", paste(collapse= " ", is(params)))
- 
+  
   ## file uploads get put into both POST and FILES. Take them out of hte general params, which are going ot be
   ## JSON-decoded, and just keep them in FILES.
   params <- params[! names(params) %in% names(file.params)]
 
-  params <- c(lapply(params, function(p)  tryCatch(fromJSON(p),
-                                                   error=function(e) stop("While JSON decoding parameter value '", p,
-                                                                          "': ", e$message))),
-              file.params)
+  params <- lapply(params, function(p)  tryCatch(fromJSON(p),
+                                                 error=function(e) stop("While JSON decoding parameter value '", p,
+                                                   "': ", e$message)))
+
+  ## Now inject the file structures into the parameters
+  injected <- .inject.file.params(params, file.params)
+  params <- injected[[1]]
+  file.params <- injected[[2]]
+  params <- c(params, file.params)  ## attach any remaining file params
 
   ## don't allow specifying of plot filename through params list
   all.plot.params <- setdiff(names(formals(device)), "filename")

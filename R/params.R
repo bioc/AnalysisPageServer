@@ -139,10 +139,7 @@ simple.param <- function(name,
 ##' (Currently there is no server-side mechanism for storing uploaded files, so asynchronous upload is not possible.)
 ##' The description field should describe what type of file is expected.
 ##'
-##' When the front-end submits, this should be submitted in the same manner as an \code{<input type="file"/>} would in a traditional
-##' non-AJAX form.
-##'
-##' Using RApache/AnalysisPageRApacheApp on the server side
+##' On the server side
 ##' your handler will get a list with "name", "tmp_name" and "fh"
 ##' elements giving the filename, and path to a local file (usually in /tmp), and the filehandle open for reading.
 ##' @title file.param

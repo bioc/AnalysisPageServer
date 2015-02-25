@@ -94,6 +94,35 @@ test.analysis.page <- function()  {
 }
 
 
+test.inject.file.params <- function()  {
+  library(RUnit)
+  library(AnalysisPageServer)
+  .inject.file.params <- AnalysisPageServer:::.inject.file.params
+
+
+  file1 <- list(foo= 1, bar = 2)
+  file2 <- list(baz = 3, bazoo = 4)
+  file3 <- list(jipi = "japa")
+  fp <- list(F1 = file1, F2 = file2, F3 = file3)
+
+  pars <- list(list(`___APS_fileContentId___` = "F1"),
+               list(1,
+                    list(foo = "bar",
+                         bar = list(`___APS_fileContentId___` = "F2")),
+                    list(`___APS_fileContentId___` = "invalidFID"),
+                    LETTERS))
+
+  
+
+  exp <- pars
+  exp[[1]] <- file1
+  exp[[2]][[2]]$bar <- file2
+
+  got <- .inject.file.params(pars, fp)
+  checkEquals(got,
+              list(exp, fp[3]))
+}
+
 test.prepare.params <- function()  {
   library(RUnit)
   library(AnalysisPageServer)
@@ -133,7 +162,24 @@ test.prepare.params <- function()  {
   checkEquals(got2$other,
               c(got$other, fp),
               "FILES param is passed through as-is, while others are still JSON decoded")
-  
+
+
+
+  pars <- list(foo = 1,
+               bar = list(bar = 2,
+                 baz = list(`___APS_fileContentId___` = "F1")),
+               baz = list(`___APS_fileContentId___` = "F2"))
+  parsWithFile <- JEAL(pars)
+  filePars <- list(F1 = "file-1-structure",
+                   F2 = "file-2-structure",
+                   F3 = "file-3-structure")
+
+  got <- pp(parsWithFile, filePars)
+  exp <- pars
+  exp$bar$baz <- filePars[[1]]
+  exp$baz <- filePars[[2]]
+  exp <- c(exp, filePars[3])
+  checkEquals(got$other, exp)
 }
 
 
