@@ -383,6 +383,11 @@ static.analysis.page <- function(outdir,
                                      uniquify.ids.suffix = word,
                                      verbose = FALSE)#verbose)
         })
+      }  else  {
+        ## I still need to uniquify the plot, otherwise I might get mixed up glyphs
+        ## when multiple plots are on one page.
+        uniquify.ids.in.svg.files(svg.filenames = plot.file.fullpath,
+                                  suffixes = word)
       }
 
       if(ncol(adf) > 2 & !show.xy[i])

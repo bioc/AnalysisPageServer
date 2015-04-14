@@ -12,7 +12,8 @@
 ##' @param y Vector of y values (same length as x)
 ##' @param ids Vector of ids (same length as x)
 ##' @param group.lengths Positive integer vector summing to \code{x} (an ordered partition of \code{length(x)})
-##' giving length of contiguous groups of elements. Each integer must be at least 3. The search will be for
+##' giving length of contiguous groups of elements. Each integer must be at least 3 or it won't be able to
+##' activate that group. The search will be for
 ##' contiguous elements, then continue where the last one left off, possibly after a gap. Default: \code{length(x)},
 ##' look for a single contiguous block.
 ##' @param class.name Class name to apply to points (default: "plot-point")
@@ -51,7 +52,6 @@ annotate.analysis.page.svg <- function(svg.filename,
   err.mesg.buffer <- ""
 
   sum(group.lengths) == n || stop("sum(group.lengths) = ", sum(group.lengths), " but I am expecting ", n)
-  all(group.lengths >= 3) || stop("group.lengths must all be >= 3")
 
   for(i.gp in 1:length(group.lengths))  {
     ## these are indices into x, y and ids
