@@ -140,8 +140,8 @@ simple.param <- function(name,
 ##' The description field should describe what type of file is expected.
 ##'
 ##' On the server side
-##' your handler will get a list with "name", "tmp_name" and "fh"
-##' elements giving the filename, and path to a local file (usually in /tmp), and the filehandle open for reading.
+##' your handler will get a list with "name", "tmp_name"
+##' elements giving the filename, and path to a local file (usually in /tmp)
 ##' @title file.param
 ##' @param ... Pass through to \code{\link{simple.param}}, including at least "name" but not including "type".
 ##' @param template.uri URI, possibly with :-prefixed parameter names. For example "/get?x=:x;y=:y" has parameters "x" and "y". (See \code{dependent.params} next).

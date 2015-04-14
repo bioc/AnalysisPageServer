@@ -247,7 +247,8 @@ rapache.app.from.registry <- function(registry,
     function(...)  {
       finish <- tryKeepTraceback(local.fcn(...))
       if(is(finish, "try-error"))  {
-        err.msg <- paste(collapse="", finish$error$message)
+        err.msg <- paste0("in ", deparse(conditionCall(finish$error)), ": ",
+                          conditionMessage(finish$error))
         tb <- paste(collapse="\n", getTraceback(finish))
         tb <- sub("local.fcn\\(", paste(sep="", local.fcn.name, "("), tb)
         

@@ -221,6 +221,8 @@ new.FastRWeb.analysis.page.run <- function(app,
   ## handle all requests. This thing has to become the "run" function in the final FastRWeb
   ## script. But right now we are just making the function.
   handler <- function(...)  {
+    if(verbose)
+      info(logger, "Starting FastRWeb handler")
     ## I don't know why I'm qualifying this with .GlobalEnv but that's
     ## what parse.multipart does so I'm doing it, too. I guess
     ## somehow it is safer than just request, I don't know.
@@ -239,11 +241,10 @@ new.FastRWeb.analysis.page.run <- function(app,
     ## to pass in arguments!
     GET <<- as.list(.parse.url.query.string(req$query.string))
 
-
-    parsed.post <- if(grepl("application/x-www-form-urlencoded", request$c.type))  {
-      .parse.url.query.string(rawToChar(request$body))
-    }  else if (grepl("multipart/form-data", request$c.type))  {
-      parse.multipart(request)
+    parsed.post <- if(grepl("application/x-www-form-urlencoded", req$c.type))  {
+      .parse.url.query.string(rawToChar(req$body))
+    }  else if (grepl("multipart/form-data", req$c.type))  {
+      parse.multipart(req)
     }  else  {
       list()
     }

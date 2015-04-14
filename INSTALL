@@ -1,26 +1,16 @@
-# Installation instructions
+# Special installation instructions
 
-## Rook dependency
+## `'__debug' file not found` error with OSX Command Line Tools 6.3
 
-For Rook deployment users will need version at least 1.1.
-
-As of September 2014 this is not available on CRAN and must
-be installed from github:
+If you see this error when installing
 
 ```
-library(devtools)
-install_github('Rook','jeffreyhorner')
+...
+In file included from /Library/Developer/CommandLineTools/usr/bin/../include/c++/v1/memory:604:
+/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1/iterator:341:10: fatal error: '__debug' file not found
+#include <__debug>
+         ^
+...
 ```
 
-Once available on CRAN this step will be unnecessary.
-
-You can still use most of the functionality of AnalysisPageServer without
-Rook. In particular, if you only want to make static reports you don't need
-it, and even if you are going to turn on a server, you don't need Rook to
-deploy via FastRWeb or Apache.
-
-## Running on windows
-
-I've set `OS_type: unix` because I've never tested the package on windows,
-only on OS X and linux. It is possible that it might be
-at least partially functional under windows.
+Then see workaround [here](http://stackoverflow.com/questions/29529455/missing-c-header-debug-after-updating-osx-command-line-tools-6-3)
