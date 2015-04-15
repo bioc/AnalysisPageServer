@@ -217,9 +217,8 @@ test.rapache <- function()  {
   check.response(res,
                  list(status=400, content.type="text/plain"),
                  "error response")
-  checkEquals(res$body[1:2],
-              c("ERROR","No such page 'nonsense' in registry"),
-              "error message starts correctly")
+  checkEquals(res$body[1], "ERROR", "error message starts correctly (first line)")
+  checkTrue(grepl("No such page 'nonsense' in registry", res$body[2]), "error message starts correctly (second line)")
 
 
 
@@ -389,7 +388,7 @@ test.rapache <- function()  {
   checkEquals(id, 1)
   checkEquals(finish.args[c("analysis.id", "success")],
               list(analysis.id = 1, success = FALSE))
-  checkTrue(grepl("^ERROR\nNo such page 'foo' in registry", finish.args$error))
+  checkTrue(grepl("^ERROR\n.*No such page 'foo' in registry", finish.args$error))
 
 
   ## Now register handlers for plot retrieval
