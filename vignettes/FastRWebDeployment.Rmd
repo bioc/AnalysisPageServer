@@ -211,8 +211,8 @@ volcano.page <- new.analysis.page(handler = volcano.handler, name = "volcano",
     description = "Draw the Maunga Whau Volcano in Two Colors")
 reg <- new.registry(volcano.page)
 
-myRun <- new.FastRWeb.analysis.page.run(reg,
-                                        FastRWeb.scriptname = "APS")
+run <- new.FastRWeb.analysis.page.run(reg,
+                                      FastRWeb.scriptname = "APS")
 ```
 
 
