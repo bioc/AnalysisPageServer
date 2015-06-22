@@ -78,7 +78,7 @@ control enable
 ```
 
 ***IMPORTANT!!!*** In the last line change `control enable` to `control disable`. This change is essential as the control commands prevent `Rserve` from
-handling parallel connections correctly, and will lead your server to crash as badly as Rook/Rhttpd. That will give you this configuration:
+handling parallel connections correctly, and your server will crash. That will give you this configuration:
 
 ```
 socket /var/FastRWeb/socket
@@ -93,10 +93,19 @@ complete the installation and start your `FastRWeb`-configured `Rserve` server.
 
 ## Developing your FastRWeb Application
 
+```{r landing-page, echo = FALSE}
+f <- formals(AnalysisPageServer::new.FastRWeb.analysis.page.run)
+unslash <- function(x) sub("/+$", "", sub("^/+", "", x))
+landingPageURL <- file.path("http://localhost", 
+                            unslash(f$FastRWeb.prefix),
+                            "APS",
+                            unslash(f$front.end.location),
+                            "analysis-page-server.html")
+```
+
 In the default configuration, `FastRWeb` maps URLs to scripts in the directory `/var/FastRWeb/web.R/`. You can deploy as many AnalysisPageServer applications
-as you want by creating multiple files in that directory. Here we'll just create one, called `APS.R`. With default configuration your server would then be located under
-the `http://hostname/cgi-bin/R/APS` URL, with landing page `http://hostname/cgi-bin/R/APS/client/analysis-page-server.html` (if you are running serving and client on
-the same machine then you could just use `localhost` for `hostname`.
+as you want by creating multiple files in that directory. Here we'll just create one, called `APS.R`. With default configuration your server would then be located at
+<code>`r landingPageURL`</code> URL.
 
 The content of a `FastRWeb` script is a bit of code which will get evaluated each time a request is made. At some point in the script a function
 must be assigned to the top-level variable `run`. In some ways the `run` function is similar to `AnalysisPageServer`'s idea of what an `AnalysisPage` handler
@@ -141,7 +150,7 @@ In any case `FastRWeb.scriptname` is required, and it has to be the same as the 
 of the `FastRWeb` script from which the app will be server, without the `.R` suffix.
 
 Once you put that in the file `/var/FastRWeb/web.R/APS.R` you can then point your
-browser to the landing page <a href="http://localhost/cgi-bin/R/APS/client/analysis-page-server.html">http://localhost/cgi-bin/R/APS/client/analysis-page-server.html</a>.
+browser to the landing page <a href="`r landingPageURL`">`r landingPageURL`</a>.
 
 ## Deploying your FastRWeb/Rserve Application
 
