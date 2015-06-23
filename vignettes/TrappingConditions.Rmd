@@ -1,0 +1,120 @@
+<!--
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{8. Condition Trapping}
+-->
+
+<link rel="stylesheet" type="text/css" href="AnalysisPageServer.css">
+
+```{r echo = FALSE}
+options(markdown.HTML.options = "toc")
+```
+
+# Condition Trapping with AnalysisPageServer
+
+In R "conditions" are messages, warnings and
+errors. `AnalysisPageServer` contains an API, completely independent
+of its other components, to trap all
+of these and be able to examine the call stacks.
+
+First let's make some functions so that we'll have non-trivial call stacks.
+
+```{r}
+e2 <- function(...)  stop(...)
+e1 <- function(...)  e2(...)
+
+w2 <- function(...)  warning(...)
+w1 <- function(...)  w2(...)
+
+m2 <- function(...)  message(...)
+m1 <- function(...)  m2(...)
+```
+
+To use this functionality wrap your code in a call to
+`tryKeepConditions()`, which returns an object of class
+class `"AnalysisPageValueWithConditions"`.
+Despite the name this is completely independent of the rest of
+`AnalysisPageServer`. We'll build two such objects, one without an
+error and one with
+
+```{r}
+library(AnalysisPageServer)
+vwc <- tryKeepConditions({
+  m1("first message")
+  m1("second message")
+  w1("a warning")
+  42
+})
+vwcErr <- tryKeepConditions({
+  w1("a warning before the error")
+  e1("this is a bad error")
+  42
+})
+```
+
+All of the functions to access these types of objects begin with
+`vwc.`.
+
+Check if your expression resulted in an error, and, if not, see what
+the value was (`NULL` if it did result in an error):
+
+```{r}
+vwc.is.error(vwc)
+vwc.is.error(vwcErr)
+vwc.value(vwc)
+vwc.value(vwcErr)
+```
+
+To inspect the three types of conditions there are a family of
+functions called `vwc.TYPE(s).condition(s)()`, `vwc.TYPE(s)()` and
+`vwc.TYPE(s).traceback(s)()`
+where `TYPE` is `message`, `warning` or `error`. The `(s)` is present
+in the function names for messages and warnings since there can be
+more than one, but absent for errors, since there can be only one.
+
+`vwc.TYPE(s).condition(s)()` returns the condition object, or, for messages
+and warnings, a list of all the condition objects:
+
+```{r}
+vwc.messages.conditions(vwc)
+vwc.messages.conditions(vwcErr)
+vwc.warnings.conditions(vwc)
+vwc.warnings.conditions(vwcErr)
+vwc.error.condition(vwc)
+vwc.error.condition(vwcErr)
+```
+
+`vwc.TYPE(s)` returns the condition messages as strings or character
+vectors:
+```{r}
+vwc.messages(vwc)
+vwc.messages(vwcErr)
+vwc.warnings(vwc)
+vwc.warnings(vwcErr)
+vwc.error(vwcErr)
+```
+
+(`vwc.error(vwc)` would throw a (new) error if the expression did not
+result in an error, so we don't call it here.)
+
+Finally, `vwc.TYPE(s).traceback(s)()` return tracebacks as character
+vectors. Note that the "real" tracebacks can be extracted from the
+condition objects as returned by `vwc.TYPE(s).conditions(s)()`, but
+these functions return something suitable for showing to an end user.
+
+(Since this vignette was rendered with `knitr` the call stacks are fairly complicated,
+but if you run it in an R session you would just see the top few levels.)
+
+```{r}
+vwc.messages.tracebacks(vwc)
+vwc.messages.tracebacks(vwcErr)
+vwc.warnings.tracebacks(vwc)
+vwc.warnings.tracebacks(vwcErr)
+vwc.error.traceback(vwc)
+vwc.error.traceback(vwcErr)
+```
+
+# SessionInfo
+
+```{r}
+sessionInfo()
+```
