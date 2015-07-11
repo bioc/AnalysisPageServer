@@ -180,7 +180,7 @@ file.param <- function(..., template.uri=NULL, dependent.params=NULL)  {
   ## This can happen (a lot) if the URI contains JSON-encoded values.
   missing.pars <- setdiff(reqd.pars, uri.params)
   length(missing.pars) == 0 || stop("Dependent parameters [",
-          paste(collapse = "missing.pars"), "] not templated in URI: ",
+          paste(collapse = " ", missing.pars), "] not templated in URI: ",
           uri)
 }
 

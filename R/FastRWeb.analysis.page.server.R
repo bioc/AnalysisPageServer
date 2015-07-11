@@ -356,6 +356,7 @@ new.FastRWeb.analysis.page.run <- function(app,
     }  else if (!is.null(EP) && grepl(REST.path.regex, path)) {
       query <- sub(REST.path.regex, "", path)
       query <- sub("^/+", "", query)
+      query <- urlEncode(query)
       info(logger, paste0("REST request query='", query, "'"))
       payload <- EP$request(query)
       cmd <- "html"  ## doesn't really mean html--it just means that payload will contain the content
