@@ -6,7 +6,10 @@ library(RUnit)
 
 ## this handles R3-type SVG docs as well as the older types
 safeGetPlotPoints <- function(svgdoc)  {
-  tryCatch(getPlotPoints(svgdoc),
+  tryCatch({
+    library(SVGAnnotation)
+    getPlotPoints(svgdoc)
+  },
            error = function(e)  {
              Filter(function(node)  {
                a <- xmlAttrs(node)
