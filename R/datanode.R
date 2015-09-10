@@ -1,6 +1,10 @@
-# not exported--- this is the "abstract" base constructor
+## not exported--- this is the "abstract" base constructor
+## custom, if provided, is a named list, and gives more metadata.
+## Each entry in the list is a charvec of HTML to render, and normally
+## the whole thing should be rendered as more sections of the accordion
 new.datanode <- function(type, name, value, label=name, description=label,
-                         warnings = character())  {
+                         warnings = character(),
+                         custom = NULL)  {
   
   retval <- list(type=type,
                  name=name,
@@ -8,6 +12,7 @@ new.datanode <- function(type, name, value, label=name, description=label,
                  description=description,
                  value=value)
   if(length(warnings) > 0)  retval$warnings <- warnings
+  if(length(custom) > 0)  retval$custom <- custom
   
   class(retval) <- "AnalysisPageDataNode"
 
@@ -18,7 +23,7 @@ new.datanode <- function(type, name, value, label=name, description=label,
 .validate.datanode <- function(node, prefix = "")  {
   .validate.type(node, "AnalysisPageDataNode", prefix)
   .validate.list.with.names(node, c("type", "name", "label", "description", "value"),
-                            optional.names = "warnings",
+                            optional.names = c("warnings", "custom"),
                             prefix = paste(prefix, "data node: "))
   
   for(param in c("type", "name", "label", "description"))
@@ -28,6 +33,9 @@ new.datanode <- function(type, name, value, label=name, description=label,
     .validate.type(node$warnings, is.character)
     .validate.type(node$warnings, is.vector)
   }
+  
+  if(!is.null(node$custom))
+    .validate.custom(node$custom, paste0(prefix, "$custom: "))
   
   type <- node$type
   constructor.name <- paste(sep=".", "new.datanode", type)
@@ -41,6 +49,21 @@ new.datanode <- function(type, name, value, label=name, description=label,
   validator(node, prefix)
 }
 
+
+.validate.custom <- function(custom, prefix)  {
+  .validate.type(custom, is.list, prefix)
+
+  
+  if(length(custom) > 0)
+    .validate.type(names(custom), Negate(is.null), paste0(prefix, "names: "))
+    
+  for(sectionName in names(custom))  {
+    section <- custom[[sectionName]]
+    sectionPrefix <- paste0(prefix, "$", sectionName, ": ")
+    .validate.type(section, is.character, sectionPrefix)
+    .validate.type(section, is.vector, sectionPrefix)
+  }
+}
 
 
 ##' Construct a new simple-type data node

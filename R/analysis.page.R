@@ -1,3 +1,91 @@
+
+
+.request.env <- list2env(list())
+
+##' Get/set section name for "messages" section
+##'
+##' Any \code{message}s thrown during execution of a page handler
+##' are display in a new section of the accordion. This controls
+##' the name. This is reset to "Messages" for each page, but
+##' the page can call this function to get or set the name.
+##'
+##' Note that all messages thrown will be collected at the end
+##' and made into this single section.
+##' Therefore, if the message section is renamed after throwing a message then
+##' both the old and any newer messages will appear under the new name.
+##'
+##' If a section of the same name is created using \code{\link{appendCustomContent}}
+##' then these messages will just be appended to the end.
+##' @param sectionName If present, new section name (e.g.
+##' "Your Messages").
+##' @return A string, the section name for the messages section
+##' @author Brad Friedman
+##' @export
+messageSectionName <- function(sectionName)  {
+  if(!missing(sectionName))
+    assign("messageSection", sectionName, pos = .request.env)
+  .request.env$messageSection
+}
+
+##' Functions to manage custom content other aspects of the request-specific environment
+##'
+##' Custom content are HTML rendered
+##' as additional accordion sections. From the data structure
+##' point of view these are represented as a named of list
+##' of character vectors. The names are the section headers.
+##' Use \code{\link{appendCustomSection}} to add more content.
+##' @return \code{getCustomContent} returns named list of character vectors
+##' @author Brad Friedman
+##' @export
+##' @examples
+##' appendCustomContent(sectionName = "foo", content = c("<i>bar</i><br>","<b>baz</b>"))
+##' getCustomContent()
+##' clearRequestEnv()
+##' @rdname requestEnv
+getCustomContent <- function()  {
+  .request.env$custom
+}
+
+##' \code{appendCustomContent} adds custom content to be rendered in separate accordion section
+##' @param sectionName Name of section (string)
+##' @param content Character vector of HTML content to append
+##' @return \code{appendCustomContent} does not return anything good.
+##' @export
+##' @rdname requestEnv
+appendCustomContent <- function(sectionName, content)  {
+  (is.character(content) && is.vector(content)) || stop("New content must be character vector: ",
+                                                        paste(collapse = " ", is(content)))
+
+  customList <- .request.env$custom
+  if(is.null(customList))
+    customList <- list()
+  existingContent <- customList[[sectionName]]  ## might be NULL---that's fine
+  newContent <- c(existingContent, content)
+
+  customList[[sectionName]] <- newContent
+  
+  assign("custom", customList, pos = .request.env)
+}
+
+
+.appendMessagesToCustomContent <- function(handler.messages)  {
+  if(length(handler.messages) > 0)
+    appendCustomContent(sectionName = messageSectionName(),
+                        content = paste0("<li>", handler.messages, "</li>"))
+}
+
+
+##' \code{clearRequestEnv} clears the environment associated with the last request.
+##' @return \code{clearRequestEnv} does not return anything useful
+##' @rdname requestEnv
+##' @export
+clearRequestEnv <- function()  {
+  rm(list = ls(.request.env), pos = .request.env)
+  messageSectionName("Messages")
+  invisible()
+}
+
+
 ##' Validate and prepare a handler for installation
 ##'
 ##' An AnalysisPage handler is a function that satistifies the following properties:
@@ -312,10 +400,15 @@ execute.handler <- function(analysis.page, params, plot.file, file.params=list()
 
   #### CALL HANDLER ####
   info(logger, paste("execute.handler(): calling analysis.page$handler"))
+
+  ## reset some of the details from the last request, such as
+  ## any messages which were thrown
+  clearRequestEnv()
   
   ## This is the magic...but it still might go wrong so make sure to have a really good error message:
   ## Also we will be ready to extract warning messages
   retval <- tryKeepConditions(do.call(analysis.page$handler, params$other))
+
   
   if(vwc.is.error(retval))  {
     msg <- paste(sep="\n",
@@ -329,8 +422,9 @@ execute.handler <- function(analysis.page, params, plot.file, file.params=list()
 
   info(logger, paste("execute.handler(): analysis.page$handler returned"))
 
-  ## This would work, but I don't do anything with it (for now) so it is commented out:
-  ## handler.messages <- vwc.messages(retval)
+  handler.messages <- vwc.messages(retval)
+  .appendMessagesToCustomContent(handler.messages)
+
   handler.warnings <- vwc.warnings(retval)
   retval <- vwc.value(retval)
   
@@ -416,7 +510,8 @@ execute.handler <- function(analysis.page, params, plot.file, file.params=list()
     retval <- new.datanode.plot("plot",
                                 plot.file = basename(plot.file),
                                 table = new.datanode.table("table", retval, caption = caption),
-                                warnings = handler.warnings)
+                                warnings = handler.warnings,
+                                custom = getCustomContent())
   }  else  {
     if(analysis.page$annotate.data.frame && !is(retval, "AnalysisPageDataNode"))  {
       info(logger, paste("execute.handler(): building table datanode"))
@@ -424,7 +519,8 @@ execute.handler <- function(analysis.page, params, plot.file, file.params=list()
       retval <- new.datanode.table("table",
                                    retval,
                                    caption = caption,
-                                   warnings = handler.warnings)
+                                   warnings = handler.warnings,
+                                   custom = getCustomContent())
     }
   }
 

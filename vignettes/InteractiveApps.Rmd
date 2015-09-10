@@ -720,6 +720,108 @@ start already with the value "foo":
 kill.process(srv)
 ```
 
+### Conditionally Persistent Parameters
+
+Persistent parameters can remember a single value. Sometimes richer
+dependencies exist. For example, imagine that the user should first
+select a language then type in a word in that language. We can make
+both the language and word persistent between the pages using the
+`persistent` argument. However, if the user switches, say, from French
+back to English, then the French word would persist. If we want the
+word for each language to persist *independently* then we can use
+*conditionally persistent parameters*. To do this, use the
+`persistent.dependencies` argument to your Parameter constructor:
+
+```{r conditional-persistent-params}
+## First we'll rewrite the two handlers to accept
+## a "language" parameter, and display "language: word"
+## instead of just "word"
+horiz.handler <- function(language = "English",
+                          word = "word")  {
+  plot.new()
+  plot.window(0:1, 0:1)
+  text(0.5, 0.5, paste0(language, ": ", word))
+  data.frame(x = numeric(), y = numeric())
+}
+
+vert.handler <- function(language = "English",
+                         word = "word")  {
+  plot.new()
+  plot.window(0:1, 0:1)
+  text(0.5, 0.5, paste0(language, ": ", word), srt = 90)
+  data.frame(x = numeric(), y = numeric())
+}
+
+## Now define language as a dropdown parameter, and make it
+## persistent between the two pages.
+language <- select.param(name = "language",
+                         value = "English",
+                         choices = c("English","Wolof","Chinese","Arabic","Klingon"),
+                         persistent = "language")
+
+## Then define the word parameter the same as above
+## but make its persistence dependent on language.
+word <- simple.param(name = "word", persistent = "word",
+                     persistent.dependencies = "language")
+
+## Finally, build the App and deploy:
+horiz.page <- new.analysis.page(horiz.handler, param.set(language, word), name = "horiz", label = "Horizontal")
+vert.page <- new.analysis.page(vert.handler, param.set(language, word), name = "vert", label = "Vertical")
+
+reg <- new.registry(horiz.page, vert.page)
+
+
+srv <- startRookAnalysisPageServer(reg, port = port)
+```
+
+Let's see how it looks.
+
+First we'll start on the `Horizontal` page, select `English` language
+and type in the word `Hello`:
+
+<p class="centered"><img src = "images/conditional-persistent-params-english-1.png" class = "screen-shot"></p>
+
+The result:
+
+<p class="centered"><img src = "images/conditional-persistent-params-english-result.png" class = "screen-shot"></p>
+
+Next we'll modify the analysis parameters. Let's switch the language
+to Wolof,
+
+<p class="centered"><img src = "images/conditional-persistent-params-select-wolof.png" class = "screen-shot"></p>
+
+and make a plot with a Wolof word:
+
+<p class="centered"><img src = "images/conditional-persistent-params-wolof-result.png" class = "screen-shot"></p>
+
+That's fine. Up until now we haven't demonstrated anything persistent,
+much less conditionally persistent. But inside the browser's cache it
+now remembers the English word "Hello" and the Wolof word
+"Merhbe", both for this page and for the `Vertical` page. Let's switch
+to the `Vertical` page:
+
+<p class="centered"><img src = "images/conditional-persistent-params-switch-to-vertical.png" class = "screen-shot"></p>
+
+The form is initialized with the last language (Wolof) and word
+("Merhbe"). This is the normal behavior for regular persistent
+parameters. Now, to demonstrate the *conditional* persistence, let's
+switch to English:
+
+<p class="centered"><img src = "images/conditional-persistent-params-switch-back-to-english.png" class = "screen-shot"></p>
+
+Once English is selected the `word` field automatically populates with
+the last English word, "Hello":
+
+<p class="centered"><img src = "images/conditional-persistent-params-english-still-says-hello.png" class = "screen-shot"></p>
+
+If we switch to a new language then the `word` field is simply reset:
+
+<p class="centered"><img src = "images/conditional-persistent-params-switch-to-chinese.png" class = "screen-shot"></p>
+
+```{r echo = FALSE}
+kill.process(srv)
+```
+
 
 ---------------
 
