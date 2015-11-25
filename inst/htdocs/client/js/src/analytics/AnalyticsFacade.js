@@ -4,18 +4,20 @@
  * There may or may not be Google Analytics configured for the app.
  * Also, some other provider may be installed instead.
  */
-define(["analytics/GoogleAnalyticsManager"], function(GA) {
+define(function(require) {
     
-    var provider = window._gaq && GA;
+    var config = require("config");
     
-    var m = {
-        trackEvent:     function() {
-            return provider && provider.trackEvent.apply(provider, arguments);
-        },
-        setCustomVariable:  function() {
-            return provider && provider.setCustomVariable.apply(provider, arguments);
-        }
-    };
+    var gam = require("analytics/GoogleAnalyticsManager");
     
-    return m;
+    if (config["analytics.provider"] === "google") {
+        return gam;
+    }
+    else {
+        return {
+            trackEvent: function() {},
+            trackPageview: function() {},
+            setCustomVariable: function() {}
+        };
+    }
 });

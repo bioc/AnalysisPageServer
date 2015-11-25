@@ -29,7 +29,7 @@ Custom content are HTML rendered
 as additional accordion sections. From the data structure
 point of view these are represented as a named of list
 of character vectors. The names are the section headers.
-Use \code{\link{appendCustomSection}} to add more content.
+Use \code{\link{appendCustomContent}} to add more content.
 
 \code{appendCustomContent} adds custom content to be rendered in separate accordion section
 

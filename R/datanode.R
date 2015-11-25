@@ -1,3 +1,4 @@
+
 ## not exported--- this is the "abstract" base constructor
 ## custom, if provided, is a named list, and gives more metadata.
 ## Each entry in the list is a charvec of HTML to render, and normally
@@ -162,6 +163,64 @@ new.datanode.table <- function(name, data, caption="", ...) {
 }
 
 
+##' AnalysisPageFilterWidget object and system
+##'
+##' The AnalysisPageFilterWidget object specifies a "filter widget" to be displayed
+##' to the user. This is a grid of colored squares, each of which controls the filtering
+##' of a subset of the samples based on the values of a pheno field.
+##' This object specifies the dimension of the grid,
+##' the colors of the squares, rollovers to appear for each square, and the subset
+##' of samples that each square filters.
+##'
+##' \code{new.filter.widget} is the constructor for this object. This should be used
+##' when constructing an \code{AnalysisPageReponse} explicitly, with the return
+##' value then passed to \code{\link{new.datanode.plot}}.
+##' @param data.field Name of table field which should be used for filtering.
+##' @param color Named character vector. Names should be values (or possible values)
+##' that the data field could take on. Values are string specifying colors. These are
+##' passed through directly to javascript so they should be valid colors there, whatever
+##' that means.
+##' @param cells Character matrix. This gives the layout of the filter grid. The values
+##' should all be either taken from \code{names(color)} or else be NA values. The NA
+##' values will be inactive (no rollover or click listeners).
+##' @param inactive.color Color for inactive cells (that are the positions with
+##' \code{is.na(cells)}). Default: "gray"
+##' @param type Filter widget type. The only currently supported type is "filter_grid".
+##' @return \code{new.filter.widget} returns an \code{AnalysisPageFilterWidget}
+##' @author Brad Friedman
+##' @export
+##' @rdname filterWidget
+new.filter.widget <- function(data.field,
+                              color,
+                              cells,
+                              inactive.color = "gray",
+                              type = "filter_grid")  {
+  stopifnot(is.character(data.field) && length(data.field) == 1 && is.vector(data.field))
+  stopifnot(is.character(color) && !is.null(names(color)) && is.vector(color))
+  data.values <- names(color)
+  stopifnot(is.matrix(cells) && is.character(cells))
+  stopifnot(all(is.na(cells) | cells %in% data.values))
+  stopifnot(is.character(inactive.color) &&
+            length(inactive.color) == 1 &&
+            is.vector(inactive.color))
+
+
+  ## rjson encodes a matrix just as a vector, but we want it as a nested array.
+  ## So we'll explicitly cast it to a list of (row)-vectors.
+  cellsAsList <- lapply(1:nrow(cells), function(i) cells[i,])
+  
+  obj <- list(type = "filter_grid",
+              data_field = data.field,
+              color = color,
+              cells = cellsAsList,
+              inactive_color = inactive.color)
+
+  class(obj) <- "AnalysisPageFilterWidget"
+  return(obj)
+}
+
+
+
 
 ##' Construct a new plot-type data node
 ##'
@@ -171,23 +230,61 @@ new.datanode.table <- function(name, data, caption="", ...) {
 ##' @param name Name of the node
 ##' @param plot.file Path to plot file, relative to server tempdir.
 ##' @param table A table-type \code{AnalysisPageDataNode}
+##' @param warnings Character vector of warnings, to be passed through to
+##' \code{new.datanode}, possibly after appending the warning described above for
+##' \code{filter.widget}. Default: \code{character()}
+##' @param filter.widget If provided, then an AnalysisPageFilterWidget. See
+##' \code{\link{new.filter.widget}} and \code{\link{setFilterWidget}}.
+##' A check is made that \code{filter.widget$data_field} is an actual field
+##' from the data table. If not, then the filter widget is omitted, with a warning.
+##' NULL (default) means to not include this.
 ##' @param ... Passed through to \code{new.datanode}, in particular \code{label} and \code{description}
 ##' @return AnalysisPageDataNode
 ##' @author Brad Friedman
 ##' @export
-new.datanode.plot <- function(name, plot.file, table, ...)  {
+new.datanode.plot <- function(name, plot.file, table, 
+                              warnings = character(),
+                              filter.widget = NULL,
+                              ...)  {
   stopifnot(is.character(plot.file) && length(plot.file) == 1)
   stopifnot(is(table, "AnalysisPageDataNode") && table$type == "table")
+  value <- list(plot = plot.file,
+                table = table)
+  if(!is.null(filter.widget))  {
+    stopifnot(is(filter.widget, "AnalysisPageFilterWidget"))
+    
+    tableData <- table$value$data
+
+    if(length(tableData) > 0)  {
+      ## If the table is non-empty, check that filter.widget$data_field
+      ## is one of the table fields
+      tableFields <- names(tableData[[1]])
+      if(filter.widget$data_field %in% tableFields)  {
+        value$filter_widget <- filter.widget
+      }  else  {
+        missingDataFieldWarning <- paste0("No data field '",
+                                          filter.widget$data_field,
+                                          "' in table. Not rendering filter widget")
+        warnings <- c(warnings, missingDataFieldWarning)
+      }
+    }
+    ## If the table is empty then we can't do the check. But on the
+    ## other hand there are no active points, so let's not bother
+    ## even rendering the widget, or throwing a warning about it.
+  }
+
   new.datanode("plot",
                name,
-               value=list(plot = plot.file,
-                 table = table),
+               value = value,
+               warnings = warnings,
                ...)
 }
 
   
 .validate.datanode.plot <- function(node, prefix)  {
-  .validate.list.with.names(node$value, c("plot", "table"),
+  .validate.list.with.names(node$value,
+                            expected.names = c("plot", "table"),
+                            optional.names = "filter_widget",
                             prefix = paste(prefix, "plot datanode value: "))
 
   .validate.string(node$value$plot, paste(prefix, "$value$plot: "))

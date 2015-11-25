@@ -15,6 +15,7 @@ define([], function() {
         "app.model.localStorage":           "app",
         "page.model.localStorage":          "page",
         "tableData.model.localStorage":     "tableData",
+        "parameter.collection.localStorage":"parameter",
         "history.root":                     "/",
         "combobox.hit.display":             "simple"// simple,extended
     };

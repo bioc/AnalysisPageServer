@@ -2,14 +2,14 @@
  * Copyright Genentech - A member of the Roche Group
  * @author Adrian Nowicki <adrian.nowicki@contractors.roche.com>
  */
-require(["backbone", "bacon", "config", "views/AppView", "models/AppModel",
-    "collections/PageCollection", 
-    "routers/MainRouter",
-    "views/HeaderView", "views/FooterView",],
-//    "backbone.syncOverride"],
-    function(Backbone, Bacon, config, AppView, AppModel, PageCollection,
-    MainRouter,
-    HeaderView, FooterView) {
+require(["backbone", "app", "bacon", "config", "Common/App/show/layoutview/AppView", 
+    "Common/App/models/AppModel",
+    "Common/Pages/models/PageCollection", 
+    "promise-polyfill",
+    "TemplateCache.mod",
+    "./AnalysisPageServer/aps-app",
+    "./Common/common-app", "./AnalysisPageServer/Pages/Landing/aps-landingpage-app"],
+    function(Backbone, app, Bacon, config, AppView, AppModel, PageCollection) {
 
     /*
      * @see EXPRESSIONPLOT-332
@@ -17,12 +17,14 @@ require(["backbone", "bacon", "config", "views/AppView", "models/AppModel",
      */
     Backbone.Router.arrayValueSplit = "|||";
 
-    var eventBus = new Bacon.Bus();
+    var globalChannel = Backbone.Wreqr.radio.channel("global");
 
     var appModel = new AppModel({
         id:     "main",
         env:    "analysis-page-server"
     });
+
+    globalChannel.commands.execute("app:model:initialize", appModel);
 
     var pages = new PageCollection(null, {
         appModel:   appModel
@@ -36,10 +38,9 @@ require(["backbone", "bacon", "config", "views/AppView", "models/AppModel",
         name:       "landing"
     });
     
-    
+    globalChannel.commands.execute("pages:collection:set", pages);
     
     var appView = new AppView({
-        eventBus:       eventBus,
         pages:          pages,
         model:          appModel,
         el:             "body",
@@ -47,40 +48,26 @@ require(["backbone", "bacon", "config", "views/AppView", "models/AppModel",
         pageTitlePrefix:""
     });
     
-    var header = new HeaderView({
-        el:         "header",
-        pages:      pages,
-        appModel:   appModel,
-        appView:    appView,
-        eventBus:   eventBus
-    });
-    header.render();
-    
-    var footer = new FooterView({
-        el:         "footer"
-    });
-    
-    var router = new MainRouter({
-        eventBus:   eventBus,
-        pages:      pages,
-        appView:    appView
-    });
-    
-    $("#ep-intro-row").remove();
+    globalChannel.commands.execute("app:view:initialize", appView);
+    globalChannel.commands.execute("header:view:initialize");
        
-    if (! Backbone.history.start({root: config["history.root"]})) {
-        appView.showModalWindow({
-            modalType:      "error",
-            backdrop:       false,
-            withClose:      true,
-            title:          "Oops, an error occured",
-            doBtnLabel:     "Send an email about this?",
-            cancelBtnLabel: "Cancel",
-            fullErrorText:  "AnalysisPageServer was unable to parse the provided link.\n\n"+
-                            window.location.href+
-                            "\n\n Either it was pasted with error or there is a bug in the app.",
-            pageModel:      pages.get("landing")
-        });
-    }
+    app.on("start", function() {
+        if (! Backbone.history.start({root: config["history.root"]})) {
+            globalChannel.reqres.request("app:view:show-modal", {
+                type: "error",
+                backdrop:       false,
+                withClose:      true,
+                title:          "Oops, an error occured",
+                doBtnLabel:     "Send an email about this?",
+                cancelBtnLabel: "Cancel",
+                fullErrorText:  "AnalysisPageServer was unable to parse the provided link.\n\n"+
+                                window.location.href+
+                                "\n\n Either it was pasted with error or there is a bug in the app.",
+                pageModel:      pages.get("landing")
+            });
+        }
+    });
+       
+    app.start();
     
 });

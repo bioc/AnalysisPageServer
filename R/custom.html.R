@@ -37,23 +37,12 @@ custom.html.headers <- function(libbase.prefix = "",
     stylesheets.html <- c(stylesheets.html,
                           paste0('<link id="ep-svg-styles" href="', libbase.prefix, ep.svg.styles, '" type="text/css" rel="stylesheet">'))
   }
-  main.script <- '<script id="ep-entry-script" data-main="js/requirejs-config" src="js/concatenated-modules.js?v=3.7.0"></script>'
+  main.script <- '<script id="ep-entry-script" data-main="js/requirejs-webconfig" src="js/require.js"></script>'
 
   return(paste(c(meta.viewport, stylesheets.html, main.script), collapse= "\n"))
                                                                     
 }
 
-##  Return custom HTML footer
-## 
-##  This is a line of HTML code that has to be included at the bottom of the body section.
-##  It loads the JS libraries.
-##  @title custom.html.footer
-##  @return String of HTML
-##  @author Brad Friedman
-##  @export
-## custom.html.footer <- function()  {
-##   '<script id="ep-entry-script" data-version="" data-main="js/build/concatenated-modules-apss" src="js/lib/require/require.js"></script>'
-## }
 
 ##' Create HTML for a div element to contain one AnalysisPageServer data set
 ##'
@@ -68,6 +57,7 @@ custom.html.headers <- function(libbase.prefix = "",
 ##' NULL to only have SVG and no table
 ##' @param show.sidebar Boolean. If TRUE (default) then show sidebar. If FALSE then omit it.
 ##' @param show.table Boolean. If TRUE (default) then show sidebar. If FALSE then omit it.
+##' @param num.table.rows Number of table rows to show. Default: 10
 ##' @param extra.html.class Thesee are extra classes to add to the div. This could be used for
 ##' whatever extended purpose you want, like extra styling or logic. Should be an unnamed charvec.
 ##' Default is \code{character()}, just use the basic required for APS.
@@ -83,6 +73,7 @@ aps.one.dataset.div <- function(svg.path = NULL,
                                 data.path = NULL,
                                 show.sidebar = TRUE,
                                 show.table = TRUE,
+                                num.table.rows = 10,
                                 extra.html.class = character(),
                                 extra.div.attr = NULL)  {
   basic.html.class <- c("ep-analysis-page-data-set","container-fluid")
@@ -97,6 +88,9 @@ aps.one.dataset.div <- function(svg.path = NULL,
                 `data-sidebar-visible` = if(show.sidebar) "yes" else "no",
                 `data-table-visible` = if(show.table) "yes" else "no",
                 extra.div.attr)
+  if(show.table)
+    div.attr["data-table-rows"] <- as.character(num.table.rows)
+  
   if(!is.null(svg.path))
      div.attr["data-svg"] <- svg.path
   if(!is.null(data.path))
@@ -131,6 +125,8 @@ aps.one.dataset.div <- function(svg.path = NULL,
 ##' @param show.table Logical vector of same length as \code{paths.list} to
 ##' pass through corresponding elements to \code{\link{aps.one.dataset.div}}.
 ##' Default: all TRUE.
+##' @param num.table.rows Number of table rows to show. Default: 10.
+##' Recycled to \code{length(paths.list)}.
 ##' @param extra.html.class List (of charvecs) of same length as \code{paths.list} to
 ##' pass through corresponding elements to \code{\link{aps.one.dataset.div}}.
 ##' Default: All empty charvec.
@@ -143,6 +139,7 @@ aps.one.dataset.div <- function(svg.path = NULL,
 aps.dataset.divs <- function(paths.list,
                              show.sidebar = rep(TRUE, length(paths.list)),
                              show.table = rep(TRUE, length(paths.list)),
+                             num.table.rows = 10,
                              extra.html.class = rep(list(character()), length(paths.list)),
                              extra.div.attr = rep(list(NULL), length(paths.list)))  {
   stopifnot(is.list(paths.list))
@@ -158,12 +155,14 @@ aps.dataset.divs <- function(paths.list,
   stopifnot(is.list(extra.div.attr))
   extra.html.class <- rep(extra.html.class, length = n.ds)
   extra.div.attr <- rep(extra.div.attr, length = n.ds)
+  num.table.rows <- rep(num.table.rows, length = n.ds)
 
   divs <- sapply(1:n.ds, function(i.ds)  {
     aps.one.dataset.div(svg.path = paths.list[[i.ds]]$plot,
                         data.path = paths.list[[i.ds]]$data,
                         show.sidebar = show.sidebar[i.ds],
                         show.table = show.table[i.ds],
+                        num.table.rows = num.table.rows[i.ds],
                         extra.html.class = extra.html.class[[i.ds]],
                         extra.div.attr = extra.div.attr[[i.ds]])
   })

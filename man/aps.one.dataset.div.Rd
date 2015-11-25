@@ -5,8 +5,8 @@
 \title{aps.one.dataset.div}
 \usage{
 aps.one.dataset.div(svg.path = NULL, data.path = NULL,
-  show.sidebar = TRUE, show.table = TRUE, extra.html.class = character(),
-  extra.div.attr = NULL)
+  show.sidebar = TRUE, show.table = TRUE, num.table.rows = 10,
+  extra.html.class = character(), extra.div.attr = NULL)
 }
 \arguments{
 \item{svg.path}{Path (could be relative to index.html) to (annotated) SVG file. NULL
@@ -18,6 +18,8 @@ NULL to only have SVG and no table}
 \item{show.sidebar}{Boolean. If TRUE (default) then show sidebar. If FALSE then omit it.}
 
 \item{show.table}{Boolean. If TRUE (default) then show sidebar. If FALSE then omit it.}
+
+\item{num.table.rows}{Number of table rows to show. Default: 10}
 
 \item{extra.html.class}{Thesee are extra classes to add to the div. This could be used for
 whatever extended purpose you want, like extra styling or logic. Should be an unnamed charvec.

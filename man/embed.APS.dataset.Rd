@@ -5,9 +5,10 @@
 \title{embed.APS.dataset}
 \usage{
 embed.APS.dataset(plot, df, title, show.sidebar = TRUE, show.table = TRUE,
-  extra.html.classes = character(), extra.div.attr = character(),
-  svg.args = list(), eval.args = list(envir = parent.frame()),
-  outdir = get.APS.outdir(), randomize.filename = TRUE, ...)
+  num.table.rows = 10, extra.html.classes = character(),
+  extra.div.attr = character(), svg.args = list(), eval.args = list(envir
+  = parent.frame()), outdir = get.APS.outdir(), randomize.filename = TRUE,
+  ...)
 }
 \arguments{
 \item{plot}{If present, then either an expression, a function, or a path to SVG file (not yet annotated).
@@ -31,6 +32,10 @@ sidebar (filtering, tagging). (This is passed through directly to
 
 \item{show.table}{Boolean, default TRUE. Set to FALSE to not show the data
 table (still available on download.
+(This is passed through directly to
+\code{\link{aps.dataset.divs}}.)}
+
+\item{num.table.rows}{Number of table rows to show. Default: 10
 (This is passed through directly to
 \code{\link{aps.dataset.divs}}.)}
 
@@ -58,7 +63,7 @@ either "." or the directory of your knit2html target .html file.}
 (but here the default is TRUE).}
 
 \item{...}{Passed through to \code{static.analysis.page}.
-t not \code{overwrite}, \code{outdir}, or \code{write.client}}
+ot \code{overwrite}, \code{outdir}, or \code{write.client}}
 }
 \value{
 Returns the div, invisibly.

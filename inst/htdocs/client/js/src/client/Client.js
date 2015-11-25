@@ -2,7 +2,7 @@
  * Copyright Genentech - A member of the Roche Group
  * @author Adrian Nowicki <adrian.nowicki@contractors.roche.com>
  */
-define([], function() {
+define(['functions/fixedEncodeURIComponent'], function(fixedEncodeURIComponent) {
 
     /**
      * @constructor
@@ -41,11 +41,11 @@ define([], function() {
                 url += "?";
             }
             if (page) {
-                url += "page=" + encodeURIComponent(page) + ";";
+                url += "page=" + fixedEncodeURIComponent(page) + ";";
             }
 
             for(var k in params)  {
-                url += k + "=" + encodeURIComponent(params[k]) + ";";
+                url += k + "=" + fixedEncodeURIComponent(params[k]) + ";";
             }
             return url;
         },
@@ -62,6 +62,7 @@ define([], function() {
          */
         encodeParams:   function(params) {
             _.each(params, function(value, key) {
+                if (value instanceof File) return;
                 value = value === void 0 ? String(null) : value.toString();
                 params[key] = value
                             .replace(/%/g, "%25")

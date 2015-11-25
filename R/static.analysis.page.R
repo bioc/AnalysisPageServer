@@ -596,6 +596,9 @@ reset.APS.outdir <- function() set.APS.outdir(".")
 ##' table (still available on download.
 ##' (This is passed through directly to
 ##' \code{\link{aps.dataset.divs}}.)
+##' @param num.table.rows Number of table rows to show. Default: 10
+##' (This is passed through directly to
+##' \code{\link{aps.dataset.divs}}.)
 ##' @param extra.html.classes Charvec of extra HTML classes to include in the
 ##' div. (This is embedded in a list then passed through directly to
 ##' \code{\link{aps.dataset.divs}}.)
@@ -614,7 +617,7 @@ reset.APS.outdir <- function() set.APS.outdir(".")
 ##' @param randomize.filename Passed through to \code{\link{static.analysis.page}}
 ##' (but here the default is TRUE).
 ##' @param ... Passed through to \code{static.analysis.page}.
-##'t not \code{overwrite}, \code{outdir}, or \code{write.client}
+##'ot \code{overwrite}, \code{outdir}, or \code{write.client}
 ##' @return Returns the div, invisibly.
 ##' @author Brad Friedman
 ##' @export
@@ -625,6 +628,7 @@ embed.APS.dataset <- function(plot,
                               title,
                               show.sidebar = TRUE,
                               show.table = TRUE,
+                              num.table.rows = 10,
                               extra.html.classes = character(),
                               extra.div.attr = character(),
                               svg.args = list(),
@@ -687,6 +691,7 @@ embed.APS.dataset <- function(plot,
   div.html <- aps.dataset.divs(sap$paths.list,
                                show.sidebar = show.sidebar,
                                show.table = show.table,
+                               num.table.rows = num.table.rows,
                                extra.html.class = list(extra.html.classes),
                                extra.div.attr = list(extra.div.attr))
 

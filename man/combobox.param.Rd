@@ -4,11 +4,13 @@
 \alias{combobox.param}
 \title{combobox.param}
 \usage{
-combobox.param(..., uri, dependent.params, prompt = "Enter search term",
+combobox.param(name, ..., uri, dependent.params, prompt = "Enter search term",
   n.param = NULL, allow.multiple = FALSE, response.type = "simple",
   persistent = NULL, extra.persistent.dependencies = NULL, delay.ms = 0)
 }
 \arguments{
+\item{name}{Name of form element}
+
 \item{...}{Passed through to \code{\link{simple.param}}. This includes at least "name", optionally "label", "description" and "value", but not "type".}
 
 \item{uri}{URI, possibly with :-prefixed parameter names. For example "/get?x=:x;y=:y" has parameters "x" and "y". (See \code{dependent.params} next)}

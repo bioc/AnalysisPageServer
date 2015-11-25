@@ -4,7 +4,7 @@
  */
 define([], function() {
     return {
-        "version":                  "3.7.0",
+        "version":                  "3.8.0",
         "contact.address":          "",
         "gmail.link.tmpl":          "https://mail.google.com/mail/?view=cm&fs=1&to=ADDRESS&su=TITLE&body=BODY&cc=&bcc=",
         "help.link":                "",
@@ -15,6 +15,7 @@ define([], function() {
         "app.model.localStorage":           "app",
         "page.model.localStorage":          "page",
         "tableData.model.localStorage":     "tableData",
+        "parameter.collection.localStorage":"parameter",
         "history.root":                     "/",
         "combobox.hit.display":             "simple"// simple,extended
     };

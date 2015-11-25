@@ -4,7 +4,8 @@
 \alias{new.datanode.plot}
 \title{new.datanode.plot}
 \usage{
-new.datanode.plot(name, plot.file, table, ...)
+new.datanode.plot(name, plot.file, table, warnings = character(),
+  filter.widget = NULL, ...)
 }
 \arguments{
 \item{name}{Name of the node}
@@ -12,6 +13,16 @@ new.datanode.plot(name, plot.file, table, ...)
 \item{plot.file}{Path to plot file, relative to server tempdir.}
 
 \item{table}{A table-type \code{AnalysisPageDataNode}}
+
+\item{warnings}{Character vector of warnings, to be passed through to
+\code{new.datanode}, possibly after appending the warning described above for
+\code{filter.widget}. Default: \code{character()}}
+
+\item{filter.widget}{If provided, then an AnalysisPageFilterWidget. See
+\code{\link{new.filter.widget}} and \code{\link{setFilterWidget}}.
+A check is made that \code{filter.widget$data_field} is an actual field
+from the data table. If not, then the filter widget is omitted, with a warning.
+NULL (default) means to not include this.}
 
 \item{...}{Passed through to \code{new.datanode}, in particular \code{label} and \code{description}}
 }

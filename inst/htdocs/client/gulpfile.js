@@ -16,19 +16,18 @@ var
 // Config
 var
     requireJsOptimizerConfig = {
-        mainConfigFile: "requirejs-config.js",
+        mainConfigFile: "requirejs-buildconfig.js",
         baseUrl: "js/src",
-        out: "concatenated-modules.js",
-        include: ["requireLib"],
+//        include: ["requireLib"],
         wrapShim: true,
         excludeShallow: ["d3", "config"]
     };
 
 gulp.task("buildRequirejsAPS", gulpr(merge(requireJsOptimizerConfig, {
             name: "init-aps",
-            out: "dist-aps/js/concatenated-modules.js",
+            out: "dist-aps/js/init.js",
 //            optimize: "none",
-            insertRequire: ["init-aps"],
+//            insertRequire: ["init-aps"],
             paths: {
                 config: "../config-aps"
             }
@@ -36,9 +35,9 @@ gulp.task("buildRequirejsAPS", gulpr(merge(requireJsOptimizerConfig, {
 
 gulp.task("buildRequirejsAPSS", gulpr(merge(requireJsOptimizerConfig, {
             name: "init-apss",
-            out: "dist-apss/js/concatenated-modules.js",
+            out: "dist-apss/js/init.js",
 //            optimize: "none",
-            insertRequire: ["init-apss"],
+//            insertRequire: ["init-apss"],
             paths: {
                 config: "../config-apss"
             }
@@ -46,9 +45,8 @@ gulp.task("buildRequirejsAPSS", gulpr(merge(requireJsOptimizerConfig, {
 
 gulp.task("buildRequirejsEP", gulpr(merge(requireJsOptimizerConfig, {
             name: "init-ep",
-            out: "dist-ep/js/concatenated-modules.js",
+            out: "dist-ep/js/init.js",
 //            optimize: "none",
-            insertRequire: ["init-ep"],
             paths: {
                 config: "../config-ep"
             }
@@ -76,8 +74,12 @@ gulp.task("copyAssetsEP", function() {
             .pipe(gulp.dest("./dist-ep/fonts"));
     gulp.src("./bower_components/bootstrap/img/*")
             .pipe(gulp.dest("./dist-ep/img"));
-    gulp.src("./bower_components/select2/select2.png")
+    gulp.src(["./bower_components/select2/select2.png", "./bower_components/select2/select2x2.png"])
             .pipe(gulp.dest("./dist-ep/css"));
+    // requirejs file
+    gulp.src("./bower_components/requirejs/require.js")
+            .pipe(gulpUglify())
+            .pipe(gulp.dest("./dist-ep/js"));
     gulp.src("./js/src/workers/TableDataWorker.js")
             .pipe(gulpUglify())
             .pipe(gulp.dest("./dist-ep/js/workers"));
@@ -90,7 +92,7 @@ gulp.task("copyAssetsEP", function() {
             .pipe(gulpRename("d3.js"))
             .pipe(gulp.dest("dist-ep/js"));
     // config files
-    gulp.src("requirejs-config.js")
+    gulp.src("requirejs-webconfig.js")
             .pipe(gulpUglify())
             .pipe(gulp.dest("./dist-ep/js"));
     gulp.src("js/config-ep.js")
@@ -108,8 +110,12 @@ gulp.task("copyAssetsAPS", function() {
             .pipe(gulp.dest("./dist-aps/fonts"));
     gulp.src("./bower_components/bootstrap/img/*")
             .pipe(gulp.dest("./dist-aps/img"));
-    gulp.src("./bower_components/select2/select2.png")
+    gulp.src(["./bower_components/select2/select2.png", "./bower_components/select2/select2x2.png"])
             .pipe(gulp.dest("./dist-aps/css"));
+    // requirejs file
+    gulp.src("./bower_components/requirejs/require.js")
+            .pipe(gulpUglify())
+            .pipe(gulp.dest("./dist-aps/js"));
     gulp.src("./js/src/workers/TableDataWorker.js")
             .pipe(gulpUglify())
             .pipe(gulp.dest("./dist-aps/js/workers"));
@@ -122,7 +128,7 @@ gulp.task("copyAssetsAPS", function() {
             .pipe(gulpRename("d3.js"))
             .pipe(gulp.dest("dist-aps/js"));
     // config files
-    gulp.src("requirejs-config.js")
+    gulp.src("requirejs-webconfig.js")
             .pipe(gulpUglify())
             .pipe(gulp.dest("./dist-aps/js"));
     gulp.src("js/config-aps.js")
@@ -140,8 +146,12 @@ gulp.task("copyAssetsAPSS", function() {
             .pipe(gulp.dest("./dist-apss/fonts"));
     gulp.src("./bower_components/bootstrap/img/*")
             .pipe(gulp.dest("./dist-apss/img"));
-    gulp.src("./bower_components/select2/select2.png")
+    gulp.src(["./bower_components/select2/select2.png", "./bower_components/select2/select2x2.png"])
             .pipe(gulp.dest("./dist-apss/css"));
+    // requirejs file
+    gulp.src("./bower_components/requirejs/require.js")
+            .pipe(gulpUglify())
+            .pipe(gulp.dest("./dist-apss/js"));
     gulp.src("./js/src/workers/TableDataWorker.js")
             .pipe(gulpUglify())
             .pipe(gulp.dest("./dist-apss/js/workers"));
@@ -154,7 +164,7 @@ gulp.task("copyAssetsAPSS", function() {
             .pipe(gulpRename("d3.js"))
             .pipe(gulp.dest("dist-apss/js"));
     // config files
-    gulp.src("requirejs-config.js")
+    gulp.src("requirejs-webconfig.js")
             .pipe(gulpUglify())
             .pipe(gulp.dest("./dist-apss/js"));
     gulp.src("js/config-apss.js")

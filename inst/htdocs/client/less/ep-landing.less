@@ -39,14 +39,20 @@
     }
     .controls {
         margin-left:        120px;
+        margin-right:       20px;
         position:           relative;
         
         button.btn-primary {
+            float: right;
             height: 58px;/* make it as tall as select2 widget */
+            position: relative;
+            z-index: 5;
         }
         
         .select2-container {
         
+            display: block;/* so the widget takes up all its space */
+            
             .select2-choice {
                 font-size:          @fontSizeLarge;
                 padding:            @paddingLarge;

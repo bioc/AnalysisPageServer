@@ -33,7 +33,7 @@ messageSectionName <- function(sectionName)  {
 ##' as additional accordion sections. From the data structure
 ##' point of view these are represented as a named of list
 ##' of character vectors. The names are the section headers.
-##' Use \code{\link{appendCustomSection}} to add more content.
+##' Use \code{\link{appendCustomContent}} to add more content.
 ##' @return \code{getCustomContent} returns named list of character vectors
 ##' @author Brad Friedman
 ##' @export
@@ -73,6 +73,36 @@ appendCustomContent <- function(sectionName, content)  {
     appendCustomContent(sectionName = messageSectionName(),
                         content = paste0("<li>", handler.messages, "</li>"))
 }
+
+
+##' \code{setFilterWidget} sets the filter widget for the current analysis. This is the
+##' function most commonly used.
+##' @inheritParams new.filter.widget
+##' @return \code{setFilterWidget} returns the newly set AnalysisPageFilterWidget object 
+##' @rdname filterWidget
+##' @export
+setFilterWidget <- function(data.field,
+                            color,
+                            cells,
+                            inactive.color = "gray",
+                            type = "filter_grid")  {
+  .request.env$filter.widget <- new.filter.widget(data.field = data.field,
+                                                  color = color,
+                                                  cells = cells,
+                                                  inactive.color = inactive.color,
+                                                  type = type)
+}
+
+##' \code{getFilterWidget} retrieve the filter widget for the current analysis.
+##' This is normally used internally, to construct the final response for the analysis.
+##' @return \code{getFilterWidget} returns the curretn AnalysisPageFilterWidget object,
+##' or NULL if it has not yet been set
+##' @rdname filterWidget
+##' @export
+getFilterWidget <- function()  {
+  .request.env$filter.widget
+}
+
 
 
 ##' \code{clearRequestEnv} clears the environment associated with the last request.
@@ -511,6 +541,7 @@ execute.handler <- function(analysis.page, params, plot.file, file.params=list()
                                 plot.file = basename(plot.file),
                                 table = new.datanode.table("table", retval, caption = caption),
                                 warnings = handler.warnings,
+                                filter.widget = getFilterWidget(),
                                 custom = getCustomContent())
   }  else  {
     if(analysis.page$annotate.data.frame && !is(retval, "AnalysisPageDataNode"))  {

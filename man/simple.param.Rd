@@ -51,7 +51,8 @@ so the param will be initialized from the value in the persistent space.}
 
 \item{persistent.dependencies}{A character vector or NULL (default) specifying the names
 of other parameters on
-which this one "depends". It is an error to provide this when \code{persistent} is NULL.
+which this one "depends". It is an error to include the parameter itself (\code{name}).
+It is an error to provide this when \code{persistent} is NULL.
 When \code{persistent} is non-NULL, providing \code{persistent.dependencies} makes this parameter
 not just "persistent" but "conditionally persistent", which
 is to say that the persistent value for this parameter is actually a hash lookup based on the
@@ -71,6 +72,8 @@ Build a simple AnalysisPageParam. These include mainly parameters that can be re
 }
 \examples{
 x <- simple.param("xmin", label="X-min", description="Minimum x value", type="text")
+  # Please see the "Persistent Parameters" and "Conditionally Persistent Parameters"
+  # sections of the Interactive Apps vignette for demonstrations of these functionalities
 }
 \author{
 Brad Friedman

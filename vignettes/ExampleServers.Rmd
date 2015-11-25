@@ -101,7 +101,7 @@ main focus of this documentation page.
 Now we'll start the server:
 
 ```{r eval=TRUE, message=FALSE}
-port <- 3324  ## or some other port
+port <- 3198  ## or some other port
 server <- startRookAnalysisPageServer(reg, port = port)
 server
 ```

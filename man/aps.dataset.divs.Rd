@@ -5,7 +5,7 @@
 \title{aps.dataset.divs}
 \usage{
 aps.dataset.divs(paths.list, show.sidebar = rep(TRUE, length(paths.list)),
-  show.table = rep(TRUE, length(paths.list)),
+  show.table = rep(TRUE, length(paths.list)), num.table.rows = 10,
   extra.html.class = rep(list(character()), length(paths.list)),
   extra.div.attr = rep(list(NULL), length(paths.list)))
 }
@@ -23,6 +23,9 @@ Default: all TRUE.}
 \item{show.table}{Logical vector of same length as \code{paths.list} to
 pass through corresponding elements to \code{\link{aps.one.dataset.div}}.
 Default: all TRUE.}
+
+\item{num.table.rows}{Number of table rows to show. Default: 10.
+Recycled to \code{length(paths.list)}.}
 
 \item{extra.html.class}{List (of charvecs) of same length as \code{paths.list} to
 pass through corresponding elements to \code{\link{aps.one.dataset.div}}.

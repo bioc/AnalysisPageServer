@@ -28,6 +28,7 @@ define(["client/Client"], function(Client) {
     RClient.prototype.encodeParams = function(params) {
         params = Client.prototype.encodeParams.call(this, params);
         _.each(params, function(value, key) {
+            if (value instanceof File) return;
             params[key] = value.toString().replace(/\+/g, "%2B");
         });
         return params;
@@ -37,13 +38,16 @@ define(["client/Client"], function(Client) {
      * Decorates params that should be sent in request body to R resource
      * @param {Object} params
      * @param {String} page
+     * @param {Array[FileParameterModel]} files
      * @returns {Object}
      */
-    RClient.prototype.decoratePostParams = function(params, page) {
+    RClient.prototype.decoratePostParams = function(params, page, files) {
         params.page = page;
         _.each(params, function(value, key) {
             try {
-                params[key] = JSON.stringify(value);
+                if (! (value instanceof File)) {// stringify only primitives
+                    params[key] = JSON.stringify(value);
+                }
             }
             catch (e) {
                 params[key] = "";
@@ -72,7 +76,18 @@ define(["client/Client"], function(Client) {
         
         params = this.encodeParams(params);
         
-        return params;
+        var fd = new FormData();
+        _.each(params, function(val, name) {
+            fd.append(name, val);
+        });
+        /**
+         * @see EXPRESSIONPLOT-415
+         */
+        _.each(files, function(fileModel) {
+            fd.append(fileModel.getFileKey(), fileModel.getValue());
+        });
+        
+        return fd;
     };
     
     

@@ -23,14 +23,17 @@
         }
     }
 
-    > .control-group {
+    > [data-parameters-region] {
+        
+        > .control-group {
 
-        button      {/* make them have same value as inputs - important for bool parameters */
-            margin-bottom:  @baseLineHeight / 2;
+            button      {/* make them have same value as inputs - important for bool parameters */
+                margin-bottom:  @baseLineHeight / 2;
+            }
         }
     }
 
-    .control-array-group {
+    .control-array-group, .control-compound-group {
         padding:        0 5px;
         margin-bottom:  8px;/* take into account borders */
 
@@ -38,7 +41,16 @@
             border-style:   dashed;
         }
 
-
+        > [data-children-region] {
+            float: left;
+        }
+    }
+    
+    .control-array-group {
+        
+        > [data-children-region] {
+            clear: left;
+        }
     }
 
     > .form-actions {
@@ -96,7 +108,7 @@
         }
     }
 
-    .control-array-group {
+    .control-array-group, .control-compound-group {
         height: auto;
 
         > .control-array-label {
@@ -142,9 +154,16 @@
         border: 1px solid #e5e5e5;
         border-radius: 4px;
 
-        svg {
-            display: block;
+        .ep-svg-container {
+            
+            overflow: hidden;/* IE10 specific fix, see EXPRESSIONPLOT-464 */
+            
+            svg {
+                display: block;
+            }
         }
+        
+        
          
         .progress {
             margin: 200px auto;
@@ -212,6 +231,10 @@
             position: absolute;
             z-index: 10;
             visibility: hidden;
+        }
+        
+        dl {
+            margin: 0;
         }
     }
 }
@@ -317,7 +340,9 @@
 
     .ep-analysis-thead {
         width: 100%;
+        max-width: none;
         table-layout: fixed;
+        border-right: 0;
 
         .ep-fake-th {
             border: 0;
@@ -326,10 +351,10 @@
         }
 
         th {
-            color: #fff;
             background-color: #aaa;
-
+            
             .ep-th {
+                color: #fff;
                 position: relative;
 
                 .ep-th-label {

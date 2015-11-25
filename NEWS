@@ -1,0 +1,7 @@
+CHANGES IN VERSION 1.5.1
+------------------------
+
+    o New build of Javascript front-end
+
+    o Control number of table rows displayed in static (knitr) reports
+

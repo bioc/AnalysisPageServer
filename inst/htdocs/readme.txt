@@ -18,3 +18,17 @@ svn merge http://resscm/bioinfo/projects/ExpressionPlot/web/js/BasicFrontEnd/tru
 This removes the ExpressionPlot-specific files.
 svn rm client/expressionplot-app.html client/dist-ep
 
+
+---
+
+Now that AnalysisPageServer has moved to Bioconductor, but Adrian still commits internally, updating looks like this:
+
+svn rm client
+svn export http://resscm/bioinfo/projects/ExpressionPlot/web/js/BasicFrontEnd/trunk client
+svn add client
+
+
+## remove unused packages
+svn --force rm client/expressionplot-app.html client/dist-ep client/test client/*.html
+
+We lose the revision history details, but that's fine. This isn't the place for JS development anyway.

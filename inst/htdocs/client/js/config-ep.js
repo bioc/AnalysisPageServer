@@ -15,7 +15,10 @@ define([], function() {
         "app.model.localStorage":           "app",
         "page.model.localStorage":          "page",
         "tableData.model.localStorage":     "tableData",
-        "history.root":                     "/expressionplot/static-pages/",
-        "combobox.hit.display":             "simple"// simple,extended
+        "parameter.collection.localStorage":"parameter",
+        "history.root":                     "/expressionplot/dist-ep/expressionplot-app.html",
+        "combobox.hit.display":             "simple",// simple,extended
+        "analytics.provider":               "google",
+        "google.analytics.id":              "UA-40803788-1"
     };
 });

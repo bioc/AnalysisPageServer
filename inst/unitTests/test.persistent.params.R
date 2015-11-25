@@ -190,6 +190,27 @@ test.validate.persistent.param.dependencies <- function()  {
           .validate.registry(reg2)
           , "dependencies have a cycle")
   
+
+
+  ## Now we are going to test combobox param automatically figuring out
+  ## their persistent dependencies. second param will be a combobox dependent
+  ## on first and also itself. It should automatically get
+  ## first as a persistent dependency
+  first3 <- simple.param(name = "first3",
+                         persistent = "pFirst")
+  second3 <- combobox.param(name = "second3",
+                            uri = "/get?first=:first&second=:second",
+                            persistent = "pSecond",
+                            dependent.params = c(first = "first3", second = "second3"))
+                            
+  page3 <- new.analysis.page(function(first3, second3) {},
+                             name = "page3",
+                             param.set = param.set(first3, second3),
+                             skip.checks = TRUE)
   
-  
+  reg3 <- new.registry(page3)
+  lives.ok(.validate.registry(reg3))
+
+  checkEquals(second3$persistent_dependencies, "first3",
+              "persistent combobox automatically detects its dependencies, correctly omitting itself")
 }

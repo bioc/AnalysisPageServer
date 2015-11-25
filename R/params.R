@@ -33,7 +33,8 @@
 ##' so the param will be initialized from the value in the persistent space.
 ##' @param persistent.dependencies A character vector or NULL (default) specifying the names
 ##' of other parameters on
-##' which this one "depends". It is an error to provide this when \code{persistent} is NULL.
+##' which this one "depends". It is an error to include the parameter itself (\code{name}).
+##' It is an error to provide this when \code{persistent} is NULL.
 ##' When \code{persistent} is non-NULL, providing \code{persistent.dependencies} makes this parameter
 ##' not just "persistent" but "conditionally persistent", which
 ##' is to say that the persistent value for this parameter is actually a hash lookup based on the
@@ -45,6 +46,8 @@
 ##' @author Brad Friedman
 ##' @examples
 ##'   x <- simple.param("xmin", label="X-min", description="Minimum x value", type="text")
+##'   # Please see the "Persistent Parameters" and "Conditionally Persistent Parameters"
+##'   # sections of the Interactive Apps vignette for demonstrations of these functionalities
 ##' @export
 simple.param <- function(name,
                          label = name,
@@ -60,9 +63,25 @@ simple.param <- function(name,
                          persistent.dependencies = NULL
                          )  {
   .validate.known.param.size(size)
-
-  if(!is.null(persistent.dependencies) && is.null(persistent))
-    stop("You provided persistent.dependencies but not persistent")
+  checkStringArg <- function(arg)  {
+    argname <- deparse(substitute(arg))
+    .validate.string(arg,
+                     paste0("simple.param() '", argname, "' argument: "))
+  }
+  checkStringArg(name)
+  checkStringArg(label)
+  checkStringArg(description)
+  checkStringArg(type)
+  
+  if(!is.null(persistent))
+    checkStringArg(persistent)
+  
+  if(!is.null(persistent.dependencies))  {
+    if(is.null(persistent))
+      stop("persistent.dependencies was provided but not persistent")
+    if(name %in% persistent.dependencies)
+      stop("The parameter itself ('", name, "') was included in the persistent dependencies.")
+  }
 
   param <- list(name=name,
                 label=label,
@@ -164,6 +183,10 @@ file.param <- function(..., template.uri=NULL, dependent.params=NULL)  {
   return(param)
 }
 
+
+## This function takes the uri, figures out which parameters are templated there
+## (by matching /:(\w+)\b/), and checks that each appears in `dependent`, which
+## gives the mapping from templated parameter names to form elements.
 .validate.dependent.params <- function(uri, dependent, n.param=NULL)  {
   param.pos <- gregexpr(":\\w+\\b", uri)[[1]]
   uri.params <- if(param.pos[1] == -1)  {
@@ -367,7 +390,7 @@ bool.param <- function(...)  {
 ##'   ## Note the :query parameter is dependent on the same gene element. This makes it a type-ahead query.
 ##'   gene <- combobox.param(name="gene", uri="/find_gene_id/:genome/:query/", dependent.params=c(genome="genome", query="gene"), response.type="id-long_name-reason")
 ##' @export
-combobox.param <- function(..., uri, dependent.params, prompt = "Enter search term", n.param=NULL,
+combobox.param <- function(name, ..., uri, dependent.params, prompt = "Enter search term", n.param=NULL,
                            allow.multiple = FALSE,
                            response.type="simple",
                            persistent = NULL,
@@ -382,12 +405,14 @@ combobox.param <- function(..., uri, dependent.params, prompt = "Enter search te
   ## Its actually the same thing---the second is a special case of the first, where the same element is one of the dependnet values.
 
   if(!is.null(persistent))  {
-    persistent.dependencies <- unique(c(unname(dependent.params),
+    auto.detected.persistent.dependencies <- setdiff(unname(dependent.params), name)
+    persistent.dependencies <- unique(c(auto.detected.persistent.dependencies,
                                         extra.persistent.dependencies))
   }  else  {
     persistent.dependencies <- NULL
   }
-  param <- simple.param(..., type="combobox",
+  param <- simple.param(name = name,
+                        ..., type="combobox",
                         persistent = persistent,
                         persistent.dependencies = persistent.dependencies)
   param$uri <- uri
