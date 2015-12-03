@@ -1,3 +1,24 @@
+
+## These 3 functions, .ignore.tags, .concat and ignore.lots.of.stuff
+## are taken from the PlotTester package, but this has not (yet?)
+## been released outside of Genentech, so I'm just copying them here.
+.ignore.tags <- function(lines, tags)  {
+  for(tag in tags)  {
+    regex <- paste(sep="", " ", tag, "=\".*?\"")
+    lines <- gsub(regex, "", lines)
+  }
+  return(lines)
+}
+
+.concat <- function(lines)  paste(collapse="", lines)
+
+ignore.lots.of.stuff <- function(lines)  {
+  one.line <- .concat(.ignore.tags(lines, c("id", "class", "type")))
+  one.line <- gsub(">\\s+<", "><", one.line)
+  return(one.line)
+}
+
+
 test.filter.widget <- function()  {
   library(AnalysisPageServer)
   library(RUnit)
@@ -77,8 +98,8 @@ test.filter.widget <- function()  {
                                               params = list(n = "60"),
                                               plot.file = plot.file)
 
-  checkEquals(PlotTester:::ignore.lots.of.stuff(readLines(plot.file)),
-              PlotTester:::ignore.lots.of.stuff(plotLines),
+  checkEquals(ignore.lots.of.stuff(readLines(plot.file)),
+              ignore.lots.of.stuff(plotLines),
               "plot same in handler() and execute.handler(...)")
 
   checkEquals(got$value$plot, basename(plot.file))
