@@ -7,7 +7,7 @@
 simple.param(name, label = name, description = label, value = "",
   type = "text", advanced = 0, show.if = NULL, display.callback = NULL,
   size = "medium", required = TRUE, persistent = NULL,
-  persistent.dependencies = NULL)
+  persistent.dependencies = NULL, transformer = NULL)
 }
 \arguments{
 \item{name}{Name of form element}
@@ -60,6 +60,17 @@ the other parameters specified in this vector. A typical example would be a phen
 which is dependent on the study parameter. The names are taken from the Page namespace, which
 means that a parameter's \code{$name} is used when this differs from its \code{$persistent}
 slot.}
+
+\item{transformer}{A function with signature \code{function(value, self)} or \code{function(value)} which accepts
+as first argument the JSON-decoded value of the parameter returned from the front end and then performs
+some sort of transformation. The return value of the function will be ultimately
+passed to AnalysisPage handler. For example, for a field which is a simple text widget
+but which is supposed to be numeric you might use \code{transformer = as.numeric}. But you could
+also implement more complicated logic here. The reason to put the logic here instead of in the handler
+is that it makes it easier to re-use the widget in multiple handlers. If you have a complex (nested) parameter
+then the nested elements' transformations, if any, are applied first, then the parental transformation is applied.
+Or, NULL (default) to not
+do any transformation beyond the JSON decoding.}
 }
 \value{
 An AnalysisPageParam. This is just a list with class name slapped on.

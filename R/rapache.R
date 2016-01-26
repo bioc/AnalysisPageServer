@@ -263,8 +263,8 @@ rapache.app.from.registry <- function(registry,
 
   e$page.params <- function()  {
     plist <- params()
-    page <- get.page(registry, plist[[page.param]])  ## need some error handling here
-    res <- new.response(body=toJSON(page$params),
+    page <- get.page(registry, plist[[page.param]])
+    res <- new.response(body=paramSetToJSON(page$params),
                         status=200,
                         content.type="application/json")
     return(res)

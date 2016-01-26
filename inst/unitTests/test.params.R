@@ -364,3 +364,41 @@ test.persistent.params <- function()  {
 }
 
   
+test.paramSetToJSON <- function()  {
+  library(AnalysisPageServer)
+  library(RUnit)
+  
+  ## make a complicated parameter with an transformer
+  simpleFooPar <- simple.param("foo")
+  fooPar <- simple.param("foo", transformer = as.numeric)
+
+  ## verify that this cannot be directly JSON-encoded
+  stopifnot(is(try(rjson::toJSON(param.set(fooPar)), silent = TRUE),
+               "try-error"))
+
+  checkEquals(paramSetToJSON(param.set(fooPar)),
+              rjson::toJSON(param.set(simpleFooPar)),
+              "transformer is silently removed --- paramToJSOn works for simple parameter")
+  
+  arrPar <- array.param("arr", prototype = fooPar)
+  ## I'm not going to keep repeating the stopifnot assertion---you can test
+  ## yourself, these things cannot be directly JSON encoded due to the transformer
+  ## function.
+  simpleArrPar <- array.param("arr", prototype = simpleFooPar)
+  checkEquals(paramSetToJSON(param.set(arrPar)),
+              rjson::toJSON(param.set(simpleArrPar)))
+
+
+  cmpPar <- compound.param("cpd",
+                           children = param.set(arrPar, fooPar))
+  simpleCmpPar <- compound.param("cpd",
+                                 children = param.set(simpleArrPar, simpleFooPar))
+  checkEquals(paramSetToJSON(param.set(cmpPar)),
+              rjson::toJSON(param.set(simpleCmpPar)))
+
+  ## And finally put all the params together
+  pset <- param.set(fooPar, arrPar, cmpPar)
+  simplePset <- param.set(simpleFooPar, simpleArrPar, simpleCmpPar)
+  checkEquals(paramSetToJSON(pset),
+              rjson::toJSON(simplePset))
+}

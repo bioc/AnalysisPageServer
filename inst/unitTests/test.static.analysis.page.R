@@ -95,14 +95,15 @@ test.static.analysis.page <- function()  {
 
   
   if(Sys.getenv("ANALYSISPAGESERVER_FULL_TESTS") == 1)  {
-    library(SVGAnnotation)
+    library(XML)
     xmlobj <- xmlToList(xmlParse(readLines(file.path(outdir, exp.paths.list[[2]]$plot))))
-    
-    got.pts <- do.call(rbind, xmlobj$g[2:201])
+
+    xmlobjGG <- xmlobj$g$g
+    got.pts <- do.call(rbind, xmlobjGG[names(xmlobjGG) == "path"])
     got.table <- rjson::fromJSON(readLines(file.path(outdir, exp.paths.list[[2]]$data)))
     got.row.names <- names(got.table$value$table$value$data)
 
-    checkEquals(unname(got.pts[,"id"]),
+    checkEquals(unname(got.pts[, "id"]),
                 got.row.names)
     checkEquals(unname(got.pts[,"class"]),
                 rep("plot-point", 200))

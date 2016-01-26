@@ -9,7 +9,7 @@ new.analysis.page(handler, param.set = NULL, annotate.plot = TRUE,
   plot.pars.transformer = NULL, annotate.data.frame = TRUE,
   numeric.sig.digs = 3, no.plot = FALSE, name = NULL, label = name,
   description = label, advanced = 0, thumbnail = NULL, service = FALSE,
-  in.menu = !service)
+  in.menu = !service, paramset.transformer = NULL)
 }
 \arguments{
 \item{handler}{A handler function, as described above.}
@@ -76,6 +76,13 @@ should not display the page in the menu, but should still be ready to render it,
 which the front end can't do anything with except provide a download link or use (as a service) to populate an input widget). The special
 condition \code{service = FALSE}, \code{in.menu = TRUE} builds a Page that the front end can use but doesn't show up in the menu.
 The combination of \code{service = TRUE}, \code{in.menu = TRUE}, doesn't make any sense and leads to an error.}
+
+\item{paramset.transformer}{A function which accepts a named list of parameter values as its first argument and possibly
+the AnalysisPage object as its second argument, and returns a named list of parameter values. This transformation is applied
+last, \emph{after} the individual parameters have been transformed, if applicable, but (of course) before the handler is called.
+Or NULL (default) to not do this transformation. The purpose of this is to be able to encode some reusable logic here for
+groups of parameters which would often be used together but whose transformation is inter-dependent.
+If both this argument and \code{plot.pars.transformer} are supplied then this transformation is applied first.}
 }
 \value{
 See above
@@ -88,9 +95,9 @@ An AnalysisPage handler is a function that satistifies the following properties:
 
 \enumerate{
   \item{ Can be called with no arguments and return a valid value (to be used for
-         testing in the next steps). }
-  \item{ It creates a plot but does not open the device }
-  \item{ It returns a data.frame with \code{x} and \code{y} fields. Alternatively it may return an \code{\link{AnnotatedDataFrame}}. }
+         testing in the next steps; although this can be relaxed with \code{skip.checks}). }
+  \item{ It creates a plot but does not open the device (although this can be relaxed with \code{do.plot}) }
+  \item{ It returns a data.frame with \code{x} and \code{y} fields. Alternatively it may return an \code{\link{AnnotatedDataFrame}}. (although this can be relaxed with \code{annotate.data.frame})}
   \item{ \code{x} and \code{y} fields are numeric.}
   \item{ The points in test plot can be successfully found (based on the x and y
          coordinates) and labeled. }

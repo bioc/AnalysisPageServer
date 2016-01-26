@@ -122,9 +122,9 @@ clearRequestEnv <- function()  {
 ##'
 ##' \enumerate{
 ##'   \item{ Can be called with no arguments and return a valid value (to be used for
-##'          testing in the next steps). }
-##'   \item{ It creates a plot but does not open the device }
-##'   \item{ It returns a data.frame with \code{x} and \code{y} fields. Alternatively it may return an \code{\link{AnnotatedDataFrame}}. }
+##'          testing in the next steps; although this can be relaxed with \code{skip.checks}). }
+##'   \item{ It creates a plot but does not open the device (although this can be relaxed with \code{do.plot}) }
+##'   \item{ It returns a data.frame with \code{x} and \code{y} fields. Alternatively it may return an \code{\link{AnnotatedDataFrame}}. (although this can be relaxed with \code{annotate.data.frame})}
 ##'   \item{ \code{x} and \code{y} fields are numeric.}
 ##'   \item{ The points in test plot can be successfully found (based on the x and y
 ##'          coordinates) and labeled. }
@@ -198,6 +198,12 @@ clearRequestEnv <- function()  {
 ##' which the front end can't do anything with except provide a download link or use (as a service) to populate an input widget). The special
 ##' condition \code{service = FALSE}, \code{in.menu = TRUE} builds a Page that the front end can use but doesn't show up in the menu.
 ##' The combination of \code{service = TRUE}, \code{in.menu = TRUE}, doesn't make any sense and leads to an error.
+##' @param paramset.transformer A function which accepts a named list of parameter values as its first argument and possibly
+##' the AnalysisPage object as its second argument, and returns a named list of parameter values. This transformation is applied
+##' last, \emph{after} the individual parameters have been transformed, if applicable, but (of course) before the handler is called.
+##' Or NULL (default) to not do this transformation. The purpose of this is to be able to encode some reusable logic here for
+##' groups of parameters which would often be used together but whose transformation is inter-dependent.
+##' If both this argument and \code{plot.pars.transformer} are supplied then this transformation is applied first.
 ##' @return See above
 ##' @author Brad Friedman
 ##' @examples
@@ -223,13 +229,23 @@ new.analysis.page <- function(handler,
                               advanced = 0,
                               thumbnail = NULL,
                               service = FALSE,
-                              in.menu = !service
+                              in.menu = !service,
+                              paramset.transformer = NULL
                               )  {
   if(is.null(name))  name <- deparse(substitute(handler))
   is(handler, "function") || stop("handler is not a function")
 
   if(is.null(param.set)) param.set <- default.param.set(handler)
 
+  if(!is.null(paramset.transformer))  {
+    is.function(paramset.transformer) || stop("paramset.transformer is not NULL or a function: ",
+                                              paste(collapse = " ", is(paramset.transformer)))
+    argNames <- names(formals(paramset.transformer))
+    length(argNames) %in% 1:2 || stop("paramset.transformer must have 1 or 2 arguments, but it has 0 or more than 2: ",
+                                      paste(collapse = " ", argNames))
+  }
+
+  
   if(service && in.menu)
     stop("Service Pages cannot appear in menu, but you supplied service = TRUE and in.menu = TRUE")
   
@@ -247,7 +263,8 @@ new.analysis.page <- function(handler,
              description=description,
              advanced=advanced,
              service=service,
-             in.menu = in.menu)
+             in.menu = in.menu,
+             paramset.transformer = paramset.transformer)
   ap$thumbnail <- thumbnail  # don't store if NULL
   class(ap) <- "AnalysisPage"
 
@@ -290,7 +307,8 @@ new.analysis.page <- function(handler,
                       "no.plot",
                       "name", "label", "description",
                       "advanced", "service", "thumbnail",
-                      "in.menu")
+                      "in.menu",
+                      "paramset.transformer")
   extra.names <- setdiff(names(ap), c(reqd.names, optional.names))
   length(extra.names) == 0 || stop("AnalysisPage unexpected names: ", paste(collapse=" ", extra.names))
           
@@ -387,8 +405,28 @@ execute.handler <- function(analysis.page, params, plot.file, file.params=list()
 
   #### PREPARE PARAMETERS ####
   params <- .prepare.params(params, file.params, device)
+  ## Important to log the params before we start screwing with them
+  ## because they might not be JSON encodable later, after they've been transformed
+  jsonParams <- toJSON(params)
+  info(logger, paste("execute.handler(): params", jsonParams))
 
-  info(logger, paste("execute.handler(): params", toJSON(params)))
+  ## Don't touch the plot parameters
+  pNames <- names(params$other)
+  params$other <- lapply(setNames(pNames, pNames), function(pname)  {
+    pval <- params$other[[pname]]
+    Param <- analysis.page$params[[pname]]
+    .transform.param.value(pval, Param)  ### ok if Param is NULL---no transformation
+  })
+  
+  paramset.transformer <- analysis.page$paramset.transformer
+  if(!is.null(paramset.transformer))  {
+    if(length(formals(paramset.transformer)) == 1)  {
+      params$other <- paramset.transformer(params$other)
+    }  else  {
+      params$other <- paramset.transformer(params$other, analysis.page)
+    }
+  }
+
   
   all.handler.params <- names(analysis.page$params)
 
@@ -408,7 +446,7 @@ execute.handler <- function(analysis.page, params, plot.file, file.params=list()
         msg <- paste(sep="\n",
                      paste(collapse="\n", vwc.error(vwc)),
                      "FULL PARAMS:",
-                     toJSON(params),
+                     jsonParams, 
                      "ANALYSIS.PAGE TRACE:",
                      paste(collapse="\n", vwc.error.traceback(vwc)))
         stop(msg)
@@ -444,7 +482,7 @@ execute.handler <- function(analysis.page, params, plot.file, file.params=list()
     msg <- paste(sep="\n",
                  paste(collapse="\n", vwc.error(retval)),
                  "PARAMS:",
-                 toJSON(params$other),
+                 jsonParams,
                  "ANALYSIS.PAGE TRACE:",
                  paste(collapse="\n", vwc.error.traceback(retval)), "")
     stop(msg)

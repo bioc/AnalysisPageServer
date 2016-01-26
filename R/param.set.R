@@ -109,3 +109,30 @@ default.param.set <- function(handler)  {
 }
 
 
+
+## iterate through data structure, removing any $transformer elements
+## which are children of AnalysisPageParams.
+.stripTransformer <- function(ap)  {
+  ap$transformer <- NULL
+  if(ap$type == "array")  {
+    ap$prototype <- .stripTransformer(ap$prototype)
+  }  else if(ap$type == "compound")  {
+    for(child in names(ap$children))
+      ap$children[[child]] <- .stripTransformer(ap$children[[child]])
+  }
+  return(ap)
+}
+
+##' Convert an AnalysisPageParamSet to a JSON string
+##'
+##' This is almost just calling toJSON but it knows to first remove $transformer
+##' components, since functions can't be JSON encoded, and anyway that
+##' is really server-side information.
+##' @param ap AnalysisPageParameter
+##' @return JSON string
+##' @author Brad Friedman
+##' @export
+##' @importFrom rjson toJSON
+paramSetToJSON <- function(ps)  {
+  toJSON(lapply(ps, .stripTransformer))
+}

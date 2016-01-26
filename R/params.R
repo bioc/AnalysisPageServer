@@ -42,6 +42,16 @@
 ##' which is dependent on the study parameter. The names are taken from the Page namespace, which
 ##' means that a parameter's \code{$name} is used when this differs from its \code{$persistent}
 ##' slot.
+##' @param transformer A function with signature \code{function(value, self)} or \code{function(value)} which accepts
+##' as first argument the JSON-decoded value of the parameter returned from the front end and then performs
+##' some sort of transformation. The return value of the function will be ultimately
+##' passed to AnalysisPage handler. For example, for a field which is a simple text widget
+##' but which is supposed to be numeric you might use \code{transformer = as.numeric}. But you could
+##' also implement more complicated logic here. The reason to put the logic here instead of in the handler
+##' is that it makes it easier to re-use the widget in multiple handlers. If you have a complex (nested) parameter
+##' then the nested elements' transformations, if any, are applied first, then the parental transformation is applied.
+##' Or, NULL (default) to not
+##' do any transformation beyond the JSON decoding.
 ##' @return An AnalysisPageParam. This is just a list with class name slapped on.
 ##' @author Brad Friedman
 ##' @examples
@@ -60,8 +70,9 @@ simple.param <- function(name,
                          size = "medium",
                          required = TRUE,
                          persistent = NULL,
-                         persistent.dependencies = NULL
-                         )  {
+                         persistent.dependencies = NULL,
+                         transformer = NULL)  {
+
   .validate.known.param.size(size)
   checkStringArg <- function(arg)  {
     argname <- deparse(substitute(arg))
@@ -83,6 +94,20 @@ simple.param <- function(name,
       stop("The parameter itself ('", name, "') was included in the persistent dependencies.")
   }
 
+  if(!is.null(transformer))  {
+    is.function(transformer) || stop("transformer is not NULL or a function: ",
+                                     paste(collapse = " ", is(transformer)))
+    ## The reason the next line is not just
+    ##   names(formals(transformer))
+    ## is that if transformer is a primitive function (such as as.numeric)
+    ## then formals(transformer) just returns NULL. args(transformer)
+    ## makes a sort of dummy object which is itself a non-primitive function
+    argNames <- names(formals(args(transformer)))
+    length(argNames) %in% 1:2 || stop("transformer must have 1 or 2 arguments, but it has 0 or more than 2: ",
+                                      paste(collapse = " ", argNames))
+  }
+    
+
   param <- list(name=name,
                 label=label,
                 description=description,
@@ -92,17 +117,57 @@ simple.param <- function(name,
                 show.if=show.if,
                 size=size,
                 required=required)
+
+  ## This has no effect if transformer is NULL
+  param$transformer <- transformer
+  ## Note: The logic of the transformation is implemented by the .transform.param() function which is
+  ## called by execute.handler.
+  
   if(!is.null(persistent))  {
     param$persistent <- persistent
     if(!is.null(persistent.dependencies))
       param$persistent_dependencies<- persistent.dependencies
   }
-
+  
   if(!is.null(display.callback))  param$display.callback <- display.callback
-
+  
   class(param) <- "AnalysisPageParam"
   return(param)
 }
+
+
+
+## ap is an AnalysisPageParam or NULL, and value is the value to transform.
+.transform.param.value <- function(value, ap)  {
+  is.null(ap) && return(value)
+  
+  ## this allows a type to define a default transformer. The main reason
+  ## for this is to be able to transform the children first, but to make
+  ## it possible for different types to define "children" differently. In
+  ## particular array and compound types need to do this.
+  ## Note that this gets called even if `ap` itself does not have a transformer.
+  transform.type.function.name <- paste0(".transform.param.value.", ap$type)
+  if(exists(transform.type.function.name, mode="function"))  {
+    transformer.type <- get(transform.type.function.name, mode="function")
+    value <- transformer.type(value, ap)
+  }
+
+
+  transformer <- ap$transformer
+  is.null(transformer) && return(value)
+
+  ## See note in simple.param about the syntax on the next line
+  if(length(formals(args(transformer))) == 1)  {
+    value <- transformer(value)
+  }  else  {
+    ## otherwise it takes 2 args, the second one being this AnalysisPage object
+    value <- transformer(value, ap)
+  }
+
+  return(value)
+}
+
+
 
 
 ## validate the show.if value---either NULL or a length 2 list, as described in the doc for simple.param
@@ -481,6 +546,22 @@ compound.param <- function(..., children)  {
   .validate.paramset(param$children, parent.parnames = parent.parnames)
 }
 
+.transform.param.value.compound <- function(value, ap)  {
+  ## I think next line should be unreachable, but if it is reached then something
+  ## is definitely wrong and the code below will not be doing what it is supposed to.
+  ## Note that some values might be missing---that's OK. We
+  ## only have to transform the ones that are present.
+  stopifnot(names(value) %in% names(ap$children))
+  valueNames <- names(value)
+  value <- lapply(setNames(valueNames, valueNames),
+                  function(valueName)  {
+                    subValue <- value[[valueName]]
+                    subParam <- ap$children[[valueName]]
+                    .transform.param.value(subValue, subParam)
+                  })
+  return(value)
+}
+
 
 
 
@@ -528,4 +609,9 @@ array.param <- function(..., prototype, start=1, min=0, max=Inf)  {
   .validate.param(param$prototype, parent.parnames = parent.parnames)
 }
 
+
+.transform.param.value.array <- function(value, ap)  {
+  value <- lapply(value, .transform.param.value, ap$prototype)
+  return(value)
+}
 
