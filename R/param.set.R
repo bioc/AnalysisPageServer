@@ -128,7 +128,7 @@ default.param.set <- function(handler)  {
 ##' This is almost just calling toJSON but it knows to first remove $transformer
 ##' components, since functions can't be JSON encoded, and anyway that
 ##' is really server-side information.
-##' @param ap AnalysisPageParameter
+##' @param ps AnalysisPageParamSet
 ##' @return JSON string
 ##' @author Brad Friedman
 ##' @export

@@ -2,8 +2,8 @@ Package: AnalysisPageServer
 Type: Package
 Title: A framework for sharing interactive data and plots from R
     through the web.
-Version: 1.7.2
-Date: 2016-01-25
+Version: 1.7.3
+Date: 2016-07-27
 Author: Brad Friedman <friedman.brad@gene.com>, Adrian Nowicki, Hunter
     Whitney <hunter@hunterwhitney.com>, Matthew Brauer
     <brauer.matthew@gene.com>
