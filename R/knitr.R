@@ -69,7 +69,7 @@ setup.APS.knitr <- function(outdir,
                             include.css = system.file("AnalysisPageServer.css", package = "AnalysisPageServer"),
                             include.toc = TRUE,
                             quiet = TRUE)  {
-  find.call <- function(pattern) Position(function(x) grepl(pattern, as.character(x)[1]), sys.calls())
+  find.call <- function(pattern) Position(function(x) grepl(paste0(pattern, "$"), as.character(x)[1]), sys.calls())
   
   bv.pos <- find.call("buildVignettes")
   if(!is.na(bv.pos))  {
