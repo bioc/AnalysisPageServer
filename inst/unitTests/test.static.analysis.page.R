@@ -98,14 +98,15 @@ test.static.analysis.page <- function()  {
     library(XML)
     xmlobj <- xmlToList(xmlParse(readLines(file.path(outdir, exp.paths.list[[2]]$plot))))
 
-    xmlobjGG <- xmlobj$g$g
-    got.pts <- do.call(rbind, xmlobjGG[names(xmlobjGG) == "path"])
+    xmlobjG <- xmlobj$g
+    xmlobjGPaths <- xmlobjG[names(xmlobjG) == "path"]
+    got.pts <- do.call(rbind, xmlobjGPaths)
     got.table <- rjson::fromJSON(readLines(file.path(outdir, exp.paths.list[[2]]$data)))
     got.row.names <- names(got.table$value$table$value$data)
 
-    checkEquals(unname(got.pts[, "id"]),
+    checkEquals(head(unname(got.pts[, "id"]), 200),
                 got.row.names)
-    checkEquals(unname(got.pts[,"class"]),
+    checkEquals(head(unname(got.pts[,"class"]), 200),
                 rep("plot-point", 200))
   }  else  {
     warning("Skipping check that plot was correctly annotated in test.static.analysis.page because ANALYSISPAGESERVER_FULL_TESTS is not set")
