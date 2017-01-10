@@ -1,0 +1,6 @@
+<label class="control-label" for="<%= baseId %>"><%= label %></label>
+<% if (primary) { %><div class="help-block">
+    <span><%= desc %></span></div><% } %>
+<div class="controls">
+    <input id="<%= baseId %>" type="file" name="<%= name %>" value="<%= value %>" class="<%= size %>" placeholder="<%= prompt %>" autocomplete="off" />
+</div>

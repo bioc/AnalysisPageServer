@@ -1,0 +1,11 @@
+<div class="row-fluid ep-analysis-plot">
+    <div class="span7 ep-plot-inner" data-main>
+        <div data-menu-region class="ep-side-menu"></div>
+        <div data-plot-region class="ep-svg-container"></div>
+    </div>
+    <div class="span5 ep-analysis-sidebar <% if (! sidebarVisible) { %>hidden<% } %>"
+        data-sidebar-region></div>
+</div>
+<div class="row-fluid <% if (! tableVisible) { %>hidden<% } %>">
+    <div class="span12" data-table-region></div>
+</div>

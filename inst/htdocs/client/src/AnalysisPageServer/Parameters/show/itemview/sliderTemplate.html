@@ -1,0 +1,8 @@
+<label class="control-label" for="<%= baseId %>"><%= label %> <span class="muted"><%= value %></span></label>
+<% if (primary) { %><div class="help-block">
+    <span><%= desc %></span></div><% } %>
+<div class="controls">
+    <span class=""><%= min %></span>
+    <input id=""<%= baseId %>" name="<%= name %>" class="<%= size %>" type="range" min="<%= min %>" max="<%= max %>" step="<%= step %>" value="<%= value %>" />
+    <span class=""><%= max %></span>
+</div>

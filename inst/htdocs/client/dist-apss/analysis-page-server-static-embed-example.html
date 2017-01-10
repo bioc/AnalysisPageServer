@@ -9,8 +9,7 @@ Copyright Genentech - A member of the Roche Group
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <!-- THESE LINK & META TAGS ARE IMPORTANT FOR EMBEDDED DATASETS TO WORK -->
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href="css/concatenated.css?v=@@version" rel="stylesheet" type="text/css" />
-        <link id="ep-svg-styles" href="css/svg.css" type="text/css" rel="stylesheet" />
+        <link href="bundle.css?v=3.10.1" rel="stylesheet" type="text/css">
         <!-- [END] -->
     </head>
     <body>
@@ -27,6 +26,8 @@ Copyright Genentech - A member of the Roche Group
         <div class="ep-analysis-page-data-set container-fluid"
              data-svg="sample-data/dataset-1.svg"
              data-set="sample-data/dataset-1.json"
+             data-plot-zoomable="no"
+             data-plot-height="300"
              data-table-rows="10"></div>
 
         <h2>More custom HTML content</h2>
@@ -43,6 +44,7 @@ Copyright Genentech - A member of the Roche Group
              data-table-visible="no"></div>
 
         <!-- THIS IS THE ONLY SCRIPT NEEDED, PUT IT AT THE BOTTOM OF THE BODY SECTION -->
-        <script id="ep-entry-script" data-main="js/requirejs-webconfig" src="js/require.js"></script>
+        <script src="config.js?v=3.10.1"></script>
+        <script src="bundle.js?v=3.10.1"></script>
     </body>
 </html>

@@ -1,23 +1,85 @@
 {
   "name": "expressionplot",
-  "version": "3.8.0",
+  "version": "3.10.1",
   "private": true,
+  "author": {
+    "name": "Adrian Nowicki",
+    "email": "adrian.nowicki@contractors.roche.com"
+  },
+  "scripts": {
+    "build": "bin/build.sh",
+    "test-unit": "bin/test-unit.sh",
+    "test-e2e": "bin/test-e2e.sh"
+  },
+  "babel": {
+    "presets": [
+      "es2015"
+    ]
+  },
   "devDependencies": {
-    "bower": "^1.3.12",
-    "bower-requirejs": "^1.1.2",
-    "casper-chai": "^0.2.1",
-    "casperjs": "^1.1.0-beta3",
+    "babel-cli": "^6.6.5",
+    "babel-preset-es2015": "^6.6.0",
+    "casper-chai": "^0.3.0",
+    "casperjs": "^1.1.3",
     "chai": "^1.10.0",
-    "deeply": "^0.1.0",
+    "del": "^2.2.0",
     "gulp": "^3.8.8",
-    "gulp-less": "^1.3.6",
+    "gulp-concat": "^2.6.0",
     "gulp-rename": "^1.2.0",
-    "gulp-replace-task": "^0.1.0",
-    "gulp-requirejs-simple": "0.0.1",
+    "gulp-replace-task": "^0.11.0",
+    "gulp-rev": "^7.1.2",
+    "gulp-rev-replace": "^0.4.3",
+    "gulp-shell": "^0.5.2",
     "gulp-uglify": "^1.0.1",
+    "gulp-webserver": "^0.9.1",
+    "http-proxy-middleware": "^0.16.0",
+    "jspm": "^0.16.46",
+    "less": "^2.6.0",
     "mocha": "^2.1.0",
-    "mocha-casperjs": "0.5.3",
-    "mocha-phantomjs": "^3.5.3",
-    "sinon": "^1.14.1"
+    "mocha-casperjs": "^0.5.6",
+    "mocha-phantomjs-core": "^2.0.0",
+    "phantomjs-prebuilt": "^2.1.4",
+    "rev-del": "^1.0.5",
+    "run-sequence": "^1.2.1",
+    "sinon": "^1.14.1",
+    "through2": "^2.0.1"
+  },
+  "jspm": {
+    "configFile": "system.config.js",
+    "dependencies": {
+      "Blob": "github:eligrey/Blob.js@master",
+      "FileSaver": "github:eligrey/FileSaver.js@master",
+      "Sortable": "github:RubaXa/Sortable@^1.4.2",
+      "backbone": "npm:backbone@^1.2.3",
+      "backbone.babysitter": "github:marionettejs/backbone.babysitter@^0.1.10",
+      "backbone.localstorage": "github:jeromegn/Backbone.localStorage@^1.1.16",
+      "backbone.radio": "npm:backbone.radio@^1.0.2",
+      "bacon": "npm:baconjs@^0.7.83",
+      "bacon.jquery": "npm:bacon.jquery@^0.4.12",
+      "bacon.model": "npm:bacon.model@^0.1.12",
+      "bootstrap": "github:twbs/bootstrap@~2",
+      "canvas-toBlob": "github:eligrey/canvas-toBlob.js@master",
+      "canvg": "github:gabelerner/canvg@master",
+      "css": "github:systemjs/plugin-css@^0.1.20",
+      "d3": "github:d3/d3@~3",
+      "font-awesome": "npm:font-awesome@^4.5.0",
+      "jquery": "npm:jquery@^2.2.0",
+      "jquery-resizable-columns": "github:dobtco/jquery-resizable-columns@^0.2.3",
+      "jst": "github:podio/plugin-jst@^0.1.2",
+      "less": "github:HuasoFoundries/systemjs-less-plugin@^1.7.0",
+      "marionette": "github:marionettejs/backbone.marionette@^2.4.4",
+      "select2": "github:select2/select2@~3.5.1",
+      "select2-bootstrap-css": "github:t0m/select2-bootstrap-css@^1.4.6",
+      "text": "github:systemjs/plugin-text@^0.0.4",
+      "underscore": "npm:underscore@^1.8.3",
+      "velocity": "github:julianshapiro/velocity@^1.2.3"
+    },
+    "devDependencies": {
+      "babel": "npm:babel-core@^5.8.24",
+      "babel-runtime": "npm:babel-runtime@^5.8.24",
+      "clean-css": "npm:clean-css@^3.4.9",
+      "core-js": "npm:core-js@^1.1.4",
+      "sinon": "npm:sinon@^1.17.3"
+    }
   }
 }

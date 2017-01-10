@@ -1,0 +1,52 @@
+<div class="accordion-heading">
+    <a class="accordion-toggle" href="#">
+        <i class="icon-chevron-right"></i>
+        Tag Points
+        <span data-nb-tags class="pull-right"></span>
+    </a>
+</div>
+<div class="accordion-body collapse">
+    <div class="accordion-inner">
+        <div class="row-fluid">
+            <div class="span6">
+            <select class="span">
+                <option selected>Select a field for tagging</option>
+                <% _.each(items, function(metaItem, i) { %>
+                <option value="<%= i %>">
+                    <%= metaItem.label %>
+                </option>
+                <% }) %>
+            </select>
+            <ul class="">
+                <li>
+                    Highlight a group of points or click on a single point to tag.
+                </li>
+                <li>
+                    Hold down shift to append your tags.
+                </li>
+                <li>
+                    Filter out the untagged points with the "Filter Tagged" button.
+                </li>
+            </ul>
+            </div>
+            <div class="span6">
+                <ul class="unstyled text-center">
+                    <li><p>Add the selected data field to the plot.</p></li>
+                    <li>
+                    <div class="btn-group">
+                        <button data-tag class="btn btn-small"><i class="icon-tag"></i> Tag All Visible</button>
+                        <button data-clear class="btn btn-small" disabled><i class="icon-remove"></i> Clear All</button>
+                    </div>
+                    </li>
+                    <li><i>or</i></li>
+                    <li>
+                    <div class="btn-group">
+                        <button data-filter-tagged class="btn btn-small" disabled><i class="icon-filter"></i> Filter Tagged</button>
+                        <button data-release class="btn btn-small" disabled><i class="icon-remove"></i> Release</button>
+                    </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,23 @@
+<div class="accordion-heading">
+    <a class="accordion-toggle" href="#">
+        <i class="icon-chevron-<% if (isWarning) { %>down<% } else { %>right<% } %>"></i>
+        <span class="<% if (isWarning) { %>label label-warning<% } %>">
+            <%= title %>
+        </span>
+    </a>
+</div>
+<div class="accordion-body collapse <% if (isWarning) { %>in<% } %>">
+    <div class="accordion-inner">
+    <% if (isWarning) { %>
+        <ul class="unstyled">
+        <% _.each(items, function(item) { %>
+            <li><div class="alert"><%= item.content %></div></li>
+        <% }) %>
+        </ul>
+    <% } else { %>
+        <% _.each(items, function(item) { %>
+            <%= item.content %>
+        <% }) %>
+    <% } %>
+    </div>
+</div>

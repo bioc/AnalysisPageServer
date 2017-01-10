@@ -1,0 +1,67 @@
+<button class="btn btn-small" title="Toggle Fullscreen" data-go-fullscreen>
+    <i class="fa fa-expand fa-fw"></i>
+</button>
+<div class="btn-group btn-group-vertical">
+    <button class="btn btn-small" title="Tag Mode" data-tag-mode>
+        <i class="fa fa-tags fa-fw"></i>
+    </button>
+    <button class="btn btn-small active" title="Pan Mode" data-pan-mode>
+        <i class="fa fa-arrows fa-fw"></i>
+    </button>
+</div>
+<div class="btn-group btn-group-vertical ">
+    <button class="btn btn-small" title="Zooming" data-zoom-in>
+        <i class="fa fa-search-plus fa-fw"></i>
+     </button>
+    <button class="btn btn-small" title="Zooming" data-zoom-out>
+        <i class="fa fa-search-minus fa-fw"></i>
+    </button>
+    <button class="btn btn-small" title="Zooming" data-reset>
+        <i class="fa fa-circle-o fa-fw"></i>
+    </button>
+</div>
+<div class="btn-group btn-group-vertical dropdown">
+    <button class="btn btn-small" title="Download" data-download>
+        <i class="fa fa-download fa-fw"></i>
+    </button>
+    <ul class="dropdown-menu">
+        <li><a href="#" class="ep-download" data-download-csv>.csv</a></li>
+        <li><a href="#" class="ep-download" data-download-png>.png</a></li>
+        <li><a href="#" class="ep-download" data-download-svg>.svg</a></li>
+    </ul>
+</div>
+<div class="hide">
+    <div data-go-fullscreen-desc>
+        View your plot in full screen.
+    </div>
+    <div data-tag-mode-desc>
+        <div>
+            Choose 'Tag Mode' to add data tags and filter selected points in your plot.
+        </div>
+    </div>
+    <div data-pan-mode-desc>
+        <ul>
+            <li>Double click or scroll wheel to zoom in.</li>
+            <li>Drag to pan.</li>
+            <li>Shift-double click to zoom out.</li>
+            <li>Or use incremental zoom
+                <i class='fa fa-search-plus'></i>,
+                <i class='fa fa-search-minus'></i> and reset
+                <i class='fa fa-circle-o'></i>
+                buttons to control zoom.
+            </li>
+        </ul>
+    </div>
+    <div data-zoom-in-desc>
+        Zoom in ('+' key)
+    </div>
+    <div data-zoom-out-desc>
+        Zoom out ('-' key)
+    </div>
+    <div data-reset-desc>
+        Reset zoom ('0' key)
+    </div>
+    <div data-download-desc>
+        Download data table as .csv or plot as .png or .svg.
+    </div>
+</div>

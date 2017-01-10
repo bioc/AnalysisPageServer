@@ -1,0 +1,13 @@
+<% _.each(items, function(item) { %>
+<div data-name="<%= item.name %>" class="media">
+    <% if (item.thumbnail) { %>
+    <a class="pull-left" href="#">
+        <img class="media-object" src="<%= item.thumbnail %>">
+    </a>
+    <% } %>
+    <div class="media-body">
+        <h4 class="media-heading"><%= item.label %></h4>
+        <%= item.description %>
+    </div>
+</div>
+<% }) %>

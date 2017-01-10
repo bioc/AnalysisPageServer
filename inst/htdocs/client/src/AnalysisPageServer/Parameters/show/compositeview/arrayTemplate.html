@@ -1,0 +1,7 @@
+<div class="control-array-label">
+    <label class="control-label" for="<%= baseId %>"><%= label %></label>
+    <% if (primary) { %><div class="help-block"><span><%= desc %></span></div><% } %>
+        <button type="button" class="btn ep-array-remove-child"><i class="icon-minus"></i></button>
+        <button type="button" class="btn ep-array-add-child"><i class="icon-plus"></i></button>
+</div>
+<div data-children-region></div>

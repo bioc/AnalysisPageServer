@@ -1,0 +1,4 @@
+<% if (! notA) { %><a <% if (name) { %>data-name="<%= name %>"<% } %> <% if (id) { %>data-id="<%= id %>"<% } %> href="#"<% } %>>
+    <% if (strong) { %><strong><%= label %></strong><% } %>
+    <% if (! strong) { %><%= label %><% } %>
+<% if (! notA) { %></a><% } %>

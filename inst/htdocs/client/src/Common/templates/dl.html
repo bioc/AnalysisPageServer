@@ -1,0 +1,8 @@
+<dl class="<% if (horizontal) { %>dl-horizontal<% } %>">
+    <% _.each(items, function(item) { %>
+    <dt><%= item.label %></dt>
+    <dd>
+        <%= item.value %>
+    </dd>
+    <% }) %>
+</dl>

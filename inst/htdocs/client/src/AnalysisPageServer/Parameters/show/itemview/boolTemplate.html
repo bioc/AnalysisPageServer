@@ -1,0 +1,8 @@
+<label class="control-label" for="<%= baseId %>"><%= label %></label>
+<% if (primary) { %><div class="help-block">
+    <span><%= desc %></span></div><% } %>
+<div class="controls">
+    <button id="<%= baseId %>" type="button" name="<%= name %>" class="btn <%= size %> <% if (active) { %>active<% } %> <%= buttonClass %>">
+        <%= buttonLabel %>
+    </button>
+</div>

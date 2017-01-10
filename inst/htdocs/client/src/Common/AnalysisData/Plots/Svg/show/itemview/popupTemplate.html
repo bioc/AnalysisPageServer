@@ -1,0 +1,10 @@
+<div class="popover fade in">
+<% if (arrow) { %><div class="arrow"></div><% } %>
+   <h3 class="popover-title">
+       <% if (close) { %><button class="close">&times;</button><% } %>
+       <%= title %>
+   </h3>
+   <div class="popover-content">
+       <p><%= content %></p>
+   </div>
+</div>

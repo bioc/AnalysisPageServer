@@ -1,0 +1,13 @@
+<div class="modal-header">
+    <% if (withClose) { %>
+        <button type="button" class="close" aria-hidden="true">&times;</button>
+    <% } %>
+    <h3><%= title %></h3>
+</div>
+<div class="modal-body" data-body-region></div>
+<div class="modal-footer">
+    <% if (progressBar) { %><div class="progress"><div class="bar"></div></div><% } %>
+    <% if (cancelBtnLabel) { %><a data-cancel href="#" class="btn btn-cancel"><%= cancelBtnLabel %></a><% } %>
+    <% if (doBtnLabel) { %><a data-primary href="#" class="btn btn-primary"><%= doBtnLabel %></a><% } %>
+    <% if (altBtnLabel) { %><a data-alt-1 href="#" class="btn btn-primary"><%= altBtnLabel %></a><% } %>
+</div>

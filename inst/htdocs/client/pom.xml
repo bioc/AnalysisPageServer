@@ -3,7 +3,7 @@
   <groupId>com.genentech.bioinformatics.expressionplot</groupId>
   <artifactId>expressionplot</artifactId>
   <packaging>pom</packaging>
-  <version>3.8.0</version>
+  <version>3.10.1</version>
   <name>ExpressionPlot</name>
   <url>http://research.gene.com/ep</url>
   <description>ExpressionPlot</description>
@@ -54,7 +54,7 @@
   <!-- Artifactory configuration ends -->
   <properties>
     <!-- Sonar settings for multi-language project -->
-    <sonar.sources>js/src</sonar.sources>
+    <sonar.sources>src</sonar.sources>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <sonar.exclusions>
 

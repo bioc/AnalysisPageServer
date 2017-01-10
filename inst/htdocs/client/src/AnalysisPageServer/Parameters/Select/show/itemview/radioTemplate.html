@@ -1,0 +1,11 @@
+<label class="control-label" for="<%= baseId %>"><%= label %></label>
+<% if (primary) { %><div class="help-block">
+    <span><%= desc %></span></div><% } %>
+<div class="controls">
+    <% _.each(choices, function(choice) { %>
+        <label class="checkbox inline">
+            <input type="radio" name="<%= choice.name %>" value="<%= value %>" <% if (selected) { %>checked<% } %> />
+            <%= label %>
+        </label>
+    <% }) %>
+</div>
