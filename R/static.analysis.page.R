@@ -301,7 +301,6 @@ static.analysis.page <- function(outdir,
                                                            data.subdir = "data",
                                                            randomize.filename = FALSE)  {
   ## Now annotate and save the plots and format the data. IT will be saved in a "data" subdirectory
-
   if(data.subdir == ".")  {
     data.dir <- outdir
   }  else  {
@@ -435,8 +434,6 @@ static.analysis.page <- function(outdir,
 ##' @param client.basedir Path to client files. Default: \code{system.file("htdocs/client/dist-apss", package = "AnalysisPageServer")}.
 ##' Probably should not be modified except during development work on the client.
 ##' @param include.landing.page Boolean. Should I include the landing page "analysis-page-server-static.html"? Default: TRUE
-##' @param requirejsWebconfigBaseUrl The file requirejs-webconfig.js has a parameter in it called baseUrl. The default is
-##' built from the current libbase.prefix.
 ##' @param ... Passed through to \code{file.copy}, such as \code{overwrite = TRUE}
 ##' @return Whatever file.copy returns.
 ##' @author Brad Friedman
@@ -447,27 +444,16 @@ copy.front.end <- function(outdir,
                            client.basedir = system.file("htdocs/client/dist-apss",
                              package = "AnalysisPageServer"),
                            include.landing.page = TRUE,
-                           requirejsWebconfigBaseUrl = paste0(get.APS.libbase.prefix(), "js/"),
                            ...)  {
   res <- file.copy(dir(client.basedir, full.names = TRUE), outdir, recursive = TRUE, ...)
   if(!include.landing.page)  {
     landing.page <- file.path(outdir, "analysis-page-server-static.html")
     unlink(landing.page)
   }
-
-  ## now re-write the special requirejs-webconfig.js file
-  webconfigPath <- file.path(outdir, "js", "requirejs-webconfig.js")
-  stopifnot(file.exists(webconfigPath))
-  wcLines <- readLines(webconfigPath, warn = FALSE)  ## suppress "incomplete final line" warning
-  stopifnot(length(wcLines) == 1) ## otherwise I don't know what to do
-  wcLines <- sub('baseUrl:"js/"',
-                 paste0('baseUrl:"', requirejsWebconfigBaseUrl, '"'),
-                 wcLines)
-  writeLines(wcLines, webconfigPath)
-
-  ## not sure how useful this is but there you have it.
-  invisible(res)
 }
+
+
+
 
 ##' Build the query string for a static analysis page
 ##'
@@ -529,49 +515,7 @@ static.analysis.page.query.string <- function(paths.list)  {
 ## words I've already used in the VERY unlikely event that I accidentally
 ## use one of them again.
 .APSEnv <- list2env(list(outdir = ".",
-                         libbase.prefix = "",
                          random.words = character(0)))
-
-
-
-##' Get current AnalysisPageServer library base directory
-##'
-##' Get current AnalysisPageServer library base directory. This is the
-##' location that contains the JS, CSS, fonts, other files required
-##' to render reports. The default "" means that these will always
-##' be written in the directories containing individual reports and
-##' datasets. Alternatively, if you are writing a lot of reports, you
-##' can set this to a system-wide location (absolute path starting
-##' and ending with "/") and then \code{\link{copy.front.end}} and
-##' \code{setup.APS.knitr()} will use those instead.
-##' @return Path
-##' @author Brad Friedman
-##' @export
-##' @seealso \code{\link{set.APS.libbase.prefix}}
-##' @examples
-##' set.APS.libbase.prefix("/some/path")
-##' get.APS.libbase.prefix()
-get.APS.libbase.prefix <- function() .APSEnv$libbase.prefix
-
-
-##' Set current AnalysisPageServer library base directory
-##'
-##' Set current AnalysisPageServer library base directory.
-##' See \code{\link{get.APS.libbase.prefix}()} for more information.
-##' @return libbase.prefix, again
-##' @author Brad Friedman
-##' @export
-##' @seealso \code{\link{get.APS.libbase.prefix}}
-##' @examples
-##' set.APS.libbase.prefix("/some/path/")
-##' get.APS.libbase.prefix()
-##' @param libbase.prefix New libbase.prefix. Must either be empty string
-##' or end with "/"
-set.APS.libbase.prefix <- function(libbase.prefix) {
-  stopifnot(libbase.prefix == "" || grepl("/$", libbase.prefix))
-  .APSEnv$libbase.prefix <- libbase.prefix
-}
-
 
 ##' Get current AnalysisPageServer output directory
 ##'

@@ -18,18 +18,18 @@ default.stylesheets <- function()  {
 ##' if you are going to put your common libraries in a shared area instead making a copy next to each
 ##' dataset.
 ##' @title custom.html.headers
-##' @param libbase.prefix Prefix where your shared CSS files will be located. Default: \code{get.APS.libbase.prefix().
+##' @param libbase.prefix Prefix where your shared CSS files will be located. Default "" will be
+##' relative to the index.html file. Otherwise you'll need to end with a "/".
 ##' @param viewport Default: "width=device-width, initial-scale=1.0". This will be used in a \code{<meta name="viewport">} tag.
 ##' @param stylesheets Charvec of stylesheets to load. Default is \code{default.stylesheets()}.
 ##' @param ep.svg.styles ep-svg-styles stylesheet. Default: "css/svg.css".
 ##' @return HTML string to be included in \code{<head>} section.
 ##' @author Brad Friedman
 ##' @export
-custom.html.headers <- function(libbase.prefix = get.APS.libbase.prefix(),
+custom.html.headers <- function(libbase.prefix = "",
                                 viewport = "width=device-width, initial-scale=1.0",
                                 stylesheets = default.stylesheets(),
                                 ep.svg.styles = "css/svg.css")  {
-
   meta.viewport <- paste0('<meta name="viewport" content="', viewport, '">')
   
   stylesheets.html <- paste0('<link href="', libbase.prefix, stylesheets, '" rel="stylesheet" type="text/css" />')
@@ -37,12 +37,8 @@ custom.html.headers <- function(libbase.prefix = get.APS.libbase.prefix(),
     stylesheets.html <- c(stylesheets.html,
                           paste0('<link id="ep-svg-styles" href="', libbase.prefix, ep.svg.styles, '" type="text/css" rel="stylesheet">'))
   }
+  main.script <- '<script id="ep-entry-script" data-main="js/requirejs-webconfig" src="js/require.js"></script>'
 
-  
-  main.script <- paste0('<script id="ep-entry-script" data-main="',
-                        libbase.prefix, 'js/requirejs-webconfig" src="',
-                        libbase.prefix, 'js/require.js"></script>')
-                        
   return(paste(c(meta.viewport, stylesheets.html, main.script), collapse= "\n"))
                                                                     
 }

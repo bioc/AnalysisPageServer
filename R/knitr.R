@@ -60,8 +60,6 @@
 ##' Default: see details.
 ##' @param include.css Paths to CSS files to include. See details.
 ##' @param include.toc Boolean, default TRUE. Should I include a table of contents?
-##' @param libbase.prefix Passed to \code{\link{custom.html.headers}}. Default:
-##' \code{\link{get.APS.libbase.prefix}()}.
 ##' @param quiet Boolean, default TRUE. Set to FALSE to turn on some diagnostic
 ##' messages
 ##' @export
@@ -70,7 +68,6 @@
 setup.APS.knitr <- function(outdir,
                             include.css = system.file("AnalysisPageServer.css", package = "AnalysisPageServer"),
                             include.toc = TRUE,
-                            libbase.prefix = get.APS.libbase.prefix(),
                             quiet = TRUE)  {
   find.call <- function(pattern) Position(function(x) grepl(paste0(pattern, "$"), as.character(x)[1]), sys.calls())
   
@@ -100,11 +97,8 @@ setup.APS.knitr <- function(outdir,
   file.exists(outdir) || stop("outdir '", outdir, "' does not exist")
 
   set.APS.outdir(outdir)
-
-  if(libbase.prefix == "")  {
-    if(!quiet) message("libbase.prefix == \"\" so now copying front-end files")
-    invisible(copy.front.end(outdir = outdir, overwrite = TRUE, include.landing.page = FALSE))
-  }
+  
+  invisible(copy.front.end(outdir = outdir, overwrite = TRUE, include.landing.page = FALSE))
   
   if(include.toc)
     options(markdown.HTML.options = "toc")
@@ -115,7 +109,7 @@ setup.APS.knitr <- function(outdir,
   css.headers <- sprintf('<link rel="stylesheet" type="text/css" href="%s" />', basename(include.css))
 
   html <- paste(collapse = "\n",
-                c(custom.html.headers(libbase.prefix = libbase.prefix),
+                c(custom.html.headers(),
                   css.headers))
   knitr::asis_output(html)
 }
