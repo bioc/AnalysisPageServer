@@ -5,7 +5,8 @@
 \title{copy.front.end}
 \usage{
 copy.front.end(outdir, client.basedir = system.file("htdocs/client/dist-apss",
-  package = "AnalysisPageServer"), include.landing.page = TRUE, ...)
+  package = "AnalysisPageServer"), include.landing.page = TRUE,
+  requirejsWebconfigBaseUrl = paste0(get.APS.libbase.prefix(), "js/"), ...)
 }
 \arguments{
 \item{outdir}{Target directory. This directory will contain your index.html file.}
@@ -14,6 +15,9 @@ copy.front.end(outdir, client.basedir = system.file("htdocs/client/dist-apss",
 Probably should not be modified except during development work on the client.}
 
 \item{include.landing.page}{Boolean. Should I include the landing page "analysis-page-server-static.html"? Default: TRUE}
+
+\item{requirejsWebconfigBaseUrl}{The file requirejs-webconfig.js has a parameter in it called baseUrl. The default is
+built from the current libbase.prefix.}
 
 \item{...}{Passed through to \code{file.copy}, such as \code{overwrite = TRUE}}
 }

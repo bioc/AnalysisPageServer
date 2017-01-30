@@ -4,14 +4,11 @@
 \alias{custom.html.headers}
 \title{custom.html.headers}
 \usage{
-custom.html.headers(libbase.prefix = "",
+custom.html.headers(libbase.prefix = get.APS.libbase.prefix(),
   viewport = "width=device-width, initial-scale=1.0",
   stylesheets = default.stylesheets(), ep.svg.styles = "css/svg.css")
 }
 \arguments{
-\item{libbase.prefix}{Prefix where your shared CSS files will be located. Default "" will be
-relative to the index.html file. Otherwise you'll need to end with a "/".}
-
 \item{viewport}{Default: "width=device-width, initial-scale=1.0". This will be used in a \code{<meta name="viewport">} tag.}
 
 \item{stylesheets}{Charvec of stylesheets to load. Default is \code{default.stylesheets()}.}

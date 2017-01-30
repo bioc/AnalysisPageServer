@@ -107,22 +107,6 @@ or
 
     $ gulp
 
-#### Important!
-Because build process now uses revision plugin to append file names with random
-suffixes, each of deployment targets won't be ready to run until one renames
-certain files according to *rev-manifest.json* file. It contains a map of repository files
-(bundle.js, bundle.css, config.css) to suffixed files.
-
-If you develop locally with package.json dependencies installed then
-suffixed assets are already placed in your dist-* directories every time you
-run gulp ep|aps|apss build.
-
-Otherwise please run:
-
-    $ ./bin/ensure-suffixed-assets.sh EP
-
-with the first argument telling the command what folder to take care of (EP|APS|APSS).
-
 ### Testing
 
 Test scripts are listed in package.json under *scripts* key.
