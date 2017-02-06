@@ -213,6 +213,7 @@ clearRequestEnv <- function()  {
 ##' ## registry <- register.page(registry, "sine", AnalysisPageServer:::sine.handler)
 ##' @seealso \code{\link{register.page}}, \code{\link{execute.handler}}, \code{\link[Biobase]{AnnotatedDataFrame}}
 ##' @export
+##' @import methods
 new.analysis.page <- function(handler,
                               param.set=NULL,
                               annotate.plot=TRUE,

@@ -202,7 +202,7 @@ new.rook.analysis.page.app <- function(app,
   dir.create(dir.for.config.js, recursive = TRUE) || stop("Couldn't mkdir ", dir.for.config.js)
   writeLines(config.lines, file.path(dir.for.config.js, "config.js"))
 
-  config.location <- file.path(front.end.location, "js/config.js")
+  config.location <- file.path(front.end.location, "config.js")
   config.app <- Rook::Static(urls = config.location,
                              root = root.for.config.js)
   

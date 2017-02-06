@@ -6,7 +6,7 @@
 \usage{
 custom.html.headers(libbase.prefix = "",
   viewport = "width=device-width, initial-scale=1.0",
-  stylesheets = default.stylesheets(), ep.svg.styles = "css/svg.css")
+  stylesheets = default.stylesheets(), ep.svg.styles = "bundle.css")
 }
 \arguments{
 \item{libbase.prefix}{Prefix where your shared CSS files will be located. Default "" will be
@@ -16,7 +16,7 @@ relative to the index.html file. Otherwise you'll need to end with a "/".}
 
 \item{stylesheets}{Charvec of stylesheets to load. Default is \code{default.stylesheets()}.}
 
-\item{ep.svg.styles}{ep-svg-styles stylesheet. Default: "css/svg.css".}
+\item{ep.svg.styles}{ep-svg-styles stylesheet. Default: "bundle.css".}
 }
 \value{
 HTML string to be included in \code{<head>} section.

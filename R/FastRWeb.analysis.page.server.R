@@ -294,7 +294,7 @@ new.FastRWeb.analysis.page.run <- function(app,
       
       
       ## First we need to check if it is going to be a config request
-      if(filepath == "js/config.js")  {
+      if(filepath == "config.js")  {
         info(logger, paste0("... front end config request"))
         payload <- config.lines
         last.content.type <- "application/javascript"
