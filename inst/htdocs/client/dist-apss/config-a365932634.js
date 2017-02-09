@@ -4,7 +4,7 @@
  */
 
 window.EP_CONFIG = {
-    "version":                  "3.10.1",
+    "version":                  "3.10.2",
     "contact.address":          "",
     "gmail.link.tmpl":          "https://mail.google.com/mail/?view=cm&fs=1&to=ADDRESS&su=TITLE&body=BODY&cc=&bcc=",
     "help.link":                "",

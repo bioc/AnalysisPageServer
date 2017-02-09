@@ -7,7 +7,7 @@
 ##' @return character vector
 ##' @author Brad Friedman
 default.stylesheets <- function()  {
-  "bundle.css"
+  getScriptName(filename = "bundle.css", type= c('apss'))
 }
 
 ##' Generate HTML for custom headers to load AnalysisPageServer CSS and viewport
@@ -37,12 +37,31 @@ custom.html.headers <- function(libbase.prefix = "",
     stylesheets.html <- c(stylesheets.html,
                           paste0('<link id="ep-svg-styles" href="', libbase.prefix, ep.svg.styles, '" type="text/css" rel="stylesheet">'))
   }
-  main.script <- '<script id="ep-entry-script" data-main="js/requirejs-webconfig" src="bundle.js"></script>'
+  script.name.1 <- getScriptName(filename = "config.js", type= c('apss'))
+  script.name.2 <- getScriptName(filename = "bundle.js", type= c('apss'))
+  
+  main.scripts <- paste0('<script id="ep-entry-script" src="', script.name.1, '"></script>', '\n',
+                        '<script id="ep-entry-script" src="', script.name.2, '"></script>')
 
-  return(paste(c(meta.viewport, stylesheets.html, main.script), collapse= "\n"))
+  return(paste(c(meta.viewport, stylesheets.html, main.scripts), collapse= "\n"))
                                                                     
 }
 
+# Get script name from rev-manifest.json
+getScriptName <- function(filename, type= c('aps', 'apss')){
+  stopifnot(length(filename) == 1)
+  if(missing(filename)) stop('filename is missing')
+  type <- match.arg(type)
+  type.path <- if(type == 'apss') 'dist-apss' else 'dist-aps'
+  rev.manifest <- rjson::fromJSON(file = file.path(
+    system.file(package='AnalysisPageServer'), 
+    'htdocs', 'client',  type.path, 
+    'rev-manifest.json'))
+  if(filename %in% names(rev.manifest))
+    filename <- rev.manifest[[filename]]
+  
+  return(filename)
+}
 
 ##' Create HTML for a div element to contain one AnalysisPageServer data set
 ##'
