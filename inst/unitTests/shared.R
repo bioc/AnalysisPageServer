@@ -4,18 +4,11 @@ library(RUnit)
 
 .dev.null <- if(platformIsWindows()) "NUL" else "/dev/null"
 
-## this handles R3-type SVG docs as well as the older types
 safeGetPlotPoints <- function(svgdoc)  {
-  tryCatch({
-    library(SVGAnnotation)
-    getPlotPoints(svgdoc)
-  },
-           error = function(e)  {
-             Filter(function(node)  {
-               a <- xmlAttrs(node)
-               "class" %in% names(a) && a[["class"]] == "plot-point"
-             }, xmlChildren(xmlChildren(xmlChildren(svgdoc)[[1]])[[2]]))
-           })
+  Filter(function(node)  {
+    a <- xmlAttrs(node)
+    "class" %in% names(a) && a[["class"]] == "plot-point"
+  }, xmlChildren(xmlChildren(xmlChildren(svgdoc)[[1]])[[2]]))
 }
 
 

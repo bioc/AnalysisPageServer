@@ -67,7 +67,7 @@ off.test.annotator.strip.plot <- function()  {
 
   library(AnalysisPageServer)
   library(XML)
-  library(SVGAnnotation)
+  # library(SVGAnnotation)
   library(RUnit)
 
   data.dir <- system.file("testdata", package="AnalysisPageSVGAnnotator")
