@@ -72,7 +72,7 @@ rapache.app.from.registry <- function(registry,
                                       logger = create.logger(stderr(), log4r:::FATAL))  {
 
   .is.registry.or.stop(registry)
-  
+
   e <- new.env()
 
   ## First check that none of the pages or the svg function have a parameter with one of the special names
@@ -89,7 +89,7 @@ rapache.app.from.registry <- function(registry,
   .validate.decoder.list(query.param.decoders)
 
   .validate.brand.builder(brand.builder)
-  
+
   for(page in pages(registry))  {
     ap <- get.page(registry, page)
     .check.collision.with.specials(paste(page, "page parameters"), ap$params, special.params)
@@ -109,7 +109,7 @@ rapache.app.from.registry <- function(registry,
   e$analysis.id <- NULL  ## ID of current analysis for logging purposes. NULL means there is no current analysis, so no events should be triggered!
   e$in.analysis <- FALSE ## Boolean to indicate that we are in the midst of an analysis (rather than another type of request, such as pages or params)
   e$plot.file <- "" ## path to current plot file, also for logging purposes.
-  
+
   e$devices <- devices
   tmpdir == "" && stop("tempdir was not provided. You can do it by setting WEB_TMPDIR environment variable, for example")
   file.exists(tmpdir) || stop("tempdir '", tmpdir, "' does not exist")
@@ -135,7 +135,7 @@ rapache.app.from.registry <- function(registry,
 
   ## Add handlers (functions) for the indicated events. This are then called internally by the server when it
   ## triggers such events. Distinguish from website handlers which handle requests.
-  ## All args are optional---whichever you supplyare added
+  ## All args are optional---whichever you supply are added
   e$add.event.handlers <- function(start.analysis, finish.analysis, start.plot.retrieval, finish.plot.retrieval)  {
     if(!missing(start.analysis))
       add.event.handler(e$events, "StartAnalysis", start.analysis)
@@ -146,7 +146,7 @@ rapache.app.from.registry <- function(registry,
     if(!missing(finish.plot.retrieval))
       add.event.handler(e$events, "FinishPlotRetrieval", finish.plot.retrieval)
   }
-  
+
 
   ## Check GET and POST to see if the request should be textarea-wrapped. Usually we don't want to
   ## reach back into GET or POST except via the params() function but this might be called after
@@ -161,7 +161,7 @@ rapache.app.from.registry <- function(registry,
     try(textarea.wrap <- fromJSON(textarea.wrap), silent=TRUE)
     return(isTRUE(as.logical(textarea.wrap)))
   }
-  
+
   ## combine GET and POST (provided by rapache in the global env) into one list
   ## The list() at the beginning makes it always return a list
   ## (handles the corner case of c(list(), NULL, NULL, NULL)). Decode the params if requested
@@ -182,7 +182,7 @@ rapache.app.from.registry <- function(registry,
   e$process.response <- function(body, content.type, status=200, headers=character(0))  {
     textarea.wrap <- is.textarea.wrap.request()
     if(textarea.wrap)  content.type <- "text/plain"
-    
+
     setContentType(content.type)
     if(!is.null(headers)) for(h in names(headers))  setHeader(header=h, value=headers[h])
 
@@ -193,12 +193,12 @@ rapache.app.from.registry <- function(registry,
       local.analysis.id <- analysis.id
       analysis.id <<- NULL
       in.analysis <<- FALSE
-      
+
       if(substr(content.type, 1, 6) == "image/")  {
         ## plot retrieval
         trigger.event(events, "FinishPlotRetrieval",
                       analysis.id = local.analysis.id)
-        
+
       }  else  {
         if(status == 200)  {
           if(file.exists(plot.file))  {
@@ -213,7 +213,7 @@ rapache.app.from.registry <- function(registry,
             trigger.event(events, "FinishAnalysis",
                           analysis.id = local.analysis.id,
                           success = TRUE)
-          }          
+          }
         }  else  {
           ## analysis error---body is a big error message
           trigger.event(events, "FinishAnalysis",
@@ -224,7 +224,7 @@ rapache.app.from.registry <- function(registry,
       }
     }
 
-    
+
     if(is.raw(body))  {
       ## handle raw body, such as might be delivered with PNGs.
       ## Would like to use writeBin for these. But it croaks on text connections
@@ -238,8 +238,8 @@ rapache.app.from.registry <- function(registry,
     }
 
     return(status)
-  } 
-  
+  }
+
   ## catches errors and calls process.response
   e$handler <- function(fcn, fcn.name, err.status=400)  {
     local.fcn.name <- fcn.name  ## let's remember a pretty name for the traceback, instead of calling it local.fcn
@@ -247,12 +247,22 @@ rapache.app.from.registry <- function(registry,
     function(...)  {
       finish <- tryKeepTraceback(local.fcn(...))
       if(is(finish, "try-error"))  {
-        err.msg <- paste0("in ", deparse(conditionCall(finish$error)), ": ",
+        err.call <- deparse(conditionCall(finish$error))
+        err.msg <- paste0("in ",
+                          # collapse with line break in the case of multi-line calls
+                          paste(err.call, collapse = "\n"),
+                          ":\n",
                           conditionMessage(finish$error))
-        tb <- paste(collapse="\n", getTraceback(finish))
-        tb <- sub("local.fcn\\(", paste(sep="", local.fcn.name, "("), tb)
-        
-        body <- paste(sep="\n", "ERROR", err.msg, tb)
+        body <- paste("ERROR", err.msg, sep = "\n")
+
+        # check if traceback is already included.
+        # if so, don't include another traceback.
+        if(!grepl("STACK TRACE:", err.msg)) {
+          tb <- paste(getTraceback(finish), collapse = "\n")
+          tb <- sub("local.fcn\\(", paste(sep="", local.fcn.name, "("), tb)
+          tb <- paste("STACK TRACE:", tb, sep = "\n")
+          body <- paste(body, tb, sep = "\n")
+        }
 
         process.response(body, "text/plain", err.status)
       }  else  {
@@ -278,13 +288,13 @@ rapache.app.from.registry <- function(registry,
 
     plist <- params()
     include.services <- !is.null(plist$include_services) && plist$include_services == 1
-    
+
     page.names <- pages(registry, include.services = include.services)
     all.info <- lapply(page.names, function(pn) {
       ap <- get.page(registry, pn)
       .page.meta.info(pn, ap)
     })
-    
+
     res <- new.response(body=toJSON(all.info),
                         status=200,
                         content.type="application/json")
@@ -304,12 +314,12 @@ rapache.app.from.registry <- function(registry,
     path <- file.path(tmpdir, plist$file)
 
     file.exists(path) || stop("File does not exist: '", path, "'")
-    
+
     extension <- sub(".*\\.", "", path)
 
     extension %in% names(mime.types) || stop("I've been asked to retreive a file with an extension '", extension, "' not in the list of known file extensions: ",
                                           paste(collapse=" ", names(mime.types)))
-    
+
     mime.type <- mime.types[[extension]]
 
     ## For SVGs I could use readLines here, but that won't work right for PNGs, so I have to use readBin.
@@ -318,7 +328,7 @@ rapache.app.from.registry <- function(registry,
     n <- file.info(path)[, "size"]
     img.data <- readBin(path, "raw", n=n)
 
-    
+
     res <- new.response(body = img.data,
                         content.type = mime.type,
                         status = 200)
@@ -336,12 +346,12 @@ rapache.app.from.registry <- function(registry,
              fileext=paste(sep="", ".", device.name),
              tmpdir=tmpdir)
   }
-  
-  
+
+
   e$analysis <- function()  {
-        
+
     info(logger, "analysis(): starting")
-    
+
     plist <- params()
     fplist <- file.params()  ## uploaded file parameters---Need to keep this separate so it doesn't get JSON decoded by .prepare.params (called by execute.handler)!
 
@@ -355,15 +365,15 @@ rapache.app.from.registry <- function(registry,
     }  else  {
       default.max.regions
     }
-    
+
     device.name <- plist[[device.param]]
     if(is.null(device.name))  device.name <- names(devices)[1]  ## default is first device, usually "svg"
-    
+
     info(logger, paste("analysis(): page name", page.name))
-    
+
     ## save in environment so it will be available for process.response
     plot.file <<- temp.plot.file(page.name, device.name)
-    
+
     ## Don't pass the special params (like page anme) to the page's handler
     plist.no.specials <- plist[!names(plist) %in% special.params]
 
@@ -377,7 +387,6 @@ rapache.app.from.registry <- function(registry,
     ## info(logger, paste("analysis(): ... params = ", paste(collapse="\n", capture.output(print(plist.no.specials)))))
     ## info(logger, paste("analysis(): ... special.params = ", paste(collapse="\n", capture.output(print(plist[intersect(names(plist), special.params)])))))
     ## info(logger, paste("analysis(): ... SERVER = ", paste(collapse="\n", capture.output(print(SERVER)))))
-    
 
 
     ## save analysis.id in environment so it will be available for process.response
@@ -404,17 +413,17 @@ rapache.app.from.registry <- function(registry,
 
 
     info(logger, paste("analysis(): analysis.id=", analysis.id))
-    
+
     if(!page$no.plot)
       info(logger, paste("analysis(): device name", device.name))
 
     info(logger, paste("analysis(): plist.no.specials", toJSON(plist.no.specials)))
-    
+
 
     annotate.plot <- page$annotate.plot && (device.name == "svg")
 
     info(logger, paste("analysis(): passing control to handler"))
-    
+
     datanode <- execute.handler(page, plist.no.specials,
                                 plot.file,
                                 file.params=fplist,
@@ -428,26 +437,26 @@ rapache.app.from.registry <- function(registry,
 
       return(datanode)
     }
-    
+
 
     if(logger$level <  log4r:::INFO)  {
       datanode.rds <- file.path(tmpdir, "last-analysis-datanode.rds")
       info(logger, paste("analysis(): handler finished; Saving datanode to", datanode.rds))
       saveRDS(datanode, file=datanode.rds)
-      
+
     }
-    
+
     info(logger, paste("analysis(): JSON-encoding datanode"))
     datanode.json <- encode.datanode(datanode)
 
     info(logger, paste("analysis(): building response object"))
-    
+
     res <- new.response(body = datanode.json,
                         content.type = "application/json",
                         status = 200)
 
     info(logger, "analysis(): returning")
-    
+
     return(res)
   }
 
@@ -460,7 +469,7 @@ rapache.app.from.registry <- function(registry,
                         status=200)
     return(res)
   }
-  
+
   e$resources <- function()  {
     c(analysis=analysis,
       brand=brand,
@@ -469,8 +478,6 @@ rapache.app.from.registry <- function(registry,
       status=status,
       retrieve=retrieve)
   }
-
-  
 
   e$status <- function()  {
     ## return some information about the status of the current process
@@ -483,7 +490,7 @@ rapache.app.from.registry <- function(registry,
     }  else  {
       decoder.name <- ""
     }
-    
+
     info <- list(PID=Sys.getpid(),
                  handlers=paste(collapse=" ", names(handlers())),
                  time=as.character(Sys.time()),
@@ -494,7 +501,7 @@ rapache.app.from.registry <- function(registry,
       sub("\\n*$", "", capture.output(print(.prepare.params(plist, fplist))))
 
     env <- Sys.getenv()
-    
+
     res <- new.response(body = paste(collapse="\n",
                           c("<html><body><pre>",
                             " *** BASIC INFO ***\n",
@@ -502,7 +509,7 @@ rapache.app.from.registry <- function(registry,
 
                             "\n\n *** OPEN PLOTTING DEVICES *** \n",
                             capture.output(print(dev.list())),
-                            
+
                             "\n\n *** PREPARED PARAMS ***\n",
                             param.text,
 
@@ -517,15 +524,15 @@ rapache.app.from.registry <- function(registry,
 
                             "\n\n *** RAPACHE SERVER VARIABLE ***\n",
                             capture.output(print(SERVER)),
-                            
+
                             "</pre></body></html>")),
                         status = 200,
                         content.type = "text/html")
     return(res)
-    
+
   }
 
-  
+
   e$handlers <- function()   {
     r <- resources()
     names(resource.names) <- resource.names <- names(r)
@@ -533,7 +540,7 @@ rapache.app.from.registry <- function(registry,
     names(handlers) <- paste(sep=".", "handle", names(handlers))
     return(handlers)
   }
-  
+
   e$add.handlers.to.global <- function(pos = .GlobalEnv)  {
     handlers <- handlers()
 
@@ -549,10 +556,10 @@ rapache.app.from.registry <- function(registry,
     }  else  {
       if(!any(grepl("add.handlers.to.global", readLines(startup.script))))
         stop("add.handlers.to.global not found in your startup script ", startup.script)
-      
-      lines <- paste("RSourceOnStartup", shQuote(startup.script))      
+
+      lines <- paste("RSourceOnStartup", shQuote(startup.script))
     }
-    
+
     for(h in names(handlers()))  {
       resource.name <- sub("^handle.","",h)
       lines <- c(lines,
@@ -564,9 +571,6 @@ rapache.app.from.registry <- function(registry,
     return(lines)
   }
 
-
-
-  
 
   for(method in c("analysis", "params", "file.params",
                   "add.handlers.to.global",
@@ -583,7 +587,7 @@ rapache.app.from.registry <- function(registry,
   }
 
   class(e) <- "AnalysisPageRApacheApp"
-  
+
   return(e)
 }
 

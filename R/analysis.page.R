@@ -448,7 +448,7 @@ execute.handler <- function(analysis.page, params, plot.file, file.params=list()
                      paste(collapse="\n", vwc.error(vwc)),
                      "FULL PARAMS:",
                      jsonParams, 
-                     "ANALYSIS.PAGE TRACE:",
+                     "ANALYSIS.PAGE STACK TRACE:",
                      paste(collapse="\n", vwc.error.traceback(vwc)))
         stop(msg)
       }
@@ -484,7 +484,7 @@ execute.handler <- function(analysis.page, params, plot.file, file.params=list()
                  paste(collapse="\n", vwc.error(retval)),
                  "PARAMS:",
                  jsonParams,
-                 "ANALYSIS.PAGE TRACE:",
+                 "ANALYSIS.PAGE STACK TRACE:",
                  paste(collapse="\n", vwc.error.traceback(retval)), "")
     stop(msg)
   }

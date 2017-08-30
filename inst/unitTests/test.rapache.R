@@ -218,7 +218,7 @@ test.rapache <- function()  {
                  list(status=400, content.type="text/plain"),
                  "error response")
   checkEquals(res$body[1], "ERROR", "error message starts correctly (first line)")
-  checkTrue(grepl("No such page 'nonsense' in registry", res$body[2]), "error message starts correctly (second line)")
+  checkTrue(grepl("No such page 'nonsense' in registry", res$body[3]), "error message starts correctly (third line)")
 
 
 
