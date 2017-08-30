@@ -262,6 +262,8 @@ rapache.app.from.registry <- function(registry,
           tb <- sub("local.fcn\\(", paste(sep="", local.fcn.name, "("), tb)
           tb <- paste("STACK TRACE:", tb, sep = "\n")
           body <- paste(body, tb, sep = "\n")
+        } else {
+          body <- sub("local.fcn\\(", paste(sep="", local.fcn.name, "("), body)
         }
 
         process.response(body, "text/plain", err.status)
