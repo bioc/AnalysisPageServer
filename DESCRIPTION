@@ -2,7 +2,7 @@ Package: AnalysisPageServer
 Type: Package
 Title: A framework for sharing interactive data and plots from R
     through the web
-Version: 1.11.3
+Version: 1.11.4
 Date: 2017-08-30
 Author: Brad Friedman <friedman.brad@gene.com>, Adrian Nowicki, Hunter
     Whitney <hunter@hunterwhitney.com>, Matthew Brauer
@@ -26,4 +26,4 @@ Suggests:
 Enhances: Rook (>= 1.1), fork, FastRWeb, ggplot2
 VignetteBuilder: knitr
 biocViews: GUI, Visualization, DataRepresentation
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

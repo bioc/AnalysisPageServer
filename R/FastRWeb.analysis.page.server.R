@@ -16,7 +16,7 @@
 
   if(prefix.slash)
     path <- paste0("/", path)
-  
+
   return(path)
 }
 
@@ -77,13 +77,13 @@
 ##' with a ".R" suffix appended.
 ##'
 ##' It would be possible to extend this system to server multiple AnalysisPageServer apps from the
-##' same FastRWeb setup. Each one would get its own FastRWeb script, and I leave it as an exercise 
+##' same FastRWeb setup. Each one would get its own FastRWeb script, and I leave it as an exercise
 ##' for the reader to build them all in the Rserve startup and assign the correct handler
 ##' to \code{run} in each script.
-##' 
+##'
 ##' In this example I point my browser to \code{http://localhost/cgi-bin/R/APS/dist-aps/analysis-page-server.html}
 ##' to open the page.
-##' 
+##'
 ##' @title new.FastRWeb.analysis.page.run
 ##' @param app AnalysisPageRApacheApp. Or an AnalysisPageRegistry from which to build an app
 ##' (see \code{...}).
@@ -146,11 +146,11 @@ new.FastRWeb.analysis.page.run <- function(app,
   checkPackageInstalled("FastRWeb") || stop("FastRWeb must be installed to create a FastRWeb-based AnalysisPageServer.")
 
   require("FastRWeb") || stop("FastRWeb couldn't be loaded")
-    
+
   if(is(app, "AnalysisPageRegistry"))  {
     app <- rapache.app.from.registry(app, tmpdir = tmpdir, logger = logger, ...)
   }
-  
+
   local.app <- app
   h <- app$handlers()
   names(h) <- sub("^handle.", "", names(h))
@@ -162,7 +162,7 @@ new.FastRWeb.analysis.page.run <- function(app,
                    "setContentType",
                    "setHeader",
                    "SendBin")
-  
+
   names(global.vars) <- global.vars
 
 
@@ -201,7 +201,7 @@ new.FastRWeb.analysis.page.run <- function(app,
   info(logger, paste0("app.prefix = '", app.prefix, "'"))
   info(logger, paste0("client.r.url = '", client.r.url, "'"))
   info(logger, paste0("client.rest.url = '", client.rest.url, "'"))
-  
+
   config.lines <- config.js(app.prefix = app.prefix,
                             client.r.url = client.r.url,
                             client.rest.url = client.rest.url)
@@ -212,12 +212,12 @@ new.FastRWeb.analysis.page.run <- function(app,
 
   REST.path.regex <- if(!is.null(EP))  paste0("^/", .standardize.path(REST.location), "/")
 
-  
+
   info(logger, "Router Regexes:")
   info(logger, paste0("front.end.path.regex = '", front.end.path.regex, "'"))
   info(logger, paste0("APS.path.regex = '", APS.path.regex, "'"))
   info(logger, paste0("REST.path.regex = '", REST.path.regex, "'"))
-  
+
   ## handle all requests. This thing has to become the "run" function in the final FastRWeb
   ## script. But right now we are just making the function.
   handler <- function(...)  {
@@ -254,9 +254,7 @@ new.FastRWeb.analysis.page.run <- function(app,
       for(line in capture.output(list(request = request, parsed.post = parsed.post)))
         info(logger, line)
     }
-    
 
-    
     ## fastRweb keeps the FILES in with the rest of the POST
     ## We can sort them out since they will be lists and everything else scalars
     POST <<- Filter(Negate(is.list), parsed.post)
@@ -275,7 +273,6 @@ new.FastRWeb.analysis.page.run <- function(app,
     setContentType <<- mySetContentType
     setHeader <<- mySetHeader
     sendBin <<- mySendBin
-    
 
     path <- req$path.info
     ## clear last
@@ -285,21 +282,20 @@ new.FastRWeb.analysis.page.run <- function(app,
     header.lines <- character(0)
 
     info(logger, paste0("path = '", path, "'"))
-    
+
     if(grepl(front.end.path.regex, path))  {
       filepath <- sub(front.end.path.regex, "", path)
 
       info(logger,
            paste0("... front end filepath = '", filepath, "'"))
-      
-      
+
       ## First we need to check if it is going to be a config request
-      if(filepath == "config.js")  {
+      if(grepl("^config-[[:xdigit:]]+.js$", filepath)) {
         info(logger, paste0("... front end config request"))
         payload <- config.lines
         last.content.type <- "application/javascript"
         cmd <- "html" ## doesn't mean html---just serve the lines
-        
+
       }  else  {
         ## OK, it is any other file from the front end.
         ## Note that cmd="file" only serves files within FastRWeb's web directory,
@@ -317,11 +313,10 @@ new.FastRWeb.analysis.page.run <- function(app,
                                     png = "image/png",
                                     svg = "image/svg+xml",
                                     "application/octet-stream")
-        
+
         info(logger, paste0("... front end other request ext='", file.ext, "' Content-Type='", last.content.type, "'"))
       }
 
-      
     }  else if (grepl(APS.path.regex, path))  {
 
       resource.path.info <- sub(APS.path.regex, "", path)
@@ -330,16 +325,15 @@ new.FastRWeb.analysis.page.run <- function(app,
 
       ## This is a bit ugly---we are modeling what would be seen under RApache here
       SERVER$path_info <<- resource.path.info
-      
-      
+
       ##resource <- basename(path)
       info(logger, paste0("... APS resource = '", resource, "'"))
 
       ## This is the money---dispatch the resource to the right function in the AnalysisPage App object
       body <- capture.output(status <- h[[resource]]())
-      
+
       header.lines <- paste(sep = ": ", names(last.headers), last.headers)
-      
+
       if(is.null(last.rawdata))  {
         ## Response is not raw---it should be in body.
         ## cmd="html" does not necessarily mean html.
@@ -382,7 +376,6 @@ new.FastRWeb.analysis.page.run <- function(app,
               payload = payload,
               content.type = last.content.type,
               headers = header.lines)
-              
   }
 
 
@@ -393,8 +386,6 @@ new.FastRWeb.analysis.page.run <- function(app,
                     unslash(FastRWeb.scriptname),
                     unslash(front.end.location),
                     "analysis-page-server.html"))
-  
-  return(handler)
-  
-}
 
+  return(handler)
+}
