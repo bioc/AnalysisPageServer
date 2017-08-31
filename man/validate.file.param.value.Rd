@@ -30,4 +30,3 @@ I will know what form they should take.
 \author{
 Brad Friedman
 }
-

@@ -38,4 +38,3 @@ pruning bloated workers.
 \author{
 Brad Friedman
 }
-

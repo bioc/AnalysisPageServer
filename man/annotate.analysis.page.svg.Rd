@@ -54,4 +54,3 @@ The file is overwritten.
 \author{
 Brad Friedman
 }
-

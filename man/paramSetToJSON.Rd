@@ -20,4 +20,3 @@ is really server-side information.
 \author{
 Brad Friedman
 }
-

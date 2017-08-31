@@ -19,4 +19,3 @@ Wrapper around try-catch
 x <- tryKeepTraceback(stop("no way"))
 if(is(x, "try-error"))  cat(getTraceback(x))
 }
-

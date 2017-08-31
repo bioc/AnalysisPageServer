@@ -18,10 +18,9 @@ Make a new (empty) registry.
 \examples{
 r <- new.registry()
 }
-\author{
-Brad Friedman
-}
 \seealso{
 \code{\link{register.page}}, \code{\link{has.page}}, \code{\link{get.page}}, \code{\link{pages}}
 }
-
+\author{
+Brad Friedman
+}

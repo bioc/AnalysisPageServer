@@ -2,9 +2,9 @@
 % Please edit documentation in R/persistent.params.R
 \name{persistent.params}
 \alias{persistent.params}
-\alias{persistent.params.AnalysisPage}
 \alias{persistent.params.AnalysisPageParam}
 \alias{persistent.params.AnalysisPageParamSet}
+\alias{persistent.params.AnalysisPage}
 \alias{persistent.params.AnalysisPageRegistry}
 \title{Return names of persistent parameters for an object}
 \usage{
@@ -40,4 +40,3 @@ there is no requirement that they be the same.
 \author{
 Brad Friedman
 }
-

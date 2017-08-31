@@ -27,12 +27,11 @@ vwc.conditions(vwc, "messages")
 vwc.conditions(vwc, "warnings")
 vwc.conditions(vwc, "error")
 }
-\author{
-Brad Friedman
-}
 \seealso{
 \code{\link{vwc.error.condition}},
 \code{\link{vwc.messages.conditions}},
 \code{\link{vwc.warnings.conditions}}
 }
-
+\author{
+Brad Friedman
+}

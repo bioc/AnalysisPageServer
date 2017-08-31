@@ -33,4 +33,3 @@ Build a slider AnalysisPageParam. This is a numeric variable. It has a minimum v
 \author{
 Brad Friedman
 }
-

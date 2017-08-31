@@ -34,4 +34,3 @@ such as SIGUSR1 that would normally cause the process to die.
 \author{
 Brad Friedman - Regular
 }
-

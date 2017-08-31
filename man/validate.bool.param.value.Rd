@@ -27,4 +27,3 @@ Validate a boolean-type AnalysisPageParam value:
 \author{
 Brad Friedman
 }
-

@@ -28,4 +28,3 @@ with the x and y coordinates, with IDs A-Z, A.1-Z.1, ...
 \author{
 Brad Friedman
 }
-

@@ -36,4 +36,3 @@ validate.param.value(sp, 3)
 \author{
 Brad Friedman
 }
-

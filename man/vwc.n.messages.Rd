@@ -25,4 +25,3 @@ vwc.n.messages(vwc)
 \author{
 Brad Friedman
 }
-

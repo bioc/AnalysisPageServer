@@ -40,4 +40,3 @@ trigger.event(r, "mouseclick", x = 30, y = 50)
 \author{
 Brad Friedman
 }
-

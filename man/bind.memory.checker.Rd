@@ -34,10 +34,9 @@ Although the BloatedMemory event would now be triggered, unless a listener
 is attached to *it* nothing special will happen.
 (See \code{\link{autosignal.on.bloated.memory}} for this.)
 }
-\author{
-Brad Friedman
-}
 \seealso{
 \code{\link{check.memory}}, \code{\link{autosignal.on.bloated.memory}}
 }
-
+\author{
+Brad Friedman
+}

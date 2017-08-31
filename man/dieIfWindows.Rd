@@ -23,4 +23,3 @@ Nothing
 \description{
 Throw an error if platform is windows
 }
-

@@ -27,4 +27,3 @@ event.names(r)
 \author{
 Brad Friedman
 }
-

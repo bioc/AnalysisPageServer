@@ -34,4 +34,3 @@ new.response(paste0(poem.html, "\\n"), content.type = "text/html")
 \author{
 Brad Friedman
 }
-

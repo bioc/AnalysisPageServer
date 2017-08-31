@@ -22,4 +22,3 @@ pages(tr)
 \author{
 Brad Friedman
 }
-

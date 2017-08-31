@@ -39,4 +39,3 @@ default.param(name = "word", prototype = c("foo", "bar", "baz"), label = "Choose
 \author{
 Brad Friedman
 }
-

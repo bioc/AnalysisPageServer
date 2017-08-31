@@ -45,4 +45,3 @@ Also, this throws an error if "x" or "y" field is missing
 \author{
 Brad Friedman
 }
-

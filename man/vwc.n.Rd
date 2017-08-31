@@ -28,4 +28,3 @@ vwc.n(vwc, "error")
 \author{
 Brad Friedman
 }
-

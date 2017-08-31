@@ -41,4 +41,3 @@ front end for its AJAX request to the server to perform an analysis, or retrieve
 \author{
 Brad Friedman
 }
-

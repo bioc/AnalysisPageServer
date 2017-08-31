@@ -29,4 +29,3 @@ has.event(r, "mouseclick")
 \author{
 Brad Friedman
 }
-

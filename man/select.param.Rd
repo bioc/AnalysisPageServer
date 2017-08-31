@@ -39,4 +39,3 @@ list of possible values. The list is known before page load time
 \author{
 Brad Friedman
 }
-

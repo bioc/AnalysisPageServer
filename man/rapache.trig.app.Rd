@@ -18,10 +18,9 @@ Build the AnalysisPageRApacheApp for the trig example
 \details{
 The toy registry has a sine page, a cosine page and the scattergram tool.
 }
-\author{
-Brad Friedman
-}
 \seealso{
 \code{\link{trig.registry}}
 }
-
+\author{
+Brad Friedman
+}

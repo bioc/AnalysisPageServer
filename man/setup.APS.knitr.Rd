@@ -82,4 +82,3 @@ message("See vignette embedding.html")
 \author{
 Brad Friedman
 }
-

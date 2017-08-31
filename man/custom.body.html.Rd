@@ -26,4 +26,3 @@ attributes you want to include. It just opens the
 \author{
 Brad Friedman
 }
-

@@ -32,4 +32,3 @@ To form a URL to view your data, simply append this query string to the URL for 
 \author{
 Brad Friedman
 }
-

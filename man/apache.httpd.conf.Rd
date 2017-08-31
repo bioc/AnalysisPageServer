@@ -40,4 +40,3 @@ See the \code{ApacheDeployment} vignette for more information.
 \author{
 Brad Friedman
 }
-

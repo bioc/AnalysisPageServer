@@ -25,4 +25,3 @@ The inner hash is keyed by the colnames of your data.frame
 \author{
 Brad Friedman
 }
-

@@ -18,4 +18,3 @@ This attribute must be included in the <body> element.
 \author{
 Brad Friedman
 }
-

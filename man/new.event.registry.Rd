@@ -24,4 +24,3 @@ r <- new.event.registry()
 \author{
 Brad Friedman
 }
-

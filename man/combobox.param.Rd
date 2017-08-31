@@ -64,4 +64,3 @@ whenever one of the depenedent elements changes.
 \author{
 Brad Friedman
 }
-

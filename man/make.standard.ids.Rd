@@ -23,4 +23,3 @@ Make a vector of standardized IDs.
 \author{
 Brad Friedman - Regular
 }
-

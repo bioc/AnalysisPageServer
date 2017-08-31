@@ -41,11 +41,10 @@ This function does not created, modify, or even check for existance of
 the SVG and JSON files. You provide paths and this function just includes
 those paths, however awful, in the HTML returned.
 }
-\author{
-Brad Friedman
-}
 \seealso{
 \code{\link{aps.dataset.divs}}, a convenience wrapper for this
 function to create multple divs at once.
 }
-
+\author{
+Brad Friedman
+}

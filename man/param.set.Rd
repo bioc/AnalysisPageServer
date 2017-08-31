@@ -27,4 +27,3 @@ pset <- param.set(par1, par2)
 \author{
 Brad Friedman
 }
-

@@ -44,4 +44,3 @@ Why are you still here? Didn't I tell you not to call this function?
 \author{
 Brad Friedman
 }
-

@@ -24,4 +24,3 @@ artifically provide default values of 0 for everything, so you get a bunch of si
 \author{
 Brad Friedman
 }
-

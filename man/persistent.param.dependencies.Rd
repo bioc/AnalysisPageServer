@@ -2,9 +2,9 @@
 % Please edit documentation in R/persistent.params.R
 \name{persistent.param.dependencies}
 \alias{persistent.param.dependencies}
-\alias{persistent.param.dependencies.AnalysisPage}
 \alias{persistent.param.dependencies.AnalysisPageParam}
 \alias{persistent.param.dependencies.AnalysisPageParamSet}
+\alias{persistent.param.dependencies.AnalysisPage}
 \alias{persistent.param.dependencies.AnalysisPageRegistry}
 \title{Return persistent parameter dependencies for an object}
 \usage{
@@ -67,4 +67,3 @@ on which they depend.
 \author{
 Brad Friedman
 }
-

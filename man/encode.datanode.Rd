@@ -25,4 +25,3 @@ the \code{$analysis} method of an \code{AnalysisPageRAapacheApp}.
 \author{
 Brad Friedman
 }
-

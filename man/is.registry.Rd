@@ -15,4 +15,3 @@ Logical, indicating that the object is an "AnalysisPageRegistry"
 \description{
 Test if an argument is an AnalysisPageRegistry
 }
-

@@ -22,4 +22,3 @@ client.ip()
 \author{
 Brad Friedman
 }
-

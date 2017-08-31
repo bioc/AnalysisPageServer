@@ -20,4 +20,3 @@ also fails then it reutrns NULL.
 \author{
 Brad Friedman
 }
-

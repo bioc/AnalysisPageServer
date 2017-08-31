@@ -38,4 +38,3 @@ vwc.tracebacks(vwc, "warnings")
 \author{
 Brad Friedman
 }
-

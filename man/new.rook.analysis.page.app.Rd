@@ -42,10 +42,9 @@ new.rook.analysis.page.app
 \examples{
 message("See vignette ExamplesServers.html")
 }
-\author{
-Brad Friedman
-}
 \seealso{
 \code{\link{startRookAnalysisPageServer}}, \code{\link{kill.process}}
 }
-
+\author{
+Brad Friedman
+}

@@ -34,4 +34,3 @@ This can be thought of as a way of building a hash out of other parameter types.
 \author{
 Brad Friedman
 }
-

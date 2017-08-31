@@ -15,4 +15,3 @@ Predicate to test if running on a windows platform
 \author{
 Brad Friedman
 }
-

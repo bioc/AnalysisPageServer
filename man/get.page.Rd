@@ -27,10 +27,9 @@ Return a registered function
 example(register.page, ask=FALSE)  # register the sine page
 get.page(registry, "sine")         # should return the sine.handler function
 }
-\author{
-Brad Friedman
-}
 \seealso{
 \code{\link{new.registry}}, \code{\link{register.page}}, \code{\link{has.page}}, \code{\link{pages}}
 }
-
+\author{
+Brad Friedman
+}

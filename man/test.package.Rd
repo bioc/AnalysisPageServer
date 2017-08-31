@@ -22,10 +22,9 @@ Run the RUnit test harness for this package
 \details{
 Run the RUnit test harness for this package
 }
-\author{
-Brad Friedman, Cory Barr
-}
 \seealso{
 \code{\link[RUnit]{runTestSuite}}, \code{\link[base]{require}}
 }
-
+\author{
+Brad Friedman, Cory Barr
+}

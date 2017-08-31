@@ -30,4 +30,3 @@ new.datanode.array(name = "arr", children = list(html.node, simple.node))
 \author{
 Brad Friedman
 }
-

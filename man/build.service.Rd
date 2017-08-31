@@ -53,10 +53,9 @@ poem <- build.service(function()  {
   content.type = "text/html")
 }, name = "poem")
 }
-\author{
-Brad Friedman
-}
 \seealso{
 \code{\link[AnalysisPageServer]{new.analysis.page}}
 }
-
+\author{
+Brad Friedman
+}

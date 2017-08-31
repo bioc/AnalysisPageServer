@@ -45,4 +45,3 @@ argument to this function (which then becomes one URL-encoded parameter in the l
 \author{
 Brad Friedman
 }
-

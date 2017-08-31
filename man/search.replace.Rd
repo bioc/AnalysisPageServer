@@ -35,4 +35,3 @@ This is done in C++ so very fast (I hope).
 \author{
 Brad Friedman
 }
-

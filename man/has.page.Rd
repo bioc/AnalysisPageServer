@@ -27,10 +27,9 @@ Predicate to test if some page is already registered under a name
 example(register.page, ask=FALSE)  # register the sine page
 has.page(registry, "sine")         # should return TRUE now.
 }
-\author{
-Brad Friedman
-}
 \seealso{
 \code{\link{new.registry}}, \code{\link{register.page}}, \code{\link{get.page}}, \code{\link{pages}}
 }
-
+\author{
+Brad Friedman
+}

@@ -28,10 +28,9 @@ with activated analysis-page-data-set containers.
 new.datanode.html(name = "shakespeare",
                   value = "<i>Shall I compute thee to a summer's data?</i>")
 }
-\author{
-Brad Friedman
-}
 \seealso{
 \code{\link{is.atomic}}
 }
-
+\author{
+Brad Friedman
+}

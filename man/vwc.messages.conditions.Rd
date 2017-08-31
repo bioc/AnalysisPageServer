@@ -25,4 +25,3 @@ vwc.messages.conditions(vwc)
 \author{
 Brad Friedman
 }
-

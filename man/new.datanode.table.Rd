@@ -32,4 +32,3 @@ Captions for plots are included implicitly in the table component of their respo
 \author{
 Brad Friedman
 }
-

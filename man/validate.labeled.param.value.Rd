@@ -38,4 +38,3 @@ where \code{real.values} and \code{readable.values} are equal-length vectors.
 \author{
 Brad Friedman
 }
-

@@ -35,10 +35,9 @@ registry <- new.registry()
 # and keep the modified registry.
 registry <- register.page(registry, "sine", AnalysisPageServer:::sine.handler)
 }
-\author{
-Brad Friedman
-}
 \seealso{
 \code{\link{new.registry}}, \code{\link{has.page}}, \code{\link{get.page}}, \code{\link{pages}}, \code{\link{new.analysis.page}}
 }
-
+\author{
+Brad Friedman
+}

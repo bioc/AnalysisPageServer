@@ -76,4 +76,3 @@ grep("glyph", readLines(svg.filenames[1]), value = TRUE)
 \author{
 Brad Friedman
 }
-

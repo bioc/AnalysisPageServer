@@ -29,4 +29,3 @@ dies.ok(stop("foo"), "foo", "it stops")
 \author{
 Brad Friedman
 }
-

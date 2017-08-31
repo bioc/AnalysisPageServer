@@ -120,7 +120,7 @@ Note that the name of the FastRWeb script must be the same as \code{FastRWeb.scr
 with a ".R" suffix appended.
 
 It would be possible to extend this system to server multiple AnalysisPageServer apps from the
-same FastRWeb setup. Each one would get its own FastRWeb script, and I leave it as an exercise 
+same FastRWeb setup. Each one would get its own FastRWeb script, and I leave it as an exercise
 for the reader to build them all in the Rserve startup and assign the correct handler
 to \code{run} in each script.
 
@@ -138,4 +138,3 @@ message("See vignette FastRWebDeployment.html")
 \author{
 Brad Friedman
 }
-

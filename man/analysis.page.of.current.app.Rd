@@ -21,4 +21,3 @@ page, then NULL is returned.
 \author{
 Brad Friedman
 }
-

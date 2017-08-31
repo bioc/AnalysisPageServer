@@ -22,4 +22,3 @@ but handy to have a single function so you don't forget the \code{wait()} call.
 \author{
 Brad Friedman
 }
-

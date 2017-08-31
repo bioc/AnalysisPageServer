@@ -24,4 +24,3 @@ Remove old files from a directory
 \author{
 Brad Friedman
 }
-

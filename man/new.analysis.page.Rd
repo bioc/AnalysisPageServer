@@ -129,10 +129,9 @@ registry <- register.page(new.registry(), "sine", page)
 ## Note: above is equivalent to the following:
 ## registry <- register.page(registry, "sine", AnalysisPageServer:::sine.handler)
 }
-\author{
-Brad Friedman
-}
 \seealso{
 \code{\link{register.page}}, \code{\link{execute.handler}}, \code{\link[Biobase]{AnnotatedDataFrame}}
 }
-
+\author{
+Brad Friedman
+}

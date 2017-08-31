@@ -61,10 +61,9 @@ led to an R CMD check warning about S3 method inconsistency.
 }
 message("See vignette ExamplesServers.html")
 }
-\author{
-Brad Friedman
-}
 \seealso{
 \code{\link{new.rook.analysis.page.app}}, \code{\link{kill.process}}
 }
-
+\author{
+Brad Friedman
+}

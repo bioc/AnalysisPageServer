@@ -25,4 +25,3 @@ vwc.n.warnings(vwc)
 \author{
 Brad Friedman
 }
-

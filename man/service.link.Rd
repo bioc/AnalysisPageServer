@@ -24,4 +24,3 @@ are not available.
 \author{
 Brad Friedman
 }
-

@@ -43,4 +43,3 @@ structure can now be specified.
 \author{
 Brad Friedman
 }
-

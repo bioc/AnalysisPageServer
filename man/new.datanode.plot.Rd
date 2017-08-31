@@ -39,4 +39,3 @@ Note: caption is included implicitly in the table object.
 \author{
 Brad Friedman
 }
-

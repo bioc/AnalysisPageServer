@@ -26,4 +26,3 @@ as are all "id", "class" and "type" tags.
 \author{
 Brad Friedman
 }
-

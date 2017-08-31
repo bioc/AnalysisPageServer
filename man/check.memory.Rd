@@ -32,4 +32,3 @@ used.
 \author{
 Brad Friedman
 }
-

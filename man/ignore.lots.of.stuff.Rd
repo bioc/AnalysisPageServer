@@ -27,10 +27,9 @@ want to use it.
 
 All the lines will be concatenated, too, into a single character string.
 }
-\author{
-Brad Friedman
-}
 \seealso{
 \code{\link{check.same.svgs}}
 }
-
+\author{
+Brad Friedman
+}

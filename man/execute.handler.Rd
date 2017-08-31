@@ -82,10 +82,9 @@ plist <- lapply(list(xmin=-2*pi, xmax=2*pi, n= 50), rjson::toJSON)
 sine.data <- AnalysisPageServer:::execute.handler(page, plist, plot.file=plot.file)
 # now sine.data is an AnnotatedDataFrame
 }
-\author{
-Brad Friedman
-}
 \seealso{
 \code{\link{new.analysis.page}}
 }
-
+\author{
+Brad Friedman
+}

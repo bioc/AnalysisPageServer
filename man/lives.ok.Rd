@@ -26,4 +26,3 @@ lives.ok(3+5, "addition lives OK")
 \author{
 Brad Friedman
 }
-

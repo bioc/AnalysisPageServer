@@ -32,10 +32,9 @@ empty.pages <- pages(new.registry())   # should be empty character vector
 example(register.page, ask=FALSE)      # see register.page example---registers the sine handler
 pages(registry)                        # should now be the character vector "sine"
 }
-\author{
-Brad Friedman
-}
 \seealso{
 \code{\link{new.registry}}, \code{\link{register.page}}, \code{\link{has.page}}, \code{\link{get.page}}
 }
-
+\author{
+Brad Friedman
+}

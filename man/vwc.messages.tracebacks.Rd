@@ -28,10 +28,9 @@ vwc <- tryKeepConditions({
 })
 vwc.messages.tracebacks(vwc)
 }
-\author{
-Brad Friedman
-}
 \seealso{
 \code{\link{vwc.tracebacks}}
 }
-
+\author{
+Brad Friedman
+}

@@ -26,4 +26,3 @@ vwc.value(vwc)
 \author{
 Brad Friedman
 }
-

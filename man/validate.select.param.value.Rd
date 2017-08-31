@@ -34,4 +34,3 @@ the candidate value as-is, it is transformed into
 \author{
 Brad Friedman
 }
-

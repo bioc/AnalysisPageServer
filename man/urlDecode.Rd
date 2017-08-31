@@ -18,4 +18,3 @@ Otherwise a pure R implementation is provided.
 \author{
 Brad Friedman
 }
-

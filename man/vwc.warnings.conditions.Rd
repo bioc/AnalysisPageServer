@@ -26,4 +26,3 @@ vwc.warnings.conditions(vwc)
 \author{
 Brad Friedman
 }
-

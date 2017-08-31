@@ -27,4 +27,3 @@ and type "text". The idea is that you will then modify it as necessary to get mo
 \author{
 Brad Friedman
 }
-

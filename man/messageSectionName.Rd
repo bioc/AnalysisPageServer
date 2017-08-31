@@ -31,4 +31,3 @@ then these messages will just be appended to the end.
 \author{
 Brad Friedman
 }
-

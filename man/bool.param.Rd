@@ -30,4 +30,3 @@ constructor \code{simple.param} when you don't provide a value) then the default
 \author{
 Brad Friedman
 }
-

@@ -107,4 +107,3 @@ usage involves only the first two.
 \author{
 Brad Friedman
 }
-

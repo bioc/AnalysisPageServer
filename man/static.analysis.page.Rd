@@ -136,4 +136,3 @@ message("See vignette StaticContent.html")
 \author{
 Brad Friedman
 }
-

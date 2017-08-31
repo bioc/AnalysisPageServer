@@ -91,4 +91,3 @@ Finally, you have to register the five handlers. This is done as follows
 \author{
 Brad Friedman
 }
-

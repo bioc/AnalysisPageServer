@@ -29,8 +29,8 @@ df <- data.frame(A=1:3, B=3:1, C=factor(c("foo","bar","foo")), row.names = c("on
 ##      two=list(A=2, B=2, C="bar"),
 ##      three=list(A=3, B=1, C="foo"))
 data.frame.to.list(df)
+data.frame.to.list(head(cars))
 }
 \author{
 Brad Friedman
 }
-

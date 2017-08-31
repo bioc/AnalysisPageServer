@@ -25,4 +25,3 @@ vwc.error(vwc)
 \author{
 Brad Friedman
 }
-

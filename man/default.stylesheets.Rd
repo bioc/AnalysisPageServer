@@ -18,4 +18,3 @@ Default stylesheets for HTML headers
 \author{
 Brad Friedman
 }
-

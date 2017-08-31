@@ -52,4 +52,3 @@ lengths to pass through to \code{\link{aps.one.dataset.div}}.
 \author{
 Brad Friedman
 }
-

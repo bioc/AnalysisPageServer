@@ -26,10 +26,9 @@ or a "scalar" value, which means length 1 atomic
 \examples{
 new.datanode.simple(name = "x", value = 100)
 }
-\author{
-Brad Friedman
-}
 \seealso{
 \code{\link{is.atomic}}
 }
-
+\author{
+Brad Friedman
+}

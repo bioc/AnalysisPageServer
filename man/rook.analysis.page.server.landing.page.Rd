@@ -24,4 +24,3 @@ message("See vignette ExamplesServers.html")
 \author{
 Brad Friedman
 }
-

@@ -19,4 +19,3 @@ Candidate value, possibly transformed into list.
 \description{
 Alias for \code{\link{validate.labeled.param.value}}
 }
-

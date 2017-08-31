@@ -17,10 +17,9 @@ set.APS.outdir("/some/path")
 get.APS.outdir()
 reset.APS.outdir()
 }
-\author{
-Brad Friedman
-}
 \seealso{
 \code{\link{set.APS.outdir}}, \code{\link{reset.APS.outdir}}
 }
-
+\author{
+Brad Friedman
+}

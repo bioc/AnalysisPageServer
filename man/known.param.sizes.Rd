@@ -18,4 +18,3 @@ Returns the controlled vocabulary of parameter size words
 \author{
 Brad Friedman
 }
-
