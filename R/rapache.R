@@ -241,7 +241,7 @@ rapache.app.from.registry <- function(registry,
   }
 
   ## catches errors and calls process.response
-  e$handler <- function(fcn, fcn.name, err.status=400)  {
+  e$handler <- function(fcn, fcn.name, err.status = 400)  {
     local.fcn.name <- fcn.name  ## let's remember a pretty name for the traceback, instead of calling it local.fcn
     local.fcn <- fcn  ## need to localize this fcn to this closure, otherwise it will still be the fcn from the parent frame and will get changed in the loop
     function(...)  {
@@ -257,13 +257,16 @@ rapache.app.from.registry <- function(registry,
 
         # check if traceback is already included.
         # if so, don't include another traceback.
+        subLocalFcn <- function(x, local.fcn.name) {
+          sub("local.fcn\\(", paste(sep = "", local.fcn.name, "("), x)
+        }
         if(!grepl("STACK TRACE:", err.msg)) {
           tb <- paste(getTraceback(finish), collapse = "\n")
-          tb <- sub("local.fcn\\(", paste(sep="", local.fcn.name, "("), tb)
+          tb <- subLocalFcn(tb, local.fcn.name)
           tb <- paste("STACK TRACE:", tb, sep = "\n")
-          body <- paste(body, tb, sep = "\n")
+          body <- paste(body, .errorMsgDelim, tb, sep = "\n")
         } else {
-          body <- sub("local.fcn\\(", paste(sep="", local.fcn.name, "("), body)
+          body <- subLocalFcn(body, local.fcn.name)
         }
 
         process.response(body, "text/plain", err.status)

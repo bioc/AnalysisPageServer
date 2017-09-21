@@ -1,6 +1,7 @@
 
-
 .request.env <- list2env(list())
+
+.errorMsgDelim <- "---===---===---===---===---"
 
 ##' Get/set section name for "messages" section
 ##'
@@ -444,12 +445,13 @@ execute.handler <- function(analysis.page, params, plot.file, file.params=list()
       ## catch errors gracefully
       vwc <- tryKeepConditions(ppt(plot=params$plot, other=params$other))
       if(vwc.is.error(vwc))  {
-        msg <- paste(sep="\n",
-                     paste(collapse="\n", vwc.error(vwc)),
+        msg <- paste(sep = "\n",
+                     paste(collapse = "\n", vwc.error(vwc)),
+                     .errorMsgDelim,
                      "FULL PARAMS:",
-                     jsonParams, 
+                     jsonParams,
                      "ANALYSIS.PAGE STACK TRACE:",
-                     paste(collapse="\n", vwc.error.traceback(vwc)))
+                     paste(collapse = "\n", vwc.error.traceback(vwc)))
         stop(msg)
       }
       params$plot <- vwc.value(vwc)
@@ -480,12 +482,13 @@ execute.handler <- function(analysis.page, params, plot.file, file.params=list()
 
   
   if(vwc.is.error(retval))  {
-    msg <- paste(sep="\n",
-                 paste(collapse="\n", vwc.error(retval)),
+    msg <- paste(sep = "\n",
+                 paste(collapse = "\n", vwc.error(retval)),
+                 .errorMsgDelim,
                  "PARAMS:",
                  jsonParams,
                  "ANALYSIS.PAGE STACK TRACE:",
-                 paste(collapse="\n", vwc.error.traceback(retval)), "")
+                 paste(collapse = "\n", vwc.error.traceback(retval)), "")
     stop(msg)
   }
 
