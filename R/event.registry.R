@@ -73,6 +73,7 @@ has.event <- function(registry, event)  {
 ##' then yes, without warning. If FALSE (default) then no, throw an error.
 ##' @return Nothing good.
 ##' @author Brad Friedman
+##' @importFrom stats setNames
 ##' @export
 ##' @examples
 ##' r <- new.event.registry()

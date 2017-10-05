@@ -616,7 +616,7 @@ rapache.app.from.registry <- function(registry,
 ##' @examples
 ##' df <- data.frame(A=1:3, B=3:1, C=factor(c("foo","bar","foo")), row.names = c("one", "two", "three"))
 ##' ## Should give the following
-##' ## '{"one":{"A":1,"B":3,"C":"foo"},"two":{"A":2,"B":2,"C":"bar"},"three":{"A":3,"B":1,"C":"foo"}}'
+##' ## {"one":{"A":1,"B":3,"C":"foo"},"two":{"A":2,"B":2,"C":"bar"},"three":{"A":3,"B":1,"C":"foo"}}
 ##' data.frame.to.json(df)
 ##' @export
 data.frame.to.json <- function(df)  {

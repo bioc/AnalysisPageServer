@@ -22,6 +22,12 @@ Factors are first coerced into characters.
 The outer hash is keyed by the rownames of your data.frame
 The inner hash is keyed by the colnames of your data.frame
 }
+\examples{
+df <- data.frame(A=1:3, B=3:1, C=factor(c("foo","bar","foo")), row.names = c("one", "two", "three"))
+## Should give the following
+## {"one":{"A":1,"B":3,"C":"foo"},"two":{"A":2,"B":2,"C":"bar"},"three":{"A":3,"B":1,"C":"foo"}}
+data.frame.to.json(df)
+}
 \author{
 Brad Friedman
 }
