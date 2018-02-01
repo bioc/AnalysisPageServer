@@ -59,7 +59,9 @@ test.error <- function()  {
     for(i in 1:length(got))  {
       top.of.stack <- head(got[[i]], length(expstack[[i]]))
       top.of.stack.no.prefix <- sub(".*: ", "", top.of.stack)
-      top.of.stack.no.linenum <- sub(" at #\\d+$", "", top.of.stack.no.prefix)
+      ## [^#]* allows this to work in the context of having source references on
+      ## Thanks to Tomas Kalibera
+      top.of.stack.no.linenum <- sub(" at [^#]*#\\d+$", "", top.of.stack.no.prefix)
 
       checkEquals(top.of.stack.no.linenum,
                   expstack[[i]],
