@@ -59,8 +59,16 @@ test.signal <- function()  {
 
   got <- lives.ok(check.signal(tools::pskill(pid, tools::SIGUSR1),
                                signo = tools::SIGUSR1))
-  
-  checkEquals(got, FALSE, "pskill FALSE value returned")
+
+  ## Previously check.signal returned FALSE if the signal was successfully *sent*
+  ## (even though it got *caught* by the receiving process [which happens to be
+  ## the same as the *sending* process], it was still successfully *sent*).
+  ## Turns out that this was an incorrect behavior, which has now been fixed.
+  ## https://github.com/HenrikBengtsson/Wishlist-for-R/issues/62.
+  ## I don't really care-- just testing that it got passed through. So I'll
+  ## for TRUE or FALSE, so the test will path with both current and devel
+  ## R versions.
+  checkTrue(got %in% c(FALSE, TRUE), "pskill value returned")
 
 
   dies.ok(
