@@ -1,0 +1,26 @@
+```{r setup, echo = FALSE}
+library(AnalysisPageServer)
+setup.APS.knitr()
+```
+
+# A simple plot: iris
+```{r iris, echo = FALSE}
+embed.APS.dataset({
+  plot(iris$Sepal.Length,
+       iris$Sepal.Width,
+       xlab = "Sepal Length",
+       ylab = "Sepal Width",
+       col = adjustcolor(as.integer(iris$Species), 0.6),
+       pch = 19)
+  legend("topright",
+         levels(iris$Species),
+         pch = 19,
+         col = 1:3)
+},
+                  df = iris,
+                  show.xy = TRUE)
+```
+
+# Passed variable
+This variable was pass through the environment (should say "foo"):
+* `passedVar`: `r passedVar`

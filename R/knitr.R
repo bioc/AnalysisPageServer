@@ -60,6 +60,8 @@
 ##' Default: see details.
 ##' @param include.css Paths to CSS files to include. See details.
 ##' @param include.toc Boolean, default TRUE. Should I include a table of contents?
+##' @param libbase.prefix Passed to \code{\link{custom.html.headers}}. Default:
+##' \code{\link{get.APS.libbase.prefix}()}.
 ##' @param quiet Boolean, default TRUE. Set to FALSE to turn on some diagnostic
 ##' messages
 ##' @export
@@ -68,6 +70,7 @@
 setup.APS.knitr <- function(outdir,
                             include.css = system.file("AnalysisPageServer.css", package = "AnalysisPageServer"),
                             include.toc = TRUE,
+                            libbase.prefix = get.APS.libbase.prefix(),
                             quiet = TRUE)  {
   find.call <- function(pattern) Position(function(x) grepl(paste0(pattern, "$"), as.character(x)[1]), sys.calls())
   
@@ -97,8 +100,12 @@ setup.APS.knitr <- function(outdir,
   file.exists(outdir) || stop("outdir '", outdir, "' does not exist")
 
   set.APS.outdir(outdir)
-  
-  invisible(copy.front.end(outdir = outdir, overwrite = TRUE, include.landing.page = FALSE))
+
+  if(libbase.prefix == "")  {
+    if(!quiet) message("libbase.prefix == \"\" so now copying front-end files")
+    invisible(copy.front.end(outdir = outdir, overwrite = TRUE, include.landing.page = FALSE))
+  }
+    
   
   if(include.toc)
     options(markdown.HTML.options = "toc")
@@ -109,7 +116,74 @@ setup.APS.knitr <- function(outdir,
   css.headers <- sprintf('<link rel="stylesheet" type="text/css" href="%s" />', basename(include.css))
 
   html <- paste(collapse = "\n",
-                c(custom.html.headers(),
+                c(custom.html.headers(libbase.prefix = libbase.prefix),
                   css.headers))
   knitr::asis_output(html)
+}
+
+
+
+
+
+##' Render an AnalysisPageServer Rmd report to HTML using knitr
+##'
+##' This doesn't do much more than just call knitr, but it first
+##' has a bit of logic to overwrite or not the target directory. AnalysisPageServer
+##' reports are entire directories, so this is convenient to manage the creation
+##' of the report at that level.
+##' @param template.Rmd Path to .Rmd template
+##' @param outdir Path to output directory. Default: \code{dirname(outfile)}. You must
+##' specify either this or \code{outfile}.
+##' @param outfile Path to output main .html file. Default is to use \code{basename(template.Rmd)}
+##' with an .html extension, and put it in the \code{outdir} directory.
+##' You must specify either \code{outdir} or this.
+##' @param e Environment to pass to knitr. Default: \code{new.env()}
+##' @param overwrite Logical, default FALSE. This controls the behavior If outdir already exists.
+##' In that case, if \code{overwrite} is TRUE then the outdir is first removed. If \code{overwrite}
+##' is FALSE then instead an error is thrown.
+##' @param ... Passed through to \code{\link[knitr]{knit2html}()}
+##' @return Path to filename written (that is, \code{outfile}).
+##' @author Brad Friedman
+##' @export
+knitAPS <- function(template.Rmd,
+                    outdir = dirname(outfile),
+                    outfile = file.path(outdir, sub(".Rmd", ".html", basename(template.Rmd))),
+                    e = new.env(),
+                    overwrite = FALSE,
+                    ...)  {
+  requireNamespace("knitr") || stop("knitr not available")
+
+  if(missing(outdir) && missing(outfile))  {
+    stop("You must supply one of outdir and outfile")
+  }
+
+  if(!missing(outdir) && !missing(outfile))  {
+    stop("You must supply only one of outdir and outfile")
+  }
+  
+  file.exists(template.Rmd) || stop("No such template file '", template.Rmd, "'")
+  if(file.exists(outdir))  {
+    if(overwrite)  {
+      message("Removing existing dir '", outdir, "'")
+      unlink(outdir, recursive = TRUE)
+      file.exists(outdir) && stop("Couldn't remove outdir for overwriting")
+    }  else  {
+      stop("outdir '", outdir, "' already exists. Supply overwrite = TRUE to proceed")
+    }
+  }
+  message("Creating outdir ", outdir)
+  dir.create(outdir, recursive = TRUE)
+
+  ## better be a full path otherwise the next chdir might
+  ## prevent knitr from finding it.
+  template.Rmd <- normalizePath(template.Rmd)
+  
+  wd <- getwd()
+  on.exit(setwd(wd))
+  setwd(outdir)
+
+  knitr::knit2html(input = template.Rmd,
+                   output = outfile,
+                   envir = e,
+                   ...)
 }

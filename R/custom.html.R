@@ -18,15 +18,14 @@ default.stylesheets <- function()  {
 ##' if you are going to put your common libraries in a shared area instead making a copy next to each
 ##' dataset.
 ##' @title custom.html.headers
-##' @param libbase.prefix Prefix where your shared CSS files will be located. Default "" will be
-##' relative to the index.html file. Otherwise you'll need to end with a "/".
+##' @param libbase.prefix Prefix where your shared CSS files will be located. Default: \code{get.APS.libbase.prefix()}.
 ##' @param viewport Default: "width=device-width, initial-scale=1.0". This will be used in a \code{<meta name="viewport">} tag.
 ##' @param stylesheets Charvec of stylesheets to load. Default is \code{default.stylesheets()}.
 ##' @param ep.svg.styles ep-svg-styles stylesheet. Default: NULL.
 ##' @return HTML string to be included in \code{<head>} section.
 ##' @author Brad Friedman
 ##' @export
-custom.html.headers <- function(libbase.prefix = "",
+custom.html.headers <- function(libbase.prefix = get.APS.libbase.prefix(),
                                 viewport = "width=device-width, initial-scale=1.0",
                                 stylesheets = default.stylesheets(),
                                 ep.svg.styles = NULL)  {
@@ -40,8 +39,8 @@ custom.html.headers <- function(libbase.prefix = "",
   script.name.1 <- getScriptName(filename = "config.js", type= c('apss'))
   script.name.2 <- getScriptName(filename = "bundle.js", type= c('apss'))
   
-  main.scripts <- paste0('<script id="ep-entry-script" src="', script.name.1, '"></script>', '\n',
-                        '<script id="ep-entry-script" src="', script.name.2, '"></script>')
+  main.scripts <- paste0('<script id="ep-entry-script" src="', libbase.prefix, script.name.1, '"></script>', '\n',
+                        '<script id="ep-entry-script" src="', libbase.prefix, script.name.2, '"></script>')
 
   return(paste(c(meta.viewport, stylesheets.html, main.scripts), collapse= "\n"))
                                                                     
@@ -76,6 +75,20 @@ getScriptName <- function(filename, type= c('aps', 'apss')){
 ##' NULL to only have SVG and no table
 ##' @param show.sidebar Boolean. If TRUE (default) then show sidebar. If FALSE then omit it.
 ##' @param show.table Boolean. If TRUE (default) then show sidebar. If FALSE then omit it.
+##' @param allow.zoom If TRUE (default) then allow zooming and panning. IF FALSE then
+##' do not allow it.
+##' @param plot.height If NULL (default) then do not specify 'data-plot-height' attribute.
+##' Otherwise, use this number as 'data-plot-height' attribute, which will specify
+##' the plot height (in pixels)
+##' @param div.width If NULL (default) then do not specify div width in style.
+##' Otherwise, supply a valid CSS width (e.g. "200px" or "60%")
+##' and this will be rolled into the inline-style
+##' @param style String specifying inline style of this div or NULL (default).
+##' If NULL then and \code{div.width}
+##' is also NULL then do not specfiy any inline style. If NULL and \code{div.width} is
+##' non-NULL then create a centered div of \code{div.width} pixels wide with
+##' \code{style="width:100px; margin:0 auto"} (or whatever div.width is, instead of "100px").
+##' If non-NULL then use the string directly as the style attribute of the div.
 ##' @param num.table.rows Number of table rows to show. Default: 10
 ##' @param extra.html.class Thesee are extra classes to add to the div. This could be used for
 ##' whatever extended purpose you want, like extra styling or logic. Should be an unnamed charvec.
@@ -92,6 +105,10 @@ aps.one.dataset.div <- function(svg.path = NULL,
                                 data.path = NULL,
                                 show.sidebar = TRUE,
                                 show.table = TRUE,
+                                allow.zoom = TRUE,
+                                plot.height = NULL,
+                                div.width = NULL,
+                                style = NULL,
                                 num.table.rows = 10,
                                 extra.html.class = character(),
                                 extra.div.attr = NULL)  {
@@ -109,12 +126,25 @@ aps.one.dataset.div <- function(svg.path = NULL,
                 extra.div.attr)
   if(show.table)
     div.attr["data-table-rows"] <- as.character(num.table.rows)
+
+  if(!allow.zoom)
+    div.attr["data-plot-zoomable"] <- "no"
+
+  if(!is.null(plot.height))
+    div.attr["data-plot-height"] <- plot.height
   
   if(!is.null(svg.path))
-     div.attr["data-svg"] <- svg.path
+    div.attr["data-svg"] <- svg.path
   if(!is.null(data.path))
     div.attr["data-set"] <- data.path
 
+
+  if(is.null(style) && !is.null(div.width))
+    style <- paste0("width:", div.width, "; margin:0 auto")
+
+  if(!is.null(style))
+    div.attr["style"] <- style
+  
   quoted.div.attr <- paste0("\"", div.attr, "\"")
 
   div.attr.str <- paste(names(div.attr), quoted.div.attr, sep = "=", collapse= "\n  ")
@@ -152,6 +182,7 @@ aps.one.dataset.div <- function(svg.path = NULL,
 ##' @param extra.div.attr List (of named charvecs or NULLs) of same length as \code{paths.list} to
 ##' pass through corresponding elements to \code{\link{aps.one.dataset.div}}.
 ##' Default: all NULL.
+##' @param ... Passed through to \code{\link{aps.one.dataset.div}}
 ##' @return Charvec of HTML divs corresponding to datasets in \code{paths.list}.
 ##' @author Brad Friedman
 ##' @export
@@ -160,7 +191,8 @@ aps.dataset.divs <- function(paths.list,
                              show.table = rep(TRUE, length(paths.list)),
                              num.table.rows = 10,
                              extra.html.class = rep(list(character()), length(paths.list)),
-                             extra.div.attr = rep(list(NULL), length(paths.list)))  {
+                             extra.div.attr = rep(list(NULL), length(paths.list)),
+                             ...)  {
   stopifnot(is.list(paths.list))
   if("paths.list" %in% names(paths.list))
     paths.list <- paths.list$paths.list
@@ -183,7 +215,8 @@ aps.dataset.divs <- function(paths.list,
                         show.table = show.table[i.ds],
                         num.table.rows = num.table.rows[i.ds],
                         extra.html.class = extra.html.class[[i.ds]],
-                        extra.div.attr = extra.div.attr[[i.ds]])
+                        extra.div.attr = extra.div.attr[[i.ds]],
+                        ...)
   })
 
   return(divs)

@@ -5,6 +5,7 @@
 \title{embed.APS.dataset}
 \usage{
 embed.APS.dataset(plot, df, title, show.sidebar = TRUE, show.table = TRUE,
+  allow.zoom = TRUE, plot.height = NULL, div.width = NULL, style = NULL,
   num.table.rows = 10, extra.html.classes = character(),
   extra.div.attr = character(), svg.args = list(), eval.args = list(envir
   = parent.frame()), outdir = get.APS.outdir(), randomize.filename = TRUE,
@@ -34,6 +35,24 @@ sidebar (filtering, tagging). (This is passed through directly to
 table (still available on download.
 (This is passed through directly to
 \code{\link{aps.dataset.divs}}.)}
+
+\item{allow.zoom}{If TRUE (default) then allow zooming and panning. IF FALSE then
+do not allow it.}
+
+\item{plot.height}{If NULL (default) then do not specify 'data-plot-height' attribute.
+Otherwise, use this number as 'data-plot-height' attribute, which will specify
+the plot height (in pixels)}
+
+\item{div.width}{If NULL (default) then do not specify div width in style.
+Otherwise, supply a valid CSS width (e.g. "200px" or "60%")
+and this will be rolled into the inline-style}
+
+\item{style}{String specifying inline style of this div or NULL (default).
+If NULL then and \code{div.width}
+is also NULL then do not specfiy any inline style. If NULL and \code{div.width} is
+non-NULL then create a centered div of \code{div.width} pixels wide with
+\code{style="width:100px; margin:0 auto"} (or whatever div.width is, instead of "100px").
+If non-NULL then use the string directly as the style attribute of the div.}
 
 \item{num.table.rows}{Number of table rows to show. Default: 10
 (This is passed through directly to

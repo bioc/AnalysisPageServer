@@ -401,6 +401,12 @@ execute.handler <- function(analysis.page, params, plot.file, file.params=list()
                             max.annotated.regions = 5000,
                             logger=create.logger(stderr(), log4r:::FATAL+1))  {
 
+  ## reset some of the details from the last request, such as
+  ## any messages which were thrown. This used to be called further down but
+  ## then it was missing things like messages and also appendCustomContent() calls.
+  ## So why not call it at the top here, and catch everything?
+  clearRequestEnv()
+  
   info(logger, paste("execute.handler()"))
   is(analysis.page, "AnalysisPage") || stop("analysis.page is not an AnalysisPage: ", paste(collapse= " ", is(analysis.page)))
 
@@ -471,10 +477,6 @@ execute.handler <- function(analysis.page, params, plot.file, file.params=list()
 
   #### CALL HANDLER ####
   info(logger, paste("execute.handler(): calling analysis.page$handler"))
-
-  ## reset some of the details from the last request, such as
-  ## any messages which were thrown
-  clearRequestEnv()
   
   ## This is the magic...but it still might go wrong so make sure to have a really good error message:
   ## Also we will be ready to extract warning messages

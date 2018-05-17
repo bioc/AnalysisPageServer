@@ -7,7 +7,7 @@
 aps.dataset.divs(paths.list, show.sidebar = rep(TRUE, length(paths.list)),
   show.table = rep(TRUE, length(paths.list)), num.table.rows = 10,
   extra.html.class = rep(list(character()), length(paths.list)),
-  extra.div.attr = rep(list(NULL), length(paths.list)))
+  extra.div.attr = rep(list(NULL), length(paths.list)), ...)
 }
 \arguments{
 \item{paths.list}{List of lists. The outer list corresponds to data sets
@@ -34,6 +34,8 @@ Default: All empty charvec.}
 \item{extra.div.attr}{List (of named charvecs or NULLs) of same length as \code{paths.list} to
 pass through corresponding elements to \code{\link{aps.one.dataset.div}}.
 Default: all NULL.}
+
+\item{...}{Passed through to \code{\link{aps.one.dataset.div}}}
 }
 \value{
 Charvec of HTML divs corresponding to datasets in \code{paths.list}.

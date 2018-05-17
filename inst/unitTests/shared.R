@@ -5,10 +5,28 @@ library(RUnit)
 .dev.null <- if(platformIsWindows()) "NUL" else "/dev/null"
 
 safeGetPlotPoints <- function(svgdoc)  {
-  Filter(function(node)  {
-    a <- xmlAttrs(node)
-    "class" %in% names(a) && a[["class"]] == "plot-point"
-  }, xmlChildren(xmlChildren(xmlChildren(svgdoc)[[1]])[[2]]))
+  .ppChildren <- function(parentNode)  {
+    Filter(function(node)  {
+      a <- xmlAttrs(node)
+      "class" %in% names(a) && a[["class"]] == "plot-point"
+    }, parentNode)
+  }
+
+  parentNode <- xmlChildren(xmlChildren(xmlChildren(svgdoc)[[1]])[[2]])
+  list1 <- .ppChildren(parentNode)
+  ## this worked
+  if(length(list1) > 0)
+    return(list1)
+
+  try({
+    ## gracefully consider that it might be  a later format
+    if(length(list1) == 0)  {
+      list2 <- .ppChildren(xmlChildren(parentNode[[2]]))
+      return(list2)
+    }
+  }, silent = TRUE)
+
+  return(list1)
 }
 
 

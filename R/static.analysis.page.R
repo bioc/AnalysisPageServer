@@ -515,7 +515,51 @@ static.analysis.page.query.string <- function(paths.list)  {
 ## words I've already used in the VERY unlikely event that I accidentally
 ## use one of them again.
 .APSEnv <- list2env(list(outdir = ".",
+                         libbase.prefix = "",
                          random.words = character(0)))
+
+
+##' Get current AnalysisPageServer library base directory
+##'
+##' Get current AnalysisPageServer library base directory. This is the
+##' location that contains the JS, CSS, fonts, other files required
+##' to render reports. The default "" means that these will always
+##' be written in the directories containing individual reports and
+##' datasets. Alternatively, if you are writing a lot of reports, you
+##' can set this to a system-wide location (absolute path starting
+##' and ending with "/") and then \code{\link{copy.front.end}} and
+##' \code{setup.APS.knitr()} will use those instead.
+##' @return Path
+##' @author Brad Friedman
+##' @export
+##' @seealso \code{\link{set.APS.libbase.prefix}}
+##' @examples
+##' set.APS.libbase.prefix("/some/path")
+##' get.APS.libbase.prefix()
+get.APS.libbase.prefix <- function() .APSEnv$libbase.prefix
+
+
+##' Set current AnalysisPageServer library base directory
+##'
+##' Set current AnalysisPageServer library base directory.
+##' See \code{\link{get.APS.libbase.prefix}()} for more information.
+##' @return libbase.prefix, again
+##' @author Brad Friedman
+##' @export
+##' @seealso \code{\link{get.APS.libbase.prefix}}
+##' @examples
+##' set.APS.libbase.prefix("/some/path/")
+##' get.APS.libbase.prefix()
+##' @param libbase.prefix New libbase.prefix. Must either be empty string
+##' or end with "/"
+set.APS.libbase.prefix <- function(libbase.prefix) {
+  stopifnot(libbase.prefix == "" || grepl("/$", libbase.prefix))
+  .APSEnv$libbase.prefix <- libbase.prefix
+}
+
+
+
+
 
 ##' Get current AnalysisPageServer output directory
 ##'
@@ -596,6 +640,21 @@ reset.APS.outdir <- function() set.APS.outdir(".")
 ##' table (still available on download.
 ##' (This is passed through directly to
 ##' \code{\link{aps.dataset.divs}}.)
+##' @param allow.zoom If TRUE (default) then allow zooming and panning. IF FALSE then
+##' do not allow it.
+##' @param plot.height If NULL (default) then do not specify 'data-plot-height' attribute.
+##' Otherwise, use this number as 'data-plot-height' attribute, which will specify
+##' the plot height (in pixels)
+##' @param div.width If NULL (default) then do not specify div width in style.
+##' Otherwise, supply a valid CSS width (e.g. "200px" or "60%")
+##' and this will be rolled into the inline-style
+##' @param style String specifying inline style of this div or NULL (default).
+##' If NULL then and \code{div.width}
+##' is also NULL then do not specfiy any inline style. If NULL and \code{div.width} is
+##' non-NULL then create a centered div of \code{div.width} pixels wide with
+##' \code{style="width:100px; margin:0 auto"} (or whatever div.width is, instead of "100px").
+##' If non-NULL then use the string directly as the style attribute of the div.
+
 ##' @param num.table.rows Number of table rows to show. Default: 10
 ##' (This is passed through directly to
 ##' \code{\link{aps.dataset.divs}}.)
@@ -628,6 +687,10 @@ embed.APS.dataset <- function(plot,
                               title,
                               show.sidebar = TRUE,
                               show.table = TRUE,
+                              allow.zoom = TRUE,
+                              plot.height = NULL,
+                              div.width = NULL,
+                              style = NULL,
                               num.table.rows = 10,
                               extra.html.classes = character(),
                               extra.div.attr = character(),
@@ -691,6 +754,10 @@ embed.APS.dataset <- function(plot,
   div.html <- aps.dataset.divs(sap$paths.list,
                                show.sidebar = show.sidebar,
                                show.table = show.table,
+                               allow.zoom = allow.zoom,
+                               plot.height = plot.height,
+                               div.width = div.width,
+                               style = style,
                                num.table.rows = num.table.rows,
                                extra.html.class = list(extra.html.classes),
                                extra.div.attr = list(extra.div.attr))

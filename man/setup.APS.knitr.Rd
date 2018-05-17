@@ -5,7 +5,8 @@
 \title{Set up knitr documents to contain AnalysisPageServer data sets}
 \usage{
 setup.APS.knitr(outdir, include.css = system.file("AnalysisPageServer.css",
-  package = "AnalysisPageServer"), include.toc = TRUE, quiet = TRUE)
+  package = "AnalysisPageServer"), include.toc = TRUE,
+  libbase.prefix = get.APS.libbase.prefix(), quiet = TRUE)
 }
 \arguments{
 \item{outdir}{Output directory to which front end files should be written.
@@ -14,6 +15,9 @@ Default: see details.}
 \item{include.css}{Paths to CSS files to include. See details.}
 
 \item{include.toc}{Boolean, default TRUE. Should I include a table of contents?}
+
+\item{libbase.prefix}{Passed to \code{\link{custom.html.headers}}. Default:
+\code{\link{get.APS.libbase.prefix}()}.}
 
 \item{quiet}{Boolean, default TRUE. Set to FALSE to turn on some diagnostic
 messages}
