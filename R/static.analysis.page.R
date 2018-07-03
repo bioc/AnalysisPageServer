@@ -534,7 +534,7 @@ static.analysis.page.query.string <- function(paths.list)  {
 ##' @export
 ##' @seealso \code{\link{set.APS.libbase.prefix}}
 ##' @examples
-##' set.APS.libbase.prefix("/some/path")
+##' set.APS.libbase.prefix("/some/path/")
 ##' get.APS.libbase.prefix()
 get.APS.libbase.prefix <- function() .APSEnv$libbase.prefix
 
