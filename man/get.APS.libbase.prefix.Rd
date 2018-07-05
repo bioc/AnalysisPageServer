@@ -20,7 +20,7 @@ and ending with "/") and then \code{\link{copy.front.end}} and
 \code{setup.APS.knitr()} will use those instead.
 }
 \examples{
-set.APS.libbase.prefix("/some/path")
+set.APS.libbase.prefix("/some/path/")
 get.APS.libbase.prefix()
 }
 \seealso{
