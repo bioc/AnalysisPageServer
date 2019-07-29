@@ -444,7 +444,7 @@ rapache.app.from.registry <- function(registry,
     }
 
 
-    if(logger$level <  log4r:::INFO)  {
+    if(log4r::level(logger) < log4r:::INFO)  {
       datanode.rds <- file.path(tmpdir, "last-analysis-datanode.rds")
       info(logger, paste("analysis(): handler finished; Saving datanode to", datanode.rds))
       saveRDS(datanode, file=datanode.rds)

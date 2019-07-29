@@ -571,7 +571,7 @@ execute.handler <- function(analysis.page, params, plot.file, file.params=list()
       try(annotate.analysis.page.svg(plot.file,
                                      x = x, y = y,
                                      ids = id,
-                                     verbose = logger$level < log4r:::INFO),
+                                     verbose = log4r::level(logger) < log4r:::INFO),
           silent=TRUE)
     }
 
